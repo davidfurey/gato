@@ -1,6 +1,6 @@
-import { curry } from '../api/FunctionalHelpers'
-import { SharedState } from './shared'
-import * as Component from '../api/Components'
+import { curry } from '../../api/FunctionalHelpers'
+import { SharedState } from '../shared'
+import * as Component from '../../api/Components'
 
 function createLowerThird(action: Component.CreateLowerThird, state: SharedState): SharedState {
   const component = action.component

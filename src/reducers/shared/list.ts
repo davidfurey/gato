@@ -1,6 +1,6 @@
-import { curry } from '../api/FunctionalHelpers'
-import { SharedState, OSDLiveEvent } from './shared'
-import * as List from '../api/Lists'
+import { curry } from '../../api/FunctionalHelpers'
+import { SharedState, OSDLiveEvent } from '../shared'
+import * as List from '../../api/Lists'
 
 function updateEvent(
   eventId: string, 

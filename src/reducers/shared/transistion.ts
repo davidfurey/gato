@@ -1,7 +1,7 @@
-import * as Transistion from '../api/Transitions'
-import { curry } from '../api/FunctionalHelpers'
-import { SharedState, OnScreenComponent, Display } from './shared'
-import { OSDComponent } from '../OSDComponent'
+import * as Transistion from '../../api/Transitions'
+import { curry } from '../../api/FunctionalHelpers'
+import { SharedState, OnScreenComponent, Display } from '../shared'
+import { OSDComponent } from '../../OSDComponent'
 
 function componentFromComponents(components: OSDComponent[], id: string): OSDComponent | undefined {
   return components.find((c) => c.id === id)

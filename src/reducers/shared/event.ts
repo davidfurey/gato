@@ -1,6 +1,6 @@
-import { curry } from '../api/FunctionalHelpers'
-import { OSDLiveEvent, SharedState, OnScreenComponent } from './shared'
-import * as Event from '../api/Events'
+import { curry } from '../../api/FunctionalHelpers'
+import { OSDLiveEvent, SharedState, OnScreenComponent } from '../shared'
+import * as Event from '../../api/Events'
 
 function updateDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
   if (state.displays.some((d) => d.eventId === event.id)) {
