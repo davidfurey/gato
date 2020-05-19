@@ -43,7 +43,7 @@ export interface ConnectionStatus {
 let clients: ConnectionStatus[] = []
 
 let state: SharedState = {
-  components: [],
+  components: {},
   groups: [],
   events: [ initialEvent ],
   displays: [{
@@ -164,7 +164,7 @@ const emptyCallback = (): void => {
   // do nothing.
 }
 
-function storeComponents(components: OSDComponent[]): void {
+function storeComponents(components: { [key: string]: OSDComponent } ): void {
   fs.writeFile('components.json', JSON.stringify(components), {}, emptyCallback)
 }
 function storeDisplays(displays: Display[]): void {
@@ -177,8 +177,8 @@ function storeGroups(groups: OSDComponentsGroup[]): void {
   fs.writeFile('groups.json', JSON.stringify(groups), {}, emptyCallback)
 }
 
-function loadComponents(): Promise<OSDComponent[]> {
-  const p = fs.promises.readFile('components.json', 'utf8').then((data) => JSON.parse(data) as OSDComponent[])
+function loadComponents(): Promise<{ [key: string]: OSDComponent }> {
+  const p = fs.promises.readFile('components.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: OSDComponent })
   p.catch((error) => { console.log("Error parsing components"); console.log(error) })
   return p
 }
@@ -216,7 +216,7 @@ function updateState(message: Message): void {
 }
 
 function loadStateFromDisk(): void {
-  Promise.all<OSDComponent[], Display[], OSDLiveEvent[], OSDComponentsGroup[]>(
+  Promise.all<{ [key: string]: OSDComponent }, Display[], OSDLiveEvent[], OSDComponentsGroup[]>(
     [loadComponents(), loadDisplays(), loadEvents(), loadGroups()]
   ).then(([components, displays, events, groups]) => {
     state = {

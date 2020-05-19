@@ -9,15 +9,14 @@ import { reduce as eventReducer } from './shared/event'
 import { reduce as listReducer } from './shared/list'
 import * as List from '../api/Lists'
 
+type uuidv4 = string
 
 export interface SharedState {
-  components: OSDComponent[];
+  components: { [key: string]: OSDComponent };
   groups: OSDComponentsGroup[];
   events: OSDLiveEvent[];
   displays: Display[];
 }
-
-type uuidv4 = string
 
 export interface OSDComponentsGroup {
   name: string;

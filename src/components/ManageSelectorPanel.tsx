@@ -6,7 +6,7 @@ import { TabbedPanel, TabContainer } from './TabbedPanel'
 
 interface ManageSelectorPanelProps {
   events: OSDLiveEvent[];
-  components: OSDComponent[];
+  components: { [key: string]: OSDComponent };
 }
 
 function EventListItem(props: { event: OSDLiveEvent }): JSX.Element {
@@ -38,7 +38,7 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
     </TabContainer>
     <TabContainer name="Components" eventKey="components">
       <ListGroup>
-        {props.components.map((component) => 
+        {Object.values(props.components).map((component) => 
           <ComponentListItem key={component.id} component={component} />
         )}
       </ListGroup>

@@ -20,7 +20,7 @@ import * as RequestMessage from './api/Requests'
 
 interface ManageProps {
   displays: Display[];
-  components: OSDComponent[];
+  components: { [key: string]: OSDComponent };
   events: OSDLiveEvent[];
   connectivity: {
     serverName: string | undefined;

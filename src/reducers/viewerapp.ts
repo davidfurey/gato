@@ -16,7 +16,7 @@ const initialEvent: OSDLiveEvent = {
 
 const initialState: ViewerAppState = {
   shared: {
-    components: [],
+    components: {},
     groups: [],
     events: [ initialEvent ],
     displays: [{

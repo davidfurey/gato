@@ -21,7 +21,7 @@ import * as RequestMessage from './api/Requests'
 
 interface ControlProps {
   displays: Display[];
-  components: OSDComponent[];
+  components: { [key: string]: OSDComponent };
   events: OSDLiveEvent[];
   connectivity: {
     serverName: string | undefined;
@@ -62,7 +62,7 @@ export class Control extends Component<ControlProps> {
 
   lookupComponent = (osc: OnScreenComponent): 
     { state: OnScreenComponentState; component: OSDComponent}[] => {
-    const component = this.props.components.find((c) => c.id === osc.id)
+    const component = this.props.components[osc.id]
     if (component) {
       return [{
         state: osc.state,
@@ -73,7 +73,7 @@ export class Control extends Component<ControlProps> {
   }
 
   lookupComponentById = (id: string): OSDComponent[] => {
-    const component = this.props.components.find((c) => c.id === id)
+    const component = this.props.components[id]
     return component ? [component] : []
   }
 

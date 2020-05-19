@@ -16,7 +16,7 @@ const initialEvent: OSDLiveEvent = {
 
 const initialState: ControlAppState = {
   shared: {
-    components: [],
+    components: {},
     groups: [],
     events: [ initialEvent ],
     displays: [{

@@ -16,7 +16,7 @@ import * as RequestMessage from './api/Requests'
 
 interface ViewerProps {
   displays: Display[];
-  components: OSDComponent[];
+  components: { [key: string]: OSDComponent };
   events: OSDLiveEvent[];
 }
 
@@ -57,7 +57,7 @@ export class Viewer extends Component<ViewerProps> {
 
   lookupComponent = 
   (osc: OnScreenComponent): { state: OnScreenComponentState; component: OSDComponent}[] => {
-    const component = this.props.components.find((c) => c.id === osc.id)
+    const component = this.props.components[osc.id]
     if (component) {
       return [{
         state: osc.state,

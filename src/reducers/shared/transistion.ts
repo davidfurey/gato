@@ -1,20 +1,15 @@
 import * as Transistion from '../../api/Transitions'
 import { curry } from '../../api/FunctionalHelpers'
 import { SharedState, OnScreenComponent, Display } from '../shared'
-import { OSDComponent } from '../../OSDComponent'
-
-function componentFromComponents(components: OSDComponent[], id: string): OSDComponent | undefined {
-  return components.find((c) => c.id === id)
-}
 
 function goTransistion(action: Transistion.GoTransistion, state: SharedState): SharedState {
   const selectedDisplay = state.displays.find((display) => display.id === action.displayId)
   if (selectedDisplay && action.inComponentId) {
-    const component = componentFromComponents(state.components, action.inComponentId)
+    const component = state.components[action.inComponentId]
     if (component?.type === "lower-thirds") {
       const onScreenComponents: OnScreenComponent[] = selectedDisplay.onScreenComponents.map(
         (otherOnScreenComponent) => {
-        const otherComponent = componentFromComponents(state.components, otherOnScreenComponent.id)
+        const otherComponent = state.components[otherOnScreenComponent.id]
         if (otherComponent?.type === "lower-thirds") {
           if (otherOnScreenComponent.id === action.inComponentId) {
             return { ...otherOnScreenComponent, state: "entering" }
