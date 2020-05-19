@@ -8,7 +8,6 @@ interface TabbedPanelProps {
 
 export class TabContainer extends Component<{ name: string; eventKey: string }> {
   render(): JSX.Element {
-    console.log(this.props)
     return <Tab.Pane eventKey={this.props.eventKey}>{this.props.children}</Tab.Pane>
   }
 }

@@ -17,6 +17,7 @@ import { uuid } from 'uuidv4';
 import { ManageSelectorPanel } from './components/ManageSelectorPanel';
 import * as Connectivity from './actions/connectivity'
 import * as RequestMessage from './api/Requests'
+import * as ComponentMessage from './api/Components'
 
 interface ManageProps {
   displays: Display[];
@@ -27,6 +28,7 @@ interface ManageProps {
     connected: boolean;
     clients: ClientStatus[];
   };
+  deleteComponent: (id: string) => void;
 }
 
 let maybeStore: Store<ManageAppState, ManageAppActions.Action> | undefined = undefined
@@ -56,7 +58,8 @@ export class Manage extends Component<ManageProps> {
       ) {
         store.dispatch({ type: Connectivity.ActionType.Disconnected})
       }
-      store.dispatch(send({"type": RequestMessage.MessageType.Ping }))
+// todo: this causes quite a lot of components to be re-rendered - how can we avoid this?
+      store.dispatch(send({"type": RequestMessage.MessageType.Ping })) 
     }, 1000)
   }
 
@@ -73,12 +76,15 @@ export class Manage extends Component<ManageProps> {
   }
 
   render(): JSX.Element {
-    console.log(this.props)
     return (
       <div className="container mt-5">
         <div className="row">
           <div className="col col-sm-auto">
-            <ManageSelectorPanel events={this.props.events} components={this.props.components} /> 
+            <ManageSelectorPanel 
+              events={this.props.events} 
+              components={this.props.components} 
+              deleteComponent={this.props.deleteComponent} 
+            /> 
             {/* todo: should only be shared components */}
             <ConnectivityPanel 
               serverName={this.props.connectivity.serverName || "streamer-1.yellowbill.co.uk"} 
@@ -100,7 +106,7 @@ export class Manage extends Component<ManageProps> {
   }
 }
 
-const mapStateToProps = (state: ManageAppState): ManageProps => {
+const mapStateToProps = (state: ManageAppState) => {
   return {
     components: state.shared.components,
     displays: state.shared.displays,
@@ -109,7 +115,19 @@ const mapStateToProps = (state: ManageAppState): ManageProps => {
   }
 }
 
-const ManageContainer = connect(mapStateToProps)(Manage)
+const mapDispatchToProps = (dispatch: AppDispatch) => {
+  return {
+    deleteComponent: (id: string) => {
+      const action: ComponentMessage.Delete = {
+        type: ComponentMessage.MessageType.Delete,
+        componentId: id,
+      }
+      dispatch(send(action))
+    }
+  }
+}
+
+const ManageContainer = connect(mapStateToProps, mapDispatchToProps)(Manage)
 
 ReactDOM.render(
   <Provider store={store}>

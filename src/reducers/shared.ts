@@ -30,7 +30,7 @@ export type ListType = "picked" | "slideshow"
 export interface ComponentList {
   name: string;
   listType: ListType;
-  components: uuidv4[];
+  components: (uuidv4 | null)[];
 }
 
 export interface OSDLiveEvent {

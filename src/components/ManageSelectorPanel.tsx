@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, ListGroup, ButtonGroup } from 'react-bootstrap'
+import React, { useState } from 'react';
+import { Modal, Button, ListGroup, ButtonGroup } from 'react-bootstrap'
 import { OSDLiveEvent } from '../reducers/shared';
 import { OSDComponent } from '../OSDComponent';
 import { TabbedPanel, TabContainer } from './TabbedPanel'
@@ -7,6 +7,7 @@ import { TabbedPanel, TabContainer } from './TabbedPanel'
 interface ManageSelectorPanelProps {
   events: OSDLiveEvent[];
   components: { [key: string]: OSDComponent };
+  deleteComponent: (id: string) => void;
 }
 
 function EventListItem(props: { event: OSDLiveEvent }): JSX.Element {
@@ -19,13 +20,41 @@ function EventListItem(props: { event: OSDLiveEvent }): JSX.Element {
   </ListGroup.Item>
 }
 
-function ComponentListItem(props: { component: OSDComponent }): JSX.Element {
+function ComponentListItem(
+  props: { component: OSDComponent; deleteComponent: (id: string) => void }
+): JSX.Element {
+  const [show, setShow] = useState(false);
+
+  const doDelete = (): void => {
+    setShow(false)
+    props.deleteComponent(props.component.id)
+  }
+
+  const handleClose = (): void => setShow(false)
+  const handleShow = (): void => setShow(true)
+
   return <ListGroup.Item className="d-flex justify-content-between align-items-center">
     {props.component.name}
     <ButtonGroup>
       <Button size="sm"><span className="material-icons">settings</span></Button>
-      <Button variant="danger" size="sm"><span className="material-icons">clear</span></Button>
+      <Button variant="danger" size="sm" onClick={handleShow}><span className="material-icons">clear</span></Button>
     </ButtonGroup>
+    <Modal show={show} onHide={handleClose} animation={false}>
+      <Modal.Header closeButton>
+        <Modal.Title>Delete component</Modal.Title>
+      </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete component &quot;{props.component.name}&quot;?
+        </Modal.Body>
+      <Modal.Footer>
+        <Button variant="danger" onClick={doDelete}>
+          Delete
+        </Button>
+        <Button variant="primary" onClick={handleClose}>
+          Cancel
+        </Button>
+      </Modal.Footer>
+    </Modal>
   </ListGroup.Item>
 }
 
@@ -39,7 +68,11 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
     <TabContainer name="Components" eventKey="components">
       <ListGroup>
         {Object.values(props.components).map((component) => 
-          <ComponentListItem key={component.id} component={component} />
+          <ComponentListItem 
+            key={component.id} 
+            component={component} 
+            deleteComponent={props.deleteComponent} 
+          />
         )}
       </ListGroup>
     </TabContainer>

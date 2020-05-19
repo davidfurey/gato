@@ -10,7 +10,7 @@ export interface PickedComponentsPanelProps {
   hide: (id: string, displayId: string) => void;
   setComponent: (index: number, id: string) => void;
   displays: Display[];
-  pickedComponents: string[];
+  pickedComponents: (string | null)[];
 }
 
 interface PickedComponentProps {
