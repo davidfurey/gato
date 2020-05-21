@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { OSDComponent } from '../OSDComponent';
-import { OnScreenComponentState } from '../reducers/shared';
+import { OSDComponent } from '../../OSDComponent';
+import { OnScreenComponentState } from '../../reducers/shared';
 import '../lower-thirds.css';
 
 interface LowerThirdsProps { 

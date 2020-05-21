@@ -3,11 +3,13 @@ import { Modal, Button, ListGroup, ButtonGroup } from 'react-bootstrap'
 import { OSDLiveEvent } from '../reducers/shared';
 import { OSDComponent } from '../OSDComponent';
 import { TabbedPanel, TabContainer } from './TabbedPanel'
+import { EditPane, EditPaneType } from '../reducers/editpanel';
 
 interface ManageSelectorPanelProps {
   events: OSDLiveEvent[];
   components: { [key: string]: OSDComponent };
   deleteComponent: (id: string) => void;
+  openTab: (pane: EditPane) => void;
 }
 
 function EventListItem(props: { event: OSDLiveEvent }): JSX.Element {
@@ -15,13 +17,17 @@ function EventListItem(props: { event: OSDLiveEvent }): JSX.Element {
     {props.event.name}
     <ButtonGroup>
       <Button size="sm"><span className="material-icons">settings</span></Button>
-      <Button variant="danger" size="sm"><span className="material-icons">clear</span></Button>
+      <Button variant="danger" size="sm"><span className="material-icons">delete</span></Button> {/* todo: bigger bin*/}
     </ButtonGroup>
   </ListGroup.Item>
 }
 
 function ComponentListItem(
-  props: { component: OSDComponent; deleteComponent: (id: string) => void }
+  props: { 
+    component: OSDComponent; 
+    deleteComponent: (id: string) => void;
+    openTab: (pane: EditPane) => void;
+  }
 ): JSX.Element {
   const [show, setShow] = useState(false);
 
@@ -33,11 +39,18 @@ function ComponentListItem(
   const handleClose = (): void => setShow(false)
   const handleShow = (): void => setShow(true)
 
+  function settings(): void {
+    props.openTab({
+      type: EditPaneType.Component,
+      id: props.component.id,
+    })
+  }
+
   return <ListGroup.Item className="d-flex justify-content-between align-items-center">
     {props.component.name}
     <ButtonGroup>
-      <Button size="sm"><span className="material-icons">settings</span></Button>
-      <Button variant="danger" size="sm" onClick={handleShow}><span className="material-icons">clear</span></Button>
+      <Button size="sm" onClick={settings}><span className="material-icons">settings</span></Button>
+      <Button variant="danger" size="sm" onClick={handleShow}><span className="material-icons">delete</span></Button>
     </ButtonGroup>
     <Modal show={show} onHide={handleClose} animation={false}>
       <Modal.Header closeButton>
@@ -71,7 +84,8 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
           <ComponentListItem 
             key={component.id} 
             component={component} 
-            deleteComponent={props.deleteComponent} 
+            deleteComponent={props.deleteComponent}
+            openTab={props.openTab}
           />
         )}
       </ListGroup>

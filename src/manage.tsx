@@ -16,8 +16,11 @@ import * as ManageAppActions from './actions/manageapp';
 import { uuid } from 'uuidv4';
 import { ManageSelectorPanel } from './components/ManageSelectorPanel';
 import * as Connectivity from './actions/connectivity'
+import * as EditPanelActions from './actions/editpanel'
+import { EditPanel } from './components/EditPanel'
 import * as RequestMessage from './api/Requests'
 import * as ComponentMessage from './api/Components'
+import { EditPanelState, EditPane } from './reducers/editpanel';
 
 interface ManageProps {
   displays: Display[];
@@ -29,6 +32,10 @@ interface ManageProps {
     clients: ClientStatus[];
   };
   deleteComponent: (id: string) => void;
+  editPanel: EditPanelState;
+  closeTab: (id: string) => void;
+  selectTab: (id: string) => void;
+  openTab: (pane: EditPane) => void;
 }
 
 let maybeStore: Store<ManageAppState, ManageAppActions.Action> | undefined = undefined
@@ -76,14 +83,16 @@ export class Manage extends Component<ManageProps> {
   }
 
   render(): JSX.Element {
+    console.log(`Selected panel is ${this.props.editPanel.selected}`)
     return (
       <div className="container mt-5">
         <div className="row">
-          <div className="col col-sm-auto">
+          <div className="col col-sm-auto" style={{ width: '25rem' }}>
             <ManageSelectorPanel 
               events={this.props.events} 
               components={this.props.components} 
-              deleteComponent={this.props.deleteComponent} 
+              deleteComponent={this.props.deleteComponent}
+              openTab={this.props.openTab}
             /> 
             {/* todo: should only be shared components */}
             <ConnectivityPanel 
@@ -91,14 +100,21 @@ export class Manage extends Component<ManageProps> {
               connected={this.props.connectivity.connected} 
               clients={this.props.connectivity.clients} />
           </div>
-          <div className="col-md-auto">
+          <div className="col-xl">
             <ViewPanel 
               key={this.privateDisplay.id} 
               name={this.privateDisplay.name} 
               showCaption={true} 
               preview={true}
               components={[]}
-            />  
+            />
+            <EditPanel 
+              editPanel={this.props.editPanel}
+              closeTab={this.props.closeTab}
+              selectTab={this.props.selectTab}
+              openTab={this.props.openTab}
+              components={this.props.components}
+            />
           </div>
         </div>
       </div>
@@ -111,7 +127,8 @@ const mapStateToProps = (state: ManageAppState) => {
     components: state.shared.components,
     displays: state.shared.displays,
     events: state.shared.events,
-    connectivity: state.connectivity
+    connectivity: state.connectivity,
+    editPanel: state.editPanel
   }
 }
 
@@ -120,9 +137,30 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     deleteComponent: (id: string) => {
       const action: ComponentMessage.Delete = {
         type: ComponentMessage.MessageType.Delete,
-        componentId: id,
+        id,
       }
       dispatch(send(action))
+    },
+    closeTab: (id: string) => {
+      const action: EditPanelActions.Close = {
+        type: EditPanelActions.ActionType.Close,
+        id,
+      }
+      dispatch(action)
+    },
+    selectTab: (id: string) => {
+      const action: EditPanelActions.Select = {
+        type: EditPanelActions.ActionType.Select,
+        id,
+      }
+      dispatch(action)
+    },
+    openTab: (pane: EditPane) => {
+      const action: EditPanelActions.Open = {
+        type: EditPanelActions.ActionType.Open,
+        pane,
+      }
+      dispatch(action)
     }
   }
 }

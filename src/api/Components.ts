@@ -1,6 +1,6 @@
 import { Uuid, BaseMessage, BaseMessageType } from './Messages'
 import { TypeMap, GenericPattern, genericMatcher, isTypeGroup, isType } from "./PatternHelpers"
-import { LowerThirdsComponent } from "../components/LowerThirds"
+import { LowerThirdsComponent } from "../components/OSDComponents/LowerThirds"
 
 export enum MessageType {
   Create = 'Component/Create',
@@ -21,8 +21,8 @@ export interface CreateLowerThird extends BaseMessage<MessageType.CreateLowerThi
   component: LowerThirdsComponent;
 }
 
-interface Delete extends BaseMessage<MessageType.Delete> {
-  componentId: Uuid;  
+export interface Delete extends BaseMessage<MessageType.Delete> {
+  id: Uuid;  
 }
 
 export const isComponentMessage = isTypeGroup<BaseMessageType, Message>("Component/")

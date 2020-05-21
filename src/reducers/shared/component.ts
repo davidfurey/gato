@@ -45,14 +45,14 @@ function deleteFromDisplay(
 }
 
 function deleteComponent(action: Component.Delete, state: SharedState): SharedState {
-  const { [action.componentId]: ignored, ...rest } = state.components;
+  const { [action.id]: ignored, ...rest } = state.components;
 
   const events = state.events.map((event) => {
-    if (event.components.includes(action.componentId)) {
+    if (event.components.includes(action.id)) {
       return {
         ...event,
-        components: event.components.filter((c) => c !== action.componentId),
-        lists: event.lists.map((ls) => deleteComponentFromList(ls, action.componentId)),
+        components: event.components.filter((c) => c !== action.id),
+        lists: event.lists.map((ls) => deleteComponentFromList(ls, action.id)),
       }
     }
     return event
@@ -62,8 +62,8 @@ function deleteComponent(action: Component.Delete, state: SharedState): SharedSt
     ...state,
     events,
     components: rest,
-    groups: state.groups.map((group) => deleteComponentFromGroup(group, action.componentId)),
-    displays: state.displays.map((display) => deleteFromDisplay(display, action.componentId))
+    groups: state.groups.map((group) => deleteComponentFromGroup(group, action.id)),
+    displays: state.displays.map((display) => deleteFromDisplay(display, action.id))
   }
 }
 

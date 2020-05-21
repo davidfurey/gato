@@ -84,7 +84,7 @@ export class Control extends Component<ControlProps> {
     return (
       <div className="container mt-5">
         <div className="row">
-          <div className="col col-sm-auto">
+          <div className="col col-sm-auto" style={{ width: '25rem' }}>
             { liveEvent ? <PickedComponentsPanelContainer eventId={liveEvent.id} pickedComponents={liveEvent.lists.find((l) => l.listType === "picked")?.components || []} components={liveEvent.components.flatMap(this.lookupComponentById)} displays={this.props.displays}/> : null }
             { liveDisplay ? <QuickCreatePanelContainer display={liveDisplay}/> : null }
             <SettingsPanel events={this.props.events} event={liveEvent} setEvent={(): void => {
