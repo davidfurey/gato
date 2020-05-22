@@ -36,6 +36,7 @@ interface ManageProps {
   closeTab: (id: string) => void;
   selectTab: (id: string) => void;
   openTab: (pane: EditPane) => void;
+  updateComponent: <T extends OSDComponent>(component: T) => void;
 }
 
 let maybeStore: Store<ManageAppState, ManageAppActions.Action> | undefined = undefined
@@ -114,6 +115,7 @@ export class Manage extends Component<ManageProps> {
               selectTab={this.props.selectTab}
               openTab={this.props.openTab}
               components={this.props.components}
+              updateComponent={this.props.updateComponent}
             />
           </div>
         </div>
@@ -134,33 +136,41 @@ const mapStateToProps = (state: ManageAppState) => {
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
   return {
-    deleteComponent: (id: string) => {
+    deleteComponent: (id: string): void => {
       const action: ComponentMessage.Delete = {
         type: ComponentMessage.MessageType.Delete,
         id,
       }
       dispatch(send(action))
     },
-    closeTab: (id: string) => {
+    closeTab: (id: string): void => {
       const action: EditPanelActions.Close = {
         type: EditPanelActions.ActionType.Close,
         id,
       }
       dispatch(action)
     },
-    selectTab: (id: string) => {
+    selectTab: (id: string): void => {
       const action: EditPanelActions.Select = {
         type: EditPanelActions.ActionType.Select,
         id,
       }
       dispatch(action)
     },
-    openTab: (pane: EditPane) => {
+    openTab: (pane: EditPane): void => {
       const action: EditPanelActions.Open = {
         type: EditPanelActions.ActionType.Open,
         pane,
       }
       dispatch(action)
+    },
+    updateComponent: <T extends OSDComponent>(component: T): void => {
+      const action: ComponentMessage.Update = {
+        type: ComponentMessage.MessageType.Update,
+        component: component,
+        id: component.id
+      }
+      dispatch(send(action))
     }
   }
 }

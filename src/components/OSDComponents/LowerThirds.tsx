@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { OSDComponent } from '../../OSDComponent';
 import { OnScreenComponentState } from '../../reducers/shared';
-import '../lower-thirds.css';
+import './lower-thirds.css';
 
 interface LowerThirdsProps { 
   components: { state: OnScreenComponentState; component: LowerThirdsComponent }[];
@@ -13,11 +13,16 @@ export interface LowerThirdsComponent extends OSDComponent {
   type: "lower-thirds";
 }
 
+export function isLowerThirdsComponent(component: OSDComponent): component is LowerThirdsComponent {
+  return component.type === "lower-thirds"
+}
+
 interface LowerThirdProps {
   title: string;
   subtitle: string;
   state: OnScreenComponentState;
 }
+
 function LowerThird(props: LowerThirdProps): JSX.Element {
   return <div className={props.state === "entering" || props.state === "visible" ?  "lower-third lower-third-visible" : "lower-third lower-third-hidden"}>
     <div className="title">{props.title}</div>

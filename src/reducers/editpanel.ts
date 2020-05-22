@@ -1,5 +1,5 @@
 import * as EditPanel from "../actions/editpanel"
-import { GenericPattern, AnnotatedType, TypeMap } from '../api/PatternHelpers'
+import { genericMatcher, GenericPattern, AnnotatedType, TypeMap } from '../api/PatternHelpers'
 import { curry } from '../api/FunctionalHelpers'
 
 export enum EditPaneType {
@@ -18,6 +18,8 @@ interface BasePane<T extends EditPaneType> extends AnnotatedType<T> {
 export type ComponentEditPane = BasePane<EditPaneType.Component>
 
 export type EventEditPane = BasePane<EditPaneType.Event>
+
+export const matcher: <T>(pattern: Pattern<T>) => (pane: EditPane) => T = genericMatcher
 
 export interface EditPanelState {
   panes: EditPane[];

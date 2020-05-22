@@ -12,6 +12,16 @@ function createLowerThird(action: Component.CreateLowerThird, state: SharedState
   }
 }
 
+function updateComponent(action: Component.Update, state: SharedState): SharedState {
+  return {
+    ...state,
+    components: { 
+      ...state.components,
+      [action.component.id]: action.component
+    }
+  }
+}
+
 function deleteComponentFromList(l: ComponentList, componentId: string): ComponentList {
   if (l.components.includes(componentId)) {
     return {
@@ -75,6 +85,7 @@ const reducer: Component.Pattern<(s: SharedState) => SharedState> = {
   [Component.MessageType.CreateLowerThird]: curry(createLowerThird),
   [Component.MessageType.Create]: notImplemented,
   [Component.MessageType.Delete]: curry(deleteComponent),
+  [Component.MessageType.Update]: curry(updateComponent),
 }
 
 export function reduce(message: Component.Message, state: SharedState): SharedState {

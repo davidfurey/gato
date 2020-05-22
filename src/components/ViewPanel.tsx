@@ -1,6 +1,6 @@
 import { OSDComponent } from '../OSDComponent'
 import React, { Component } from 'react';
-import { LowerThirds, LowerThirdsComponent } from './OSDComponents/LowerThirds';
+import { LowerThirds, LowerThirdsComponent, isLowerThirdsComponent } from './OSDComponents/LowerThirds';
 import { OnScreenComponentState } from '../reducers/shared'
 
 interface ViewPanelProps {
