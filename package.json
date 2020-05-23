@@ -47,6 +47,7 @@
     "@giantmachines/redux-websocket": "^1.2.0",
     "bootswatch": "^4.4.1",
     "compression": "^1.7.4",
+    "core-js": "^3.6.5",
     "express": "^4.17.1",
     "material-design-icons": "^3.0.1",
     "normalizr": "^3.6.0",

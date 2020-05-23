@@ -1,3 +1,4 @@
+import 'core-js/features/object/from-entries';
 import path from 'path';
 import express, { Request as ExpressRequest } from 'express';
 import compression from 'compression';

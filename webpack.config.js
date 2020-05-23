@@ -62,6 +62,7 @@ const serverConfig = env => {
               options: {
                 presets: [
                   '@babel/preset-react',
+                  '@babel/preset-env',
                 ],
               },
             },
