@@ -17,7 +17,7 @@ import * as RequestMessage from './api/Requests'
 interface ViewerProps {
   displays: Display[];
   components: { [key: string]: OSDComponent };
-  events: OSDLiveEvent[];
+  events: { [key: string]: OSDLiveEvent };
 }
 
 let maybeStore: Store<ViewerAppState, ViewAppActions.Action> | undefined = undefined

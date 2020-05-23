@@ -6,41 +6,54 @@ import { TabbedPanel, TabContainer } from './TabbedPanel'
 import { EditPane, EditPaneType } from '../reducers/editpanel';
 
 interface ManageSelectorPanelProps {
-  events: OSDLiveEvent[];
+  events: { [key: string]: OSDLiveEvent };
   components: { [key: string]: OSDComponent };
   deleteComponent: (id: string) => void;
   openTab: (pane: EditPane) => void;
 }
 
-function EventListItem(props: { event: OSDLiveEvent }): JSX.Element {
+function EventListItem(props: { 
+  event: OSDLiveEvent;
+  openTab: (pane: EditPane) => void;
+ }): JSX.Element {
+  function settings(): void {
+    props.openTab({
+      type: EditPaneType.Event,
+      id: props.event.id,
+    })
+  }
+
   return <ListGroup.Item className="d-flex justify-content-between align-items-center">
     {props.event.name}
     <ButtonGroup>
-      <Button size="sm"><span className="material-icons">settings</span></Button>
+      <Button size="sm" onClick={settings}><span className="material-icons">settings</span></Button>
       <Button variant="danger" size="sm"><span className="material-icons">delete</span></Button> {/* todo: bigger bin*/}
     </ButtonGroup>
   </ListGroup.Item>
 }
 
-function ComponentListItem(
+export function ComponentListItem( 
   props: { 
     component: OSDComponent; 
-    deleteComponent: (id: string) => void;
-    openTab: (pane: EditPane) => void;
+    deleteComponent?: () => void;
+    removeComponent?: () => void;
+    openTab?: (pane: EditPane) => void;
   }
 ): JSX.Element {
   const [show, setShow] = useState(false);
 
-  const doDelete = (): void => {
-    setShow(false)
-    props.deleteComponent(props.component.id)
+  function deleteHandler(deleteComponent: () => void): () => void {
+    return (): void => {
+      setShow(false)
+      deleteComponent()
+    }
   }
 
   const handleClose = (): void => setShow(false)
   const handleShow = (): void => setShow(true)
 
-  function settings(): void {
-    props.openTab({
+  function settings(openTab: (pane: EditPane) => void): () => void {
+    return (): void => openTab({
       type: EditPaneType.Component,
       id: props.component.id,
     })
@@ -49,9 +62,11 @@ function ComponentListItem(
   return <ListGroup.Item className="d-flex justify-content-between align-items-center">
     {props.component.name}
     <ButtonGroup>
-      <Button size="sm" onClick={settings}><span className="material-icons">settings</span></Button>
-      <Button variant="danger" size="sm" onClick={handleShow}><span className="material-icons">delete</span></Button>
+      { props.openTab ? <Button size="sm" onClick={settings(props.openTab)}><span className="material-icons">settings</span></Button> : null }
+      { props.removeComponent ? <Button variant="warning" size="sm" onClick={props.removeComponent}><span className="material-icons">clear</span></Button> : null }
+      { props.deleteComponent ? <Button variant="danger" size="sm" onClick={handleShow}><span className="material-icons">delete</span></Button> : null }
     </ButtonGroup>
+    { props.deleteComponent ?
     <Modal show={show} onHide={handleClose} animation={false}>
       <Modal.Header closeButton>
         <Modal.Title>Delete component</Modal.Title>
@@ -60,14 +75,15 @@ function ComponentListItem(
           Are you sure you want to delete component &quot;{props.component.name}&quot;?
         </Modal.Body>
       <Modal.Footer>
-        <Button variant="danger" onClick={doDelete}>
+        <Button variant="danger" onClick={deleteHandler(props.deleteComponent)}>
           Delete
         </Button>
         <Button variant="primary" onClick={handleClose}>
           Cancel
         </Button>
       </Modal.Footer>
-    </Modal>
+    </Modal> : null
+    }
   </ListGroup.Item>
 }
 
@@ -75,7 +91,10 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
   return <TabbedPanel>
     <TabContainer name="Event" eventKey="events">
       <ListGroup>
-        {props.events.map((event) => <EventListItem key={event.id} event={event} />)}
+        {Object.values(props.events).map((event) => 
+          <EventListItem key={event.id} event={event} openTab={props.openTab} />
+        )}
+        <ListGroup.Item><Button><span className="material-icons material-icons-raised">add</span> New event (todo)</Button></ListGroup.Item>
       </ListGroup>
     </TabContainer>
     <TabContainer name="Components" eventKey="components">
@@ -84,7 +103,7 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
           <ComponentListItem 
             key={component.id} 
             component={component} 
-            deleteComponent={props.deleteComponent}
+            deleteComponent={(): void => props.deleteComponent(component.id)}
             openTab={props.openTab}
           />
         )}

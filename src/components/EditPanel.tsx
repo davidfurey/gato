@@ -4,6 +4,8 @@ import { ListGroup, ButtonGroup, Button, ListGroupItem, Form, Row, Col, Containe
 import * as EditPanelReducer from '../reducers/editpanel';
 import { OSDComponent } from '../OSDComponent';
 import { isLowerThirdsComponent } from './OSDComponents/LowerThirds';
+import { OSDLiveEvent } from '../reducers/shared';
+import { ComponentListItem } from './ManageSelectorPanel';
 
 interface EditPanelProps {
   editPanel: EditPanelReducer.EditPanelState;
@@ -11,13 +13,23 @@ interface EditPanelProps {
   selectTab: (id: string) => void;
   openTab: (pane: EditPanelReducer.EditPane) => void;
   components: { [key: string]: OSDComponent };
+  events: { [key: string]: OSDLiveEvent };
   updateComponent: <T extends OSDComponent>(component: T) => void;
+  removeComponent: (eventId: string, componentId: string) => void;
 }
 
 interface ComponentEditPaneProps {
   pane: EditPanelReducer.ComponentEditPane;
   component: OSDComponent;
   updateComponent: <T extends OSDComponent>(component: T) => void;
+}
+
+interface EventEditPaneProps {
+  pane: EditPanelReducer.EventEditPane;
+  event: OSDLiveEvent;
+  openTab: (pane: EditPanelReducer.EditPane) => void;
+  removeComponent: (eventId: string, componentId: string) => void;
+  components: { [key: string]: OSDComponent };
 }
 
 export function EditableText(props: { value: string; update: (v: string) => void }): JSX.Element {
@@ -94,10 +106,32 @@ function ComponentEditPane(props: ComponentEditPaneProps): JSX.Element {
   }
 }
 
+function EventEditPane(props: EventEditPaneProps): JSX.Element {
+  return <Container className="mt-3 mb-3">
+    <h1>{ props.event.name }</h1>
+    {/* <h2>{props.event.components}</h2>
+    <h2>{props.event.lists}</h2> */}
+    <h2>Components</h2>
+    <ListGroup>
+        {props.event.components.map((componentId) => 
+          <ComponentListItem 
+            key={componentId} 
+            component={props.components[componentId]} 
+            removeComponent={(): void => props.removeComponent(props.event.id, componentId)}
+            openTab={props.openTab}
+          />
+        )}
+      </ListGroup>
+  </Container>
+}
+
 export function createPane(
   pane: EditPanelReducer.EditPane, 
   components: { [key: string]: OSDComponent },
-  updateComponent: <T extends OSDComponent>(component: T) => void
+  events: { [key: string]: OSDLiveEvent },
+  updateComponent: <T extends OSDComponent>(component: T) => void,
+  openTab: (pane: EditPanelReducer.EditPane) => void,
+  removeComponent: (eventId: string, componentId: string) => void
 ): JSX.Element {
   const pattern: EditPanelReducer.Pattern<JSX.Element> = {
 // eslint-disable-next-line react/display-name
@@ -109,13 +143,20 @@ export function createPane(
       />,
 // eslint-disable-next-line react/display-name
     [EditPanelReducer.EditPaneType.Event]: (pane) =>
-      <ListGroup><ListGroupItem>{pane.id} edit panel {pane.type}</ListGroupItem></ListGroup>
+      <EventEditPane 
+        pane={pane} 
+        event={events[pane.id]} 
+        components={components} 
+        openTab={openTab} 
+        removeComponent={removeComponent}
+      />
   }
   
   return EditPanelReducer.matcher(pattern)(pane)
 }
 
 export function EditPanel(props: EditPanelProps): JSX.Element {
+  console.log(props)
   return <TabbedPanel 
       defaultActiveKey={props.editPanel.selected} 
       onSelect={props.selectTab}
@@ -124,11 +165,18 @@ export function EditPanel(props: EditPanelProps): JSX.Element {
       {
         props.editPanel.panes.map((pane) => <TabContainer 
           key={pane.id} 
-          name={props.components[pane.id].name}
+          name={pane.type === "Event" ? props.events[pane.id].name : props.components[pane.id].name}
           eventKey={pane.id}
           closeTab={(): void => props.closeTab(pane.id)}
         >
-          { createPane(pane, props.components, props.updateComponent) }
+          { createPane(
+              pane, 
+              props.components, 
+              props.events, 
+              props.updateComponent, 
+              props.openTab, 
+              props.removeComponent
+          ) }
         </TabContainer>
         )  
       }

@@ -20,12 +20,13 @@ import * as EditPanelActions from './actions/editpanel'
 import { EditPanel } from './components/EditPanel'
 import * as RequestMessage from './api/Requests'
 import * as ComponentMessage from './api/Components'
+import * as EventMessage from './api/Events'
 import { EditPanelState, EditPane } from './reducers/editpanel';
 
 interface ManageProps {
   displays: Display[];
   components: { [key: string]: OSDComponent };
-  events: OSDLiveEvent[];
+  events: { [key: string]: OSDLiveEvent };
   connectivity: {
     serverName: string | undefined;
     connected: boolean;
@@ -37,6 +38,7 @@ interface ManageProps {
   selectTab: (id: string) => void;
   openTab: (pane: EditPane) => void;
   updateComponent: <T extends OSDComponent>(component: T) => void;
+  removeComponent: (eventId: string, componentId: string) => void;
 }
 
 let maybeStore: Store<ManageAppState, ManageAppActions.Action> | undefined = undefined
@@ -115,7 +117,9 @@ export class Manage extends Component<ManageProps> {
               selectTab={this.props.selectTab}
               openTab={this.props.openTab}
               components={this.props.components}
+              events={this.props.events}
               updateComponent={this.props.updateComponent}
+              removeComponent={this.props.removeComponent}
             />
           </div>
         </div>
@@ -169,6 +173,14 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         type: ComponentMessage.MessageType.Update,
         component: component,
         id: component.id
+      }
+      dispatch(send(action))
+    },
+    removeComponent: (eventId: string, componentId: string): void => {
+      const action: EventMessage.RemoveComponent = {
+        type: EventMessage.MessageType.RemoveComponent,
+        id: eventId,
+        componentId
       }
       dispatch(send(action))
     }

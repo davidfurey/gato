@@ -22,7 +22,7 @@ import * as RequestMessage from './api/Requests'
 interface ControlProps {
   displays: Display[];
   components: { [key: string]: OSDComponent };
-  events: OSDLiveEvent[];
+  events: { [key: string]: OSDLiveEvent };
   connectivity: {
     serverName: string | undefined;
     connected: boolean;
@@ -80,14 +80,17 @@ export class Control extends Component<ControlProps> {
   render(): JSX.Element {
     const liveDisplay = this.props.displays.find((d) => d.name === "live")
     const liveEvent = liveDisplay !== undefined ? 
-      this.props.events.find((e) => e.id === liveDisplay.eventId) : undefined
+      this.props.events[liveDisplay.eventId] : undefined
     return (
       <div className="container mt-5">
         <div className="row">
           <div className="col col-sm-auto" style={{ width: '25rem' }}>
             { liveEvent ? <PickedComponentsPanelContainer eventId={liveEvent.id} pickedComponents={liveEvent.lists.find((l) => l.listType === "picked")?.components || []} components={liveEvent.components.flatMap(this.lookupComponentById)} displays={this.props.displays}/> : null }
             { liveDisplay ? <QuickCreatePanelContainer display={liveDisplay}/> : null }
-            <SettingsPanel events={this.props.events} event={liveEvent} setEvent={(): void => {
+            <SettingsPanel 
+              events={Object.values(this.props.events)} 
+              event={liveEvent} 
+              setEvent={(): void => {
               // do nothing
             }} />
             <ConnectivityPanel serverName={this.props.connectivity.serverName || "streamer-1.yellowbill.co.uk"} connected={this.props.connectivity.connected} clients={this.props.connectivity.clients} />

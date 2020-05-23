@@ -18,7 +18,7 @@ const initialState: ViewerAppState = {
   shared: {
     components: {},
     groups: [],
-    events: [ initialEvent ],
+    events: { [initialEvent.id]: initialEvent },
     displays: [{
       eventId: initialEvent.id,
       type: "OnAir",

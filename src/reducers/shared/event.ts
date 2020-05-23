@@ -1,6 +1,7 @@
 import { curry } from '../../api/FunctionalHelpers'
 import { OSDLiveEvent, SharedState, OnScreenComponent } from '../shared'
 import * as Event from '../../api/Events'
+import { removeComponentFromList } from './component'
 
 function updateDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
   if (state.displays.some((d) => d.eventId === event.id)) {
@@ -40,7 +41,7 @@ function updateDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
 }
 
 function AddComponent(action: Event.AddComponent, state: SharedState): SharedState {
-  const event = state.events.find((e) => e.id === action.id)
+  const event = state.events[action.id]
   if (event) {
     const newEvent = {
       ...event,
@@ -48,7 +49,30 @@ function AddComponent(action: Event.AddComponent, state: SharedState): SharedSta
     }
     return updateDisplays({
       ...state,
-      events: state.events.map((e) => e.id === newEvent.id ? newEvent : e)
+      events: {
+        ...state.events,
+        [newEvent.id]: newEvent
+      }
+    }, newEvent)
+  }
+  return state
+}
+
+function RemoveComponent(action: Event.RemoveComponent, state: SharedState): SharedState {
+  const event = state.events[action.id]
+  if (event) {
+    const newEvent = {
+      ...event,
+      components: event.components.filter((c) => c !== action.componentId),
+      lists: event.lists.map((ls) => removeComponentFromList(ls, action.id)),
+    }
+
+    return updateDisplays({
+      ...state,
+      events: {
+        ...state.events,
+        [action.id]: newEvent
+      }
     }, newEvent)
   }
   return state
@@ -62,7 +86,7 @@ const reducer: Event.Pattern<(s: SharedState) => SharedState> = {
   [Event.MessageType.AddComponent]: curry(AddComponent),
   [Event.MessageType.Create]: notImplemented,
   [Event.MessageType.Delete]: notImplemented,
-  [Event.MessageType.RemoveComponent]: notImplemented,
+  [Event.MessageType.RemoveComponent]: curry(RemoveComponent),
   [Event.MessageType.Update]: notImplemented,
 }
 

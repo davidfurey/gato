@@ -7,10 +7,13 @@ function updateEvent(
   update: (event: OSDLiveEvent) => OSDLiveEvent, 
   state: SharedState
 ): SharedState {
-  if (state.events.some((e) => e.id === eventId)) {
+  if (state.events[eventId]) {
     return {
       ...state,
-      events: state.events.map((e) => e.id === eventId ? update(e) : e)
+      events: {
+        ...state.events,
+        eventId: update(state.events[eventId])
+      }
     }
   } else {
     return state

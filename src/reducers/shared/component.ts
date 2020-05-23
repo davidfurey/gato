@@ -22,7 +22,7 @@ function updateComponent(action: Component.Update, state: SharedState): SharedSt
   }
 }
 
-function deleteComponentFromList(l: ComponentList, componentId: string): ComponentList {
+export function removeComponentFromList(l: ComponentList, componentId: string): ComponentList {
   if (l.components.includes(componentId)) {
     return {
       ...l,
@@ -57,12 +57,19 @@ function deleteFromDisplay(
 function deleteComponent(action: Component.Delete, state: SharedState): SharedState {
   const { [action.id]: ignored, ...rest } = state.components;
 
-  const events = state.events.map((event) => {
+  const objectMap = <T>(obj: { [key: string]: T }, fn: (pv: T, pk: string, pi: number) => T): 
+  { [key: string]: T } => Object.fromEntries(
+    Object.entries(obj).map(
+      ([k, v], i) => [k, fn(v, k, i)]
+    )
+  )
+  
+  const events = objectMap(state.events, (event) => {
     if (event.components.includes(action.id)) {
       return {
         ...event,
         components: event.components.filter((c) => c !== action.id),
-        lists: event.lists.map((ls) => deleteComponentFromList(ls, action.id)),
+        lists: event.lists.map((ls) => removeComponentFromList(ls, action.id)),
       }
     }
     return event

@@ -14,7 +14,7 @@ type uuidv4 = string
 export interface SharedState {
   components: { [key: string]: OSDComponent };
   groups: OSDComponentsGroup[];
-  events: OSDLiveEvent[];
+  events: { [key: string]: OSDLiveEvent };
   displays: Display[];
 }
 
