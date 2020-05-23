@@ -12,7 +12,7 @@ function updateEvent(
       ...state,
       events: {
         ...state.events,
-        eventId: update(state.events[eventId])
+        [eventId]: update(state.events[eventId])
       }
     }
   } else {
