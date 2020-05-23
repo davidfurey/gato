@@ -64,7 +64,7 @@ function RemoveComponent(action: Event.RemoveComponent, state: SharedState): Sha
     const newEvent = {
       ...event,
       components: event.components.filter((c) => c !== action.componentId),
-      lists: event.lists.map((ls) => removeComponentFromList(ls, action.id)),
+      lists: event.lists.map((ls) => removeComponentFromList(ls, action.componentId)),
     }
 
     return updateDisplays({
