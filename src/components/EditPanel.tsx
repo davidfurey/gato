@@ -5,7 +5,7 @@ import * as EditPanelReducer from '../reducers/editpanel';
 import { OSDComponent } from '../OSDComponent';
 import { isLowerThirdsComponent } from './OSDComponents/LowerThirds';
 import { OSDLiveEvent } from '../reducers/shared';
-import { ComponentListItem } from './ManageSelectorPanel';
+import { ComponentList } from './ComponentList';
 
 interface EditPanelProps {
   editPanel: EditPanelReducer.EditPanelState;
@@ -112,16 +112,26 @@ function EventEditPane(props: EventEditPaneProps): JSX.Element {
     {/* <h2>{props.event.components}</h2>
     <h2>{props.event.lists}</h2> */}
     <h2>Components</h2>
-    <ListGroup>
-        {props.event.components.map((componentId) => 
-          <ComponentListItem 
-            key={componentId} 
-            component={props.components[componentId]} 
-            removeComponent={(): void => props.removeComponent(props.event.id, componentId)}
-            openTab={props.openTab}
-          />
-        )}
-      </ListGroup>
+    <ComponentList 
+      components={props.event.components.map((cId) => props.components[cId])} 
+      removeComponent={(componentId: string): void => 
+        props.removeComponent(props.event.id, componentId)
+      }
+      openTab={props.openTab}
+    />
+    <h2>Lists</h2>
+    {props.event.lists.map((eList) => <div key={eList.name}>
+        <h3>List - {eList.name}</h3>
+        <ComponentList 
+          components={
+            eList.components.map(
+              (cId) => cId !== null && props.components[cId] ? props.components[cId] : null
+            )
+          }  // todo: should be storing mepty list items as null not as "0"
+          openTab={props.openTab}
+        />
+      </div>
+    )}
   </Container>
 }
 
