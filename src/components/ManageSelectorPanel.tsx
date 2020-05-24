@@ -13,8 +13,6 @@ interface ManageSelectorPanelProps {
   openTab: (pane: EditPane) => void;
 }
 
-
-
 export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Element {
   return <TabbedPanel>
     <TabContainer name="Event" eventKey="events">

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button, ListGroup, ButtonGroup } from 'react-bootstrap'
 import { OSDComponent } from '../OSDComponent';
 import { EditPane, EditPaneType } from '../reducers/editpanel';
+import { ComponentPicker } from './ComponentPicker';
 
 export function ComponentListItem( 
   props: { 
@@ -78,5 +79,11 @@ export function ComponentList(props: {
         openTab={openTab}
       /> : <ListGroup.Item>Empty</ListGroup.Item>
   )}
+  <ListGroup.Item>
+      {/* <Button>
+        <span className="material-icons material-icons-raised">add</span> Add component (todo)
+      </Button> */}
+      <ComponentPicker components={props.components.flatMap((c) => c !== null ? [c] : [])} />
+    </ListGroup.Item>
   </ListGroup>
 }
