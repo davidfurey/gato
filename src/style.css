@@ -63,7 +63,7 @@ body {
   background-color: rgba(0, 0, 0, 0) !important
 }
 
-.card-header .nav .nav-item .active {
+.card-header .nav-tabs .nav-item .active {
   background-color: var(--gray-dark);
 }
 
@@ -100,3 +100,50 @@ body {
   vertical-align: middle;
   margin-bottom: 2px;
 }
+
+.list-group-item:focus {
+  background-color: var(--dark);
+}
+
+.list-group>.active:focus, .list-group>.active:hover {
+  background-color: var(--primary);
+}
+
+.list-group-item:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.bs-popover-top>.arrow::after {
+  border-top-color: var(--secondary);
+}
+
+.nav-pills .nav-item:not(:last-child) .custom-nav-link {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.nav-pills .nav-item:not(:first-child) .custom-nav-link {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.nav-pills .nav-item .active {
+  background-color: #28415b;
+  border-color: #243a53;
+}
+
+.nav-pills .nav-item .custom-nav-link:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+
+/* px-1 d-flex justify-content-center nav-link active */
+/* .btn-group>.btn:not(:last-child)
+
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show>.btn-primary.dropdown-toggle {
+
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show>.btn-primary.dropdown-toggle {
+
+.btn-group>.btn:not(:first-child), .btn-group>.btn-group:not(:first-child) */

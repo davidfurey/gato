@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { TabbedPanel, TabContainer } from '../components/TabbedPanel';
-import { ListGroup, ButtonGroup, Button, ListGroupItem, Form, Row, Col, Container } from 'react-bootstrap';
+import { Card, ListGroup, ButtonGroup, Button, ListGroupItem, Form, Row, Col, Container, Badge } from 'react-bootstrap';
 import * as EditPanelReducer from '../reducers/editpanel';
 import { OSDComponent } from '../OSDComponent';
 import { isLowerThirdsComponent } from './OSDComponents/LowerThirds';
 import { OSDLiveEvent } from '../reducers/shared';
 import { ComponentList } from './ComponentList';
+import { ComponentPicker } from './ComponentPicker';
+import { uuid } from 'uuidv4';
 
 interface EditPanelProps {
   editPanel: EditPanelReducer.EditPanelState;
@@ -16,6 +18,8 @@ interface EditPanelProps {
   events: { [key: string]: OSDLiveEvent };
   updateComponent: <T extends OSDComponent>(component: T) => void;
   removeComponent: (eventId: string, componentId: string) => void;
+  addComponent: (eventId: string, componentId: string) => void;
+  newComponent: (eventId: string, componentId: string, name: string, type: string) => void;
 }
 
 interface ComponentEditPaneProps {
@@ -29,6 +33,8 @@ interface EventEditPaneProps {
   event: OSDLiveEvent;
   openTab: (pane: EditPanelReducer.EditPane) => void;
   removeComponent: (eventId: string, componentId: string) => void;
+  addComponent: (eventId: string, componentId: string) => void;
+  newComponent: (eventId: string, componentId: string, name: string, type: string) => void;
   components: { [key: string]: OSDComponent };
 }
 
@@ -106,31 +112,62 @@ function ComponentEditPane(props: ComponentEditPaneProps): JSX.Element {
   }
 }
 
+function PaneIcon(props: { type: string}): JSX.Element {
+  return <Badge variant="dark" className="py-2 mr-2 ml-n2" style={{width: "1.7rem", height: "1.7rem"}}>
+    <span className="material-icons material-icons-raised">{ props.type }</span>
+  </Badge>
+}
+
+function capitalise(s: string): string { 
+  return s.length > 0 ? s.charAt(0).toUpperCase() + s.slice(1) : s 
+}
+
 function EventEditPane(props: EventEditPaneProps): JSX.Element {
   return <Container className="mt-3 mb-3">
-    <h1>{ props.event.name }</h1>
-    {/* <h2>{props.event.components}</h2>
-    <h2>{props.event.lists}</h2> */}
-    <h2>Components</h2>
-    <ComponentList 
-      components={props.event.components.map((cId) => props.components[cId])} 
-      removeComponent={(componentId: string): void => 
-        props.removeComponent(props.event.id, componentId)
-      }
-      openTab={props.openTab}
-    />
-    <h2>Lists</h2>
-    {props.event.lists.map((eList) => <div key={eList.name}>
-        <h3>List - {eList.name}</h3>
+    <Card style={{width: "30rem"}} className="mb-3">
+      <Card.Header><PaneIcon type="widgets" /> Components</Card.Header>
+      <ComponentList 
+        components={props.event.components.map((cId) => props.components[cId])} 
+        removeComponent={(componentId: string): void => 
+          props.removeComponent(props.event.id, componentId)
+        }
+        openTab={props.openTab}
+      />
+      <Card.Footer className="p-2">
+        <ComponentPicker 
+        components={
+          Object.values(props.components).filter((c) => !props.event.components.includes(c.id))
+        } 
+        existingComponent={(componentId): void => props.addComponent(props.event.id, componentId)} 
+        newComponent={(name: string, type: string): void => {
+          const componentId = uuid()
+          props.newComponent(props.event.id, componentId, name, type)
+          // todo: opening tab doesn't work because it is fairly sync whereas create goes via server
+          // props.openTab({
+          //   type: EditPanelReducer.EditPaneType.Component,
+          //   id: componentId,
+          // })
+        }
+        }
+      />
+      </Card.Footer>
+    </Card>
+
+    {/* <Button className="w-100">
+        <span className="material-icons material-icons-raised">add</span> New event
+      </Button> */}
+    {props.event.lists.map((eList) =>
+      <Card style={{width: "30rem"}} className="bg-secondary" key={eList.name}>
+      <Card.Header><PaneIcon type="list" /> { capitalise(eList.name) } List</Card.Header>
         <ComponentList 
           components={
             eList.components.map(
               (cId) => cId !== null && props.components[cId] ? props.components[cId] : null
             )
-          }  // todo: should be storing mepty list items as null not as "0"
+          }  // todo: should be storing empty list items as null not as "0"
           openTab={props.openTab}
         />
-      </div>
+      </Card>
     )}
   </Container>
 }
@@ -141,7 +178,9 @@ export function createPane(
   events: { [key: string]: OSDLiveEvent },
   updateComponent: <T extends OSDComponent>(component: T) => void,
   openTab: (pane: EditPanelReducer.EditPane) => void,
-  removeComponent: (eventId: string, componentId: string) => void
+  removeComponent: (eventId: string, componentId: string) => void,
+  addComponent: (eventId: string, componentId: string) => void,
+  newComponent: (eventId: string, componentId: string, name: string, type: string) => void
 ): JSX.Element {
   const pattern: EditPanelReducer.Pattern<JSX.Element> = {
 // eslint-disable-next-line react/display-name
@@ -159,6 +198,8 @@ export function createPane(
         components={components} 
         openTab={openTab} 
         removeComponent={removeComponent}
+        addComponent={addComponent}
+        newComponent={newComponent}
       />
   }
   
@@ -166,7 +207,6 @@ export function createPane(
 }
 
 export function EditPanel(props: EditPanelProps): JSX.Element {
-  console.log(props)
   return <TabbedPanel 
       defaultActiveKey={props.editPanel.selected} 
       onSelect={props.selectTab}
@@ -185,7 +225,9 @@ export function EditPanel(props: EditPanelProps): JSX.Element {
               props.events, 
               props.updateComponent, 
               props.openTab, 
-              props.removeComponent
+              props.removeComponent,
+              props.addComponent,
+              props.newComponent
           ) }
         </TabContainer>
         )  

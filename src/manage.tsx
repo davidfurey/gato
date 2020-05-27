@@ -22,23 +22,22 @@ import * as RequestMessage from './api/Requests'
 import * as ComponentMessage from './api/Components'
 import * as EventMessage from './api/Events'
 import { EditPanelState, EditPane } from './reducers/editpanel';
+import { Col, Container, Row, Navbar, Nav } from 'react-bootstrap';
+import { PageNav } from './components/PageNav';
 
 interface ManageProps {
   displays: Display[];
   components: { [key: string]: OSDComponent };
   events: { [key: string]: OSDLiveEvent };
-  connectivity: {
-    serverName: string | undefined;
-    connected: boolean;
-    clients: ClientStatus[];
-  };
   deleteComponent: (id: string) => void;
   editPanel: EditPanelState;
   closeTab: (id: string) => void;
   selectTab: (id: string) => void;
   openTab: (pane: EditPane) => void;
   updateComponent: <T extends OSDComponent>(component: T) => void;
+  addComponent: (eventId: string, componentId: string) => void;
   removeComponent: (eventId: string, componentId: string) => void;
+  newComponent: (eventId: string, componentId: string, name: string, type: string) => void;
 }
 
 let maybeStore: Store<ManageAppState, ManageAppActions.Action> | undefined = undefined
@@ -86,11 +85,10 @@ export class Manage extends Component<ManageProps> {
   }
 
   render(): JSX.Element {
-    console.log(`Selected panel is ${this.props.editPanel.selected}`)
     return (
-      <div className="container mt-5">
-        <div className="row">
-          <div className="col col-sm-auto" style={{ width: '25rem' }}>
+      <Container className="mt-4">
+        <Row>
+          <Col sm="auto" style={{ width: "25rem"}}>
             <ManageSelectorPanel 
               events={this.props.events} 
               components={this.props.components} 
@@ -98,19 +96,16 @@ export class Manage extends Component<ManageProps> {
               openTab={this.props.openTab}
             /> 
             {/* todo: should only be shared components */}
-            <ConnectivityPanel 
-              serverName={this.props.connectivity.serverName || "streamer-1.yellowbill.co.uk"} 
-              connected={this.props.connectivity.connected} 
-              clients={this.props.connectivity.clients} />
-          </div>
-          <div className="col-xl">
-            <ViewPanel 
+            <ConnectedConnectivityPanel /> 
+          </Col>
+          <Col xl={true}>
+            {/* <ViewPanel 
               key={this.privateDisplay.id} 
               name={this.privateDisplay.name} 
               showCaption={true} 
               preview={true}
               components={[]}
-            />
+            /> */}
             <EditPanel 
               editPanel={this.props.editPanel}
               closeTab={this.props.closeTab}
@@ -119,11 +114,13 @@ export class Manage extends Component<ManageProps> {
               components={this.props.components}
               events={this.props.events}
               updateComponent={this.props.updateComponent}
+              addComponent={this.props.addComponent}
               removeComponent={this.props.removeComponent}
+              newComponent={this.props.newComponent}
             />
-          </div>
-        </div>
-      </div>
+          </Col>
+        </Row>
+      </Container>
     )
   }
 }
@@ -133,8 +130,15 @@ const mapStateToProps = (state: ManageAppState) => {
     components: state.shared.components,
     displays: state.shared.displays,
     events: state.shared.events,
-    connectivity: state.connectivity,
     editPanel: state.editPanel
+  }
+}
+
+const mapConnectivityStateToProps = (state: ManageAppState) => {
+  return {
+    serverName: state.connectivity.serverName || "streamer-1.yellowbill.co.uk",
+    connected: state.connectivity.connected,
+    clients: state.connectivity.clients
   }
 }
 
@@ -183,15 +187,46 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         componentId
       }
       dispatch(send(action))
+    },
+    addComponent: (eventId: string, componentId: string): void => {
+      const action: EventMessage.AddComponent = {
+        type: EventMessage.MessageType.AddComponent,
+        id: eventId,
+        componentId
+      }
+      dispatch(send(action))
+    },
+    newComponent: (eventId: string, componentId: string, name: string, type: string): void => {
+      const create: ComponentMessage.Create = {
+        type: ComponentMessage.MessageType.Create,
+        id: componentId,
+        component: {
+          id: componentId,
+          name,
+          type
+        }
+      }
+      const add: EventMessage.AddComponent = {
+        type: EventMessage.MessageType.AddComponent,
+        id: eventId,
+        componentId
+      }
+      dispatch(send(create))
+      dispatch(send(add))
     }
   }
 }
 
+const ConnectedConnectivityPanel = connect(mapConnectivityStateToProps)(ConnectivityPanel)
 const ManageContainer = connect(mapStateToProps, mapDispatchToProps)(Manage)
 
 ReactDOM.render(
   <Provider store={store}>
+    <PageNav page="manage" />
     <ManageContainer />
   </Provider>,
   document.getElementById("root")
 );
+
+
+//todo: apply same connectivity panel trick to the other apps (control and viewer)

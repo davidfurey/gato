@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Modal, Button, ListGroup, ButtonGroup } from 'react-bootstrap'
 import { OSDComponent } from '../OSDComponent';
 import { EditPane, EditPaneType } from '../reducers/editpanel';
-import { ComponentPicker } from './ComponentPicker';
 
 export function ComponentListItem( 
   props: { 
@@ -10,6 +9,8 @@ export function ComponentListItem(
     deleteComponent?: () => void;
     removeComponent?: () => void;
     openTab?: (pane: EditPane) => void;
+    onClick?: () => void;
+    active: boolean;
   }
 ): JSX.Element {
   const [show, setShow] = useState(false);
@@ -31,11 +32,11 @@ export function ComponentListItem(
     })
   }
 
-  return <ListGroup.Item className="d-flex justify-content-between align-items-center">
+  return <ListGroup.Item active={props.active} action={props.onClick !== undefined} className="d-flex justify-content-between align-items-center" onClick={props.onClick}>
     {props.component.name}
     <ButtonGroup>
-      { props.openTab ? <Button size="sm" onClick={settings(props.openTab)}><span className="material-icons">settings</span></Button> : null }
-      { props.removeComponent ? <Button variant="warning" size="sm" onClick={props.removeComponent}><span className="material-icons">clear</span></Button> : null }
+      { props.openTab ? <Button variant="info" size="sm" onClick={settings(props.openTab)}><span className="material-icons">settings</span></Button> : null }
+      { props.removeComponent ? <Button variant="danger" size="sm" onClick={props.removeComponent}><span className="material-icons">clear</span></Button> : null }
       { props.deleteComponent ? <Button variant="danger" size="sm" onClick={handleShow}><span className="material-icons">delete</span></Button> : null }
     </ButtonGroup>
     { props.deleteComponent ?
@@ -64,26 +65,33 @@ export function ComponentList(props: {
   deleteComponent?: (id: string) => void;
   openTab?: (pane: EditPane) => void;
   removeComponent?: (id: string) => void;
+  onClick?: (id: string, active: boolean) => void;
+  activeId?: string;
 }): JSX.Element {
   const deleteComponent = props.deleteComponent
   const removeComponent = props.removeComponent
+  const onClick = props.onClick
   const openTab = props.openTab
-  return <ListGroup>
-  {props.components.map((component) => 
-    component !== null ?
-      <ComponentListItem 
-        key={component.id} 
-        component={component} 
-        deleteComponent={deleteComponent ? (): void => deleteComponent(component.id) : undefined }
-        removeComponent={removeComponent ? (): void => removeComponent(component.id) : undefined }
-        openTab={openTab}
-      /> : <ListGroup.Item>Empty</ListGroup.Item>
-  )}
-  <ListGroup.Item>
-      {/* <Button>
-        <span className="material-icons material-icons-raised">add</span> Add component (todo)
-      </Button> */}
-      <ComponentPicker components={props.components.flatMap((c) => c !== null ? [c] : [])} />
-    </ListGroup.Item>
+  const seenIds: { [id: string]: number} = {} // list can contain duplicates
+  return <ListGroup variant="flush">
+  {props.components.map((component) => {
+    if (component === null) {
+      return <ListGroup.Item>Empty</ListGroup.Item>
+    } else {
+      seenIds[component.id] = (seenIds[component.id] || 0) + 1
+      return component !== null ?
+        <ComponentListItem 
+          key={component.id + seenIds[component.id]} 
+          component={component} 
+          deleteComponent={deleteComponent ? (): void => deleteComponent(component.id) : undefined }
+          removeComponent={removeComponent ? (): void => removeComponent(component.id) : undefined }
+          onClick={onClick ? (): void => 
+            onClick(component.id, component.id === props.activeId) : undefined 
+          }
+          openTab={openTab}
+          active={component.id === props.activeId}
+        /> : <ListGroup.Item>Empty</ListGroup.Item>
+    }
+  })}
   </ListGroup>
 }

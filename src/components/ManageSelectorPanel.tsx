@@ -5,6 +5,7 @@ import { OSDLiveEvent } from '../reducers/shared';
 import { OSDComponent } from '../OSDComponent';
 import { TabbedPanel, TabContainer } from './TabbedPanel'
 import { EditPane } from '../reducers/editpanel';
+import { Button, Card } from 'react-bootstrap';
 
 interface ManageSelectorPanelProps {
   events: { [key: string]: OSDLiveEvent };
@@ -14,9 +15,12 @@ interface ManageSelectorPanelProps {
 }
 
 export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Element {
-  return <TabbedPanel>
+  return <TabbedPanel variant="pills">
     <TabContainer name="Event" eventKey="events">
       <EventList events={Object.values(props.events)} openTab={props.openTab} />
+      <Card.Footer className="p-2"><Button>
+        <span className="material-icons material-icons-raised">add</span> New event
+      </Button></Card.Footer>
     </TabContainer>
     <TabContainer name="Components" eventKey="components">
       <ComponentList 
@@ -24,6 +28,10 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
         deleteComponent={props.deleteComponent}
         openTab={props.openTab}
       />
+      <Card.Footer className="p-2"><Button>
+        <span className="material-icons material-icons-raised">add</span> New component
+      </Button>
+      </Card.Footer>
     </TabContainer>
   </TabbedPanel>
 }

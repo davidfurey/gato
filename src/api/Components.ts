@@ -14,8 +14,9 @@ export type Message = Create | Delete | CreateLowerThird | Update
 
 export type Pattern<T> = GenericPattern<TypeMap<MessageType, Message>, T>
 
-interface Create extends BaseMessage<MessageType.Create> {
+export interface Create extends BaseMessage<MessageType.Create> {
   id: Uuid;
+  component: OSDComponent;
 }
 
 export interface Update extends BaseMessage<MessageType.Update> {

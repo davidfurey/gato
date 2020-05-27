@@ -1,6 +1,7 @@
 import { curry } from '../../api/FunctionalHelpers'
 import { SharedState, ComponentList, OSDComponentsGroup, Display } from '../shared'
 import * as Component from '../../api/Components'
+import * as LowerThirds from '../../components/OSDComponents/LowerThirds'
 
 function createLowerThird(action: Component.CreateLowerThird, state: SharedState): SharedState {
   return {
@@ -9,6 +10,35 @@ function createLowerThird(action: Component.CreateLowerThird, state: SharedState
       ...state.components,
       [action.component.id]: action.component
     }
+  }
+}
+
+function create(action: Component.Create, state: SharedState): SharedState {
+  console.log("Creating new component")
+  console.log(action)
+  if (action.component.type === LowerThirds.LowerThirdsType) {
+    console.log("Creating new component 2")
+    const component = {
+      ...LowerThirds.template,
+      name: action.component.name,
+      id: action.component.id
+    }
+    console.log({
+      components: { 
+        ...state.components,
+        [action.component.id]: component
+      }
+    })
+    return {
+      ...state,
+      components: { 
+        ...state.components,
+        [action.component.id]: component
+      }
+    }
+  } else {
+    console.warn("Unsupported component type")
+    return state
   }
 }
 
@@ -84,13 +114,9 @@ function deleteComponent(action: Component.Delete, state: SharedState): SharedSt
   }
 }
 
-const notImplemented = (_: Component.Message) => (state: SharedState): SharedState => {
-  return state
-}
-
 const reducer: Component.Pattern<(s: SharedState) => SharedState> = {
   [Component.MessageType.CreateLowerThird]: curry(createLowerThird),
-  [Component.MessageType.Create]: notImplemented,
+  [Component.MessageType.Create]: curry(create),
   [Component.MessageType.Delete]: curry(deleteComponent),
   [Component.MessageType.Update]: curry(updateComponent),
 }

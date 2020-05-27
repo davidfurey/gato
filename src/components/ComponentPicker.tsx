@@ -1,83 +1,149 @@
-import React, { useState, ReactNode, CSSProperties } from 'react';
+import React, { useState, useRef } from 'react';
 import { OSDComponent } from "../OSDComponent";
-import { Dropdown, FormControl, Button } from 'react-bootstrap';
-
-// todo: component that lets you select an existing shared component or create a new component 
-// (including selecting the component type)
+import { Button, Popover, Overlay, Form, Col, Container, Row, PopoverTitle, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
+import { ComponentList } from './ComponentList';
+import { LowerThirdsType } from './OSDComponents/LowerThirds';
 
 interface ComponentPickerProps {
   components: OSDComponent[];
-}
-
-type Props = { 
-  children: ReactNode;
-//  onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-}
-
-const CustomToggle = React.forwardRef<HTMLButtonElement & Button, Props>(
-  function CustomToggleRef(props: Props, ref) {
-  return <Button
-    ref={ref}
-    onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
-       e.preventDefault();
-      props.onClick(e);
-    }}
-  >
-    {props.children}
-    &#x25bc;
-  </Button>
-});
-
-interface MenuProps { 
-  children: ReactNode;
-  style?: CSSProperties | undefined;
+  existingComponent: (id: string) => void;
+  newComponent: (name: string, type: string) => void;
   className?: string;
-  'aria-labelledby'?: string;
 }
 
-const CustomMenu = React.forwardRef<HTMLDivElement, MenuProps>(
-  function CustomMenuRe(props: MenuProps, ref) {
-    const [value, setValue] = useState('');
+function popover(
+  components: OSDComponent[], 
+  close: () => void,
+  existingComponent: (id: string) => void,
+  newComponent: (name: string, type: string) => void
+): JSX.Element {
+  const [value, setValue] = useState("existing");
+  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
+  const [type, setType] = useState(LowerThirdsType);
+  const [name, setName] = useState("");
 
-    return (
-      <div
-        ref={ref}
-        style={props.style}
-        className={props.className}
-        aria-labelledby={props['aria-labelledby']}
-      >
-        <FormControl
-          autoFocus
-          className="mx-3 my-2 w-auto"
-          placeholder="Type to filter..."
-          onChange={(e) => setValue(e.target.value)}
-          value={value}
-        />
-        <ul className="list-unstyled">
-          {React.Children.toArray(props.children).filter(
-            (child) =>
-              !value || 
-              (child as React.ReactElement).props.children.toLowerCase().startsWith(value),
-          )}
-        </ul>
-      </div>
-    );
-  }
-);
+  const handleChange = (val: string): void => setValue(val);
+
+  return <Popover id="popover-basic" className="bg-secondary">
+    <PopoverTitle className="text-center">
+    <ToggleButtonGroup size="sm" type="radio" name="options" value={value} onChange={handleChange}>
+    <ToggleButton type="radio" name="radio" defaultChecked value="existing" variant="primary">
+      Existing
+    </ToggleButton>
+    <ToggleButton type="radio" name="radio" value="new" variant="primary">
+      New
+    </ToggleButton>
+    </ToggleButtonGroup>
+    </PopoverTitle>
+    { value === "existing" ?
+      <div id="page-content-wrapper" style={{height: "15rem", width: "15rem"}} className="p-0 d-flex flex-column overflow-hidden">
+        <Container className="container-fluid d-flex flex-column overflow-auto flex-fill p-0">
+            <Container className="bg-dark flex-fill flex-column d-flex">
+                <div className="section-div flex-grow-1 flex-column d-flex">
+                    <Row className="flex-fill d-flex">
+                        <Col className="overflow-auto flex-shrink-1 position-relative p-0">
+                            <div className="position-absolute w-100">
+  <ComponentList 
+    components={components} 
+    onClick={
+      (id: string, active: boolean): void => 
+        active ? setSelectedComponent(null) : setSelectedComponent(id)
+    }
+    activeId={selectedComponent !== null ? selectedComponent : undefined}
+  />
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
+            </Container>
+            <Container className="flex-shrink-1 pt-2 pb-2">
+                <Row>
+                    <Col className="text-center">
+                    <Button 
+                      size="sm" 
+                      variant="primary" 
+                      className="mr-2" 
+                      disabled={selectedComponent == null}
+                      onClick={(): void => {
+                          if (selectedComponent !== null) {
+                            existingComponent(selectedComponent)
+                            close()
+                          }
+                        }
+                      }
+                    >
+                      Add
+                    </Button>
+                    <Button size="sm" variant="secondary" onClick={close}>
+                      Cancel
+                    </Button>
+                    </Col>
+                </Row>
+            </Container>
+        </Container>
+    </div>
+    : null }
+    { value === "new" ?
+    <Container style={{height: "15rem", width: "15rem"}} className="container-fluid d-flex flex-column overflow-auto flex-fill p-0">
+      <Container className="flex-fill flex-column d-flex bg-dark p-3">
+        <Form.Group>
+        <Form.Row>
+            <Form.Label lg={3} column="sm">Name</Form.Label>
+            <Col>
+            <Form.Control size="sm" type="text" onChange={(event): void => setName(event.target.value)} />
+            </Col>
+        </Form.Row>
+        <Form.Row>
+            <Form.Label lg={3} column="sm">Type</Form.Label>
+            <Col>
+            <Form.Control as="select" onChange={(event): void => setType(event.target.value)}>
+              <option value={LowerThirdsType}>Banner</option>
+              <option>Slide</option>
+            </Form.Control>
+            </Col>
+        </Form.Row>
+        </Form.Group>
+      </Container>
+      <Container className="flex-shrink-1 pt-2 pb-2">
+          <Row>
+              <Col className="text-center">
+              <Button 
+                size="sm" 
+                variant="success" 
+                className="mr-2"
+                disabled={name === ""}
+                onClick={(): void => { newComponent(name, type); close() }}
+              >
+                Create
+              </Button>
+              <Button size="sm" variant="secondary" onClick={close}>
+                Cancel
+              </Button>
+              </Col>
+          </Row>
+      </Container>
+    </Container>
+    : null }
+  </Popover>
+}
 
 export function ComponentPicker(props: ComponentPickerProps): JSX.Element {
-  return <Dropdown>
-    < .Toggle 
-      as={CustomToggle} 
-      id="dropdown-custom-components"
-    >
-      Custom toggle
-    </Dropdown.Toggle>
-    <Dropdown.Menu as={CustomMenu}>
-  {props.components.map((component) => 
-    <Dropdown.Item 
-      key={component.id} 
-    >{component.name}</Dropdown.Item> )}
-    </Dropdown.Menu>
-  </Dropdown>
+  const [show, setShow] = useState(false);
+  const target = useRef(null);
+  const close = (): void => {
+    setShow(false)
+  }
+  return <div>
+    {/* <OverlayTrigger trigger="click" overlay={popover(props.components)}> */}
+    <Button ref={target} onClick={(): void => setShow(!show)} className={props.className}>
+        <span className="material-icons material-icons-raised">add</span> Add component
+    </Button>
+    <Overlay target={target.current} show={show}>{popover(
+      props.components, 
+      close,
+      props.existingComponent,
+      props.newComponent
+    )}</Overlay>
+  {/* </OverlayTrigger> */}
+  </div>
 }

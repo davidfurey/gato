@@ -18,6 +18,7 @@ import { ClientStatus } from './api/Responses';
 import * as ControlAppActions from './actions/controlapp';
 import * as Connectivity from  './actions/connectivity';
 import * as RequestMessage from './api/Requests'
+import { PageNav } from './components/PageNav';
 
 interface ControlProps {
   displays: Display[];
@@ -82,7 +83,7 @@ export class Control extends Component<ControlProps> {
     const liveEvent = liveDisplay !== undefined ? 
       this.props.events[liveDisplay.eventId] : undefined
     return (
-      <div className="container mt-5">
+      <div className="container mt-4">
         <div className="row">
           <div className="col col-sm-auto" style={{ width: '25rem' }}>
             { liveEvent ? <PickedComponentsPanelContainer eventId={liveEvent.id} pickedComponents={liveEvent.lists.find((l) => l.listType === "picked")?.components || []} components={liveEvent.components.flatMap(this.lookupComponentById)} displays={this.props.displays}/> : null }
@@ -127,6 +128,7 @@ const ControlContainer = connect(mapStateToProps)(Control)
 
 ReactDOM.render(
   <Provider store={store}>
+    <PageNav page="control" />
     <ControlContainer />
   </Provider>,
   document.getElementById("root")
