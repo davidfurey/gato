@@ -24,7 +24,7 @@ const serverConfig = env => {
   const isProd = env && env.production;
   const isWatch = env && env.watch;
 
-  const plugins = []
+  const plugins = [new MiniCssExtractPlugin()]
 
   if (isWatch) {
     plugins.push(new LaunchServerPlugin());
@@ -70,7 +70,11 @@ const serverConfig = env => {
               loader: 'ts-loader',
             }
           ],
-        }
+        },
+        {
+          test: /\.css$/i,
+          use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        },
       ]
     },
   }
