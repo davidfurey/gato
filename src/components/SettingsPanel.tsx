@@ -1,5 +1,5 @@
-import React from 'react';
-import { SplitButton, Button, Form, ListGroup, ListGroupItem } from 'react-bootstrap'
+import React, { useState } from 'react';
+import { Row, ButtonToolbar, Card, Modal, SplitButton, Button, Form, ListGroup, ListGroupItem, Container, Col, ButtonGroup } from 'react-bootstrap'
 import { OSDLiveEvent } from '../reducers/shared'
 import { CollapsablePanel } from './CollapsablePanel';
 
@@ -10,36 +10,52 @@ interface SettingsPanelProps {
 }
 
 export function SettingsPanel(props: SettingsPanelProps): JSX.Element {
+  const [loadEventId, setLoadEventId] = useState(props.event?.id || ""); // todo
+  const [showLoadEvent, setShowLoadEvent] = useState(false);
+
+  const handleCloseLoadEvent = (): void => setShowLoadEvent(false)
+  const handleShowLoadEvent = (): void => {
+    setLoadEventId(props.event?.id || "")
+    setShowLoadEvent(true)
+  }
+
   return (
-    <CollapsablePanel header="Settings" open={false}>
+    <CollapsablePanel header="Settings" open={true}>
       <ListGroup>
-        <ListGroupItem>
+        <ListGroupItem className="d-flex justify-content-between align-items-center">
           {/* should probably be a regular select with a load button */}
-          <SplitButton
-            size="sm"
-            variant="dark"
-            id="dropdown-basic-button" 
-            title={props.event?.name || "(empty)"} 
-          >
-            <Form>{/* horizontal? */}
+          {/* {setLoadEventId(event.target.value)} */}
+          {/* (): void => loadEventId !== null ? props.setEvent(loadEventId) : undefined */}
+          <Row><Col sm="auto">Event:</Col><Col>
+          {props.event?.name || "(empty)"}</Col></Row>
+          <Button size="sm" variant="primary" onClick={handleShowLoadEvent}>Load</Button>
+          <Modal show={showLoadEvent} onHide={handleCloseLoadEvent} animation={false}>
+            <Modal.Header closeButton>
+              <Modal.Title>Load event</Modal.Title>
+            </Modal.Header>
+              <Modal.Body>
               <Form.Group>
-                <Form.Label>Events</Form.Label>
-                <Form.Control as="select">
-{/* {props.events.map((component, i) => <Dropdown.Item 
-key={component.id} onClick={() => props.setEvent(component.id)}>{component.name}</Dropdown.Item> 
-)} */}
+                <Form.Control as="select" value={loadEventId} 
+                  onChange={(event): void => setLoadEventId(event.target.value)}>
                 {props.events.map((component) => 
                   <option key={component.id} value={component.id}>{component.name}</option> 
                 )}
                 </Form.Control>
               </Form.Group>
-              <Button variant="warning" type="submit">Load</Button>
-              <Button variant="info" type="submit" onClick={(): void => {
-                // do nothing
-              }}>Cancel</Button>
-            </Form>
-          </SplitButton>
-        </ListGroupItem>
+              </Modal.Body>
+            <Modal.Footer>
+              <Button variant="danger" onClick={(): void => { 
+                props.setEvent(loadEventId)
+                handleCloseLoadEvent()
+              }}>
+                Load
+              </Button>
+              <Button variant="primary" onClick={handleCloseLoadEvent}>
+                Cancel
+              </Button>
+            </Modal.Footer>
+          </Modal>
+      </ListGroupItem>
       </ListGroup>
     </CollapsablePanel>
   )

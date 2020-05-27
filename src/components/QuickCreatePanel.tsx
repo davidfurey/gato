@@ -4,8 +4,9 @@ import { Card, Form, Button, Col } from 'react-bootstrap'
 import { CollapsablePanel } from './CollapsablePanel';
 
 interface QuickCreatePanelProps {
-  show: (title: string, subtitle: string, display: Display) => undefined;
+  show: (title: string, subtitle: string, display: Display, eventId: string) => undefined;
   display: Display;
+  eventId: string;
 }
 
 interface QuickCreatePanelState {
@@ -25,7 +26,7 @@ export class QuickCreatePanel extends Component<QuickCreatePanelProps, QuickCrea
   }
 
   create = (): void => {
-    this.props.show(this.state.title, this.state.subtitle, this.props.display)
+    this.props.show(this.state.title, this.state.subtitle, this.props.display, this.props.eventId)
   }
 
   titleChanged = (event: React.ChangeEvent<HTMLInputElement>): void => {

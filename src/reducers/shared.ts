@@ -16,6 +16,7 @@ export interface SharedState {
   groups: OSDComponentsGroup[];
   events: { [key: string]: OSDLiveEvent };
   displays: Display[];
+  eventId: uuidv4;
 }
 
 export interface OSDComponentsGroup {
@@ -53,7 +54,6 @@ export interface OnScreenComponent {
 export type ScreenType = "OnAir" | "Preview" 
 
 export interface Display {
-  eventId: uuidv4;
   name: string;
   id: uuidv4;
   resolution: Resolution;

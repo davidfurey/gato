@@ -15,7 +15,7 @@ import { AppDispatch } from '../control'
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
   return {
-    show: (title: string, subtitle: string, display: Display): void => {
+    show: (title: string, subtitle: string, display: Display, eventId: string): void => {
       const id = uuid();
       const action: ComponentMessage.CreateLowerThird = {
         id,
@@ -30,7 +30,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
       }
       dispatch(send(action))
       const action2: EventMessage.AddComponent = {
-        id: display.eventId,
+        id: eventId,
         componentId: id,
         type: EventMessage.MessageType.AddComponent,
       }

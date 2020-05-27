@@ -27,11 +27,11 @@ const initialEvent: OSDLiveEvent = {
 
 const initialManageState: ManageAppState = {
   shared: {
+    eventId: initialEvent.id,
     components: {},
     groups: [],
     events: { [initialEvent.id]: initialEvent },
     displays: [{
-      eventId: initialEvent.id,
       type: "OnAir",
       name: "live",
       id: uuid(),

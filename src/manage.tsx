@@ -9,7 +9,6 @@ import { createStore, applyMiddleware, Store } from 'redux'
 import { ManageAppState, createReducer } from './reducers/manageapp'
 import reduxWebsocket from '@giantmachines/redux-websocket';
 import { connect as websocketConnect, send } from '@giantmachines/redux-websocket';
-import { ConnectivityPanel } from './components/ConnectivityPanel';
 import * as ManageAppActions from './actions/manageapp';
 import { uuid } from 'uuidv4';
 import { ManageSelectorPanel } from './components/ManageSelectorPanel';
@@ -22,6 +21,7 @@ import * as EventMessage from './api/Events'
 import { EditPanelState, EditPane } from './reducers/editpanel';
 import { Col, Container, Row } from 'react-bootstrap';
 import { PageNav } from './components/PageNav';
+import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';
 
 interface ManageProps {
   displays: Display[];
@@ -71,7 +71,6 @@ export class Manage extends Component<ManageProps> {
   }
 
   privateDisplay: Display = {
-    eventId: "test",
     name: "local",
     id: uuid(),
     resolution: {
@@ -94,7 +93,7 @@ export class Manage extends Component<ManageProps> {
               openTab={this.props.openTab}
             /> 
             {/* todo: should only be shared components */}
-            <ConnectedConnectivityPanel /> 
+            <ConnectivityPanelContainer /> 
           </Col>
           <Col xl={true}>
             {/* <ViewPanel 
@@ -129,14 +128,6 @@ const mapStateToProps = (state: ManageAppState) => {
     displays: state.shared.displays,
     events: state.shared.events,
     editPanel: state.editPanel
-  }
-}
-
-const mapConnectivityStateToProps = (state: ManageAppState) => {
-  return {
-    serverName: state.connectivity.serverName || "streamer-1.yellowbill.co.uk",
-    connected: state.connectivity.connected,
-    clients: state.connectivity.clients
   }
 }
 
@@ -215,7 +206,6 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
   }
 }
 
-const ConnectedConnectivityPanel = connect(mapConnectivityStateToProps)(ConnectivityPanel)
 const ManageContainer = connect(mapStateToProps, mapDispatchToProps)(Manage)
 
 ReactDOM.render(
@@ -225,6 +215,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
-
-
-//todo: apply same connectivity panel trick to the other apps (control and viewer)

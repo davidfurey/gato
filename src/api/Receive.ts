@@ -10,7 +10,6 @@ function create(msg: Display.Create, state: State): State {
   return {
     ...state,
     displays: state.displays.concat({
-      eventId: msg.eventId,
       name: msg.name,
       id: msg.id,
       resolution: msg.resolution,

@@ -16,11 +16,11 @@ const initialEvent: OSDLiveEvent = {
 
 const initialState: ControlAppState = {
   shared: {
+    eventId: initialEvent.id,
     components: {},
     groups: [],
     events: { [initialEvent.id]: initialEvent },
     displays: [{
-      eventId: initialEvent.id,
       type: "OnAir",
       name: "live",
       id: uuid(),

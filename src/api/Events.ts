@@ -5,11 +5,12 @@ export enum MessageType {
   Create = 'Event/Create',
   Delete = 'Event/Delete',
   Update = 'Event/Update',
+  Load = 'Event/Load',
   AddComponent = 'Event/AddComponent',
   RemoveComponent = 'Event/RemoveComponent',
 }
 
-export type Message = Create | Delete | Update | AddComponent | RemoveComponent
+export type Message = Create | Delete | Update | AddComponent | RemoveComponent | Load
 
 export type Pattern<T> = GenericPattern<TypeMap<MessageType, Message>, T>
 
@@ -35,6 +36,10 @@ export interface AddComponent extends BaseMessage<MessageType.AddComponent> {
 export interface RemoveComponent extends BaseMessage<MessageType.RemoveComponent> {
   id: Uuid;
   componentId: Uuid;
+}
+
+export interface Load extends BaseMessage<MessageType.Load> {
+  id: Uuid;
 }
 
 export const isEventMessage = isTypeGroup<BaseMessageType, Message>("Event/")

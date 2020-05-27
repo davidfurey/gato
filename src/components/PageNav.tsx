@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navbar, Nav } from 'react-bootstrap'
 
-export function PageNav(props: { page: string }): JSX.Element {
+export function PageNav(props: { page: string; event?: string }): JSX.Element {
   return <Navbar bg="primary" variant="dark" expand="lg">
     <Navbar.Brand href="manage.html">On screen graphics</Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -10,11 +10,7 @@ export function PageNav(props: { page: string }): JSX.Element {
         <Nav.Link active={props.page === "manage"} href="manage.html">Manage</Nav.Link>
         <Nav.Link active={props.page === "control"} href="control.html">Control</Nav.Link>
       </Nav>
-    { props.page === "control" ?
-    <Navbar.Text>
-      7th Sunday of Easter
-    </Navbar.Text> : null
-    }
+    { props.event ? <Navbar.Text>{ props.event }</Navbar.Text> : null }
     </Navbar.Collapse>
     </Navbar>
 }

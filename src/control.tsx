@@ -12,13 +12,13 @@ import { createStore, applyMiddleware, Store } from 'redux'
 import { ControlAppState, createReducer } from './reducers/controlapp'
 import reduxWebsocket from '@giantmachines/redux-websocket';
 import { connect as websocketConnect, send } from '@giantmachines/redux-websocket';
-import { ConnectivityPanel } from './components/ConnectivityPanel';
-import { SettingsPanel } from './components/SettingsPanel';
 import { ClientStatus } from './api/Responses';
 import * as ControlAppActions from './actions/controlapp';
 import * as Connectivity from  './actions/connectivity';
 import * as RequestMessage from './api/Requests'
 import { PageNav } from './components/PageNav';
+import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';
+import { SettingsPanelContainer } from './containers/SettingsPanelContainer';
 
 interface ControlProps {
   displays: Display[];
@@ -29,6 +29,7 @@ interface ControlProps {
     connected: boolean;
     clients: ClientStatus[];
   };
+  eventId: string;
 }
 
 let maybeStore: Store<ControlAppState, ControlAppActions.Action> | undefined = undefined
@@ -80,21 +81,23 @@ export class Control extends Component<ControlProps> {
 
   render(): JSX.Element {
     const liveDisplay = this.props.displays.find((d) => d.name === "live")
-    const liveEvent = liveDisplay !== undefined ? 
-      this.props.events[liveDisplay.eventId] : undefined
+    const liveEvent = this.props.events[this.props.eventId]
     return (
       <div className="container mt-4">
         <div className="row">
           <div className="col col-sm-auto" style={{ width: '25rem' }}>
-            { liveEvent ? <PickedComponentsPanelContainer eventId={liveEvent.id} pickedComponents={liveEvent.lists.find((l) => l.listType === "picked")?.components || []} components={liveEvent.components.flatMap(this.lookupComponentById)} displays={this.props.displays}/> : null }
-            { liveDisplay ? <QuickCreatePanelContainer display={liveDisplay}/> : null }
-            <SettingsPanel 
-              events={Object.values(this.props.events)} 
-              event={liveEvent} 
-              setEvent={(): void => {
-              // do nothing
-            }} />
-            <ConnectivityPanel serverName={this.props.connectivity.serverName || "streamer-1.yellowbill.co.uk"} connected={this.props.connectivity.connected} clients={this.props.connectivity.clients} />
+            { liveEvent ? <PickedComponentsPanelContainer 
+              eventId={liveEvent.id} 
+              pickedComponents={liveEvent.lists.find((l) => l.listType === "picked")?.components || []} 
+              components={liveEvent.components.flatMap(this.lookupComponentById)} 
+              displays={this.props.displays}/> : null 
+              }
+            { liveDisplay ? <QuickCreatePanelContainer 
+              display={liveDisplay} 
+              eventId={this.props.eventId} 
+            /> : null }
+            <SettingsPanelContainer />
+            <ConnectivityPanelContainer /> 
           </div>
           <div className="col-md-auto">
             {this.props.displays.map((display =>
@@ -120,15 +123,28 @@ const mapStateToProps = (state: ControlAppState): ControlProps => {
     components: state.shared.components,
     displays: state.shared.displays,
     events: state.shared.events,
-    connectivity: state.connectivity
+    connectivity: state.connectivity,
+    eventId: state.shared.eventId
   }
 }
 
 const ControlContainer = connect(mapStateToProps)(Control)
 
+const mapStateToNavProps = 
+  (state: ControlAppState, ownProps: { page: string }): { event?: string; page: string } => {
+  const event = state.shared.events[state.shared.eventId]
+  return {
+    event: event?.name,
+    page: ownProps.page
+  }
+}
+
+
+const ConnectedNav = connect(mapStateToNavProps)(PageNav)
+
 ReactDOM.render(
   <Provider store={store}>
-    <PageNav page="control" />
+    <ConnectedNav page="control" />
     <ControlContainer />
   </Provider>,
   document.getElementById("root")

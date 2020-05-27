@@ -4,31 +4,27 @@ import * as Event from '../../api/Events'
 import { removeComponentFromList } from './component'
 
 function updateDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
-  if (state.displays.some((d) => d.eventId === event.id)) {
+  if (state.eventId === event.id) {
     const displays = state.displays.map((display) => {
-      if (display.eventId === event.id) {
-        const filteredComponets = display.onScreenComponents.filter(
-          (c) => event.components.includes(c.id)
-        )
-        const missingIds = event.components.filter(
-          (c) => !display.onScreenComponents.some((oc) => oc.id === c)
-        )
-        const missingComponents = missingIds.map((c): OnScreenComponent => {
-          return {
-            id: c,
-            state: "hidden",
-            transitionInTimeMs: 1000,
-            transitionOutTimeMs: 1000,
-            stateStartTimeMs: Date.now()
-          }
-        })
-        const onScreenComponents = filteredComponets.concat(missingComponents)
+      const filteredComponets = display.onScreenComponents.filter(
+        (c) => event.components.includes(c.id)
+      )
+      const missingIds = event.components.filter(
+        (c) => !display.onScreenComponents.some((oc) => oc.id === c)
+      )
+      const missingComponents = missingIds.map((c): OnScreenComponent => {
         return {
-          ...display,
-          onScreenComponents
+          id: c,
+          state: "hidden",
+          transitionInTimeMs: 1000,
+          transitionOutTimeMs: 1000,
+          stateStartTimeMs: Date.now()
         }
-      } else {
-        return display
+      })
+      const onScreenComponents = filteredComponets.concat(missingComponents)
+      return {
+        ...display,
+        onScreenComponents
       }
     })
     return {
@@ -78,6 +74,18 @@ function RemoveComponent(action: Event.RemoveComponent, state: SharedState): Sha
   return state
 }
 
+function Load(action: Event.Load, state: SharedState): SharedState {
+  const event = state.events[action.id]
+  if (event) {
+    return {
+      ...state,
+      eventId: action.id,
+    }
+  }
+  console.warn(`Attempted to load mising event ${action.id}`)
+  return state
+}
+
 const notImplemented = (_: Event.Message) => (state: SharedState): SharedState => {
   return state
 }
@@ -88,6 +96,7 @@ const reducer: Event.Pattern<(s: SharedState) => SharedState> = {
   [Event.MessageType.Delete]: notImplemented,
   [Event.MessageType.RemoveComponent]: curry(RemoveComponent),
   [Event.MessageType.Update]: notImplemented,
+  [Event.MessageType.Load]: curry(Load)
 }
 
 export function reduce(message: Event.Message, state: SharedState): SharedState {

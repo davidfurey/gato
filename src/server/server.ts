@@ -47,8 +47,8 @@ let state: SharedState = {
   components: {},
   groups: [],
   events: { [initialEvent.id]: initialEvent },
+  eventId: initialEvent.id,
   displays: [{
-    eventId: initialEvent.id,
     type: "OnAir",
     name: "live",
     id: uuid(),
@@ -58,7 +58,6 @@ let state: SharedState = {
     },
     onScreenComponents: [],
   },{
-    eventId: initialEvent.id,
     type: "Preview",
     name: "preview",
     id: uuid(),
@@ -226,6 +225,7 @@ function loadStateFromDisk(): void {
     [loadComponents(), loadDisplays(), loadEvents(), loadGroups()]
   ).then(([components, displays, events, groups]) => {
     state = {
+      eventId: Object.values(events)[0].id, // todo: should persist this to disk!
       components,
       displays,
       events,
