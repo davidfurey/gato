@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
-import { ViewPanel } from './components/ViewPanel';
 import { OSDComponent } from './OSDComponent';
 import { Display, OSDLiveEvent } from './reducers/shared'
 import { connect } from 'react-redux'
@@ -11,7 +10,6 @@ import { ManageAppState, createReducer } from './reducers/manageapp'
 import reduxWebsocket from '@giantmachines/redux-websocket';
 import { connect as websocketConnect, send } from '@giantmachines/redux-websocket';
 import { ConnectivityPanel } from './components/ConnectivityPanel';
-import { ClientStatus } from './api/Responses';
 import * as ManageAppActions from './actions/manageapp';
 import { uuid } from 'uuidv4';
 import { ManageSelectorPanel } from './components/ManageSelectorPanel';
@@ -22,7 +20,7 @@ import * as RequestMessage from './api/Requests'
 import * as ComponentMessage from './api/Components'
 import * as EventMessage from './api/Events'
 import { EditPanelState, EditPane } from './reducers/editpanel';
-import { Col, Container, Row, Navbar, Nav } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { PageNav } from './components/PageNav';
 
 interface ManageProps {
