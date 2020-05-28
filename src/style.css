@@ -118,6 +118,10 @@ body {
   border-top-color: var(--secondary);
 }
 
+.bs-popover-bottom>.arrow::after {
+  border-bottom-color: var(--secondary);
+}
+
 .nav-pills .nav-item:not(:last-child) .custom-nav-link {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;

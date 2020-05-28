@@ -124,7 +124,7 @@ function popover(
   const handleChange = (val: string): void => setValue(val);
 
   return <Popover id="popover-basic" className="bg-secondary">
-    <PopoverTitle className="text-center">
+    <PopoverTitle className="text-center bg-primary">
     { components !== undefined && existingComponent !== undefined ?
       <ToggleButtonGroup size="sm" type="radio" name="options" value={value} onChange={handleChange}> {/* todo: switch to using tab panel pills variant? */}
       <ToggleButton type="radio" name="radio" defaultChecked value="existing" variant="primary">
@@ -152,7 +152,7 @@ export function ComponentPicker(props: ComponentPickerProps): JSX.Element {
         <span className="material-icons material-icons-raised">add</span> 
         { newOnly ? "New component" : "Add component" }
     </Button>
-    <Overlay target={target.current} show={show}>{popover(
+    <Overlay placement="right" target={target.current} show={show}>{popover(
       close,
       props.newComponent,
       props.existingComponent,
