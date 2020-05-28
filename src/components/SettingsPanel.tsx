@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, ButtonToolbar, Card, Modal, SplitButton, Button, Form, ListGroup, ListGroupItem, Container, Col, ButtonGroup } from 'react-bootstrap'
+import { Row, Modal, Button, Form, ListGroup, ListGroupItem, Col } from 'react-bootstrap'
 import { OSDLiveEvent } from '../reducers/shared'
 import { CollapsablePanel } from './CollapsablePanel';
 
@@ -20,7 +20,7 @@ export function SettingsPanel(props: SettingsPanelProps): JSX.Element {
   }
 
   return (
-    <CollapsablePanel header="Settings" open={true}>
+    <CollapsablePanel header="Settings" open={false}>
       <ListGroup>
         <ListGroupItem className="d-flex justify-content-between align-items-center">
           {/* should probably be a regular select with a load button */}

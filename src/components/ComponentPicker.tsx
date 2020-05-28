@@ -5,13 +5,13 @@ import { ComponentList } from './ComponentList';
 import { LowerThirdsType } from './OSDComponents/LowerThirds';
 
 interface ComponentPickerProps {
-  components: OSDComponent[];
-  existingComponent: (id: string) => void;
+  components?: OSDComponent[];
+  existingComponent?: (id: string) => void;
   newComponent: (name: string, type: string) => void;
   className?: string;
 }
 
-function LoadComponent(props: { 
+export function LoadComponent(props: { 
   components: OSDComponent[];
   existingComponent: (id: string) => void;
   close: () => void;
@@ -115,27 +115,28 @@ function CreateComponent(props: {
 }
 
 function popover(
-  components: OSDComponent[], 
   close: () => void,
-  existingComponent: (id: string) => void,
-  newComponent: (name: string, type: string) => void
+  newComponent: (name: string, type: string) => void,
+  existingComponent?: (id: string) => void,
+  components?: OSDComponent[], 
 ): JSX.Element {
   const [value, setValue] = useState("existing");
   const handleChange = (val: string): void => setValue(val);
 
   return <Popover id="popover-basic" className="bg-secondary">
     <PopoverTitle className="text-center">
-    <ToggleButtonGroup size="sm" type="radio" name="options" value={value} onChange={handleChange}>
-    <ToggleButton type="radio" name="radio" defaultChecked value="existing" variant="primary">
-      Existing
-    </ToggleButton>
-    <ToggleButton type="radio" name="radio" value="new" variant="primary">
-      New
-    </ToggleButton>
-    </ToggleButtonGroup>
+    { components !== undefined && existingComponent !== undefined ?
+      <ToggleButtonGroup size="sm" type="radio" name="options" value={value} onChange={handleChange}> {/* todo: switch to using tab panel pills variant? */}
+      <ToggleButton type="radio" name="radio" defaultChecked value="existing" variant="primary">
+        Existing
+      </ToggleButton>
+      <ToggleButton type="radio" name="radio" value="new" variant="primary">
+        New
+      </ToggleButton>
+      </ToggleButtonGroup> : "Component" }
     </PopoverTitle>
-    { value === "existing" ? <LoadComponent components={components} close={close} existingComponent={existingComponent} /> : null }
-    { value === "new" ? <CreateComponent newComponent={newComponent} close={close} /> : null }
+    { value === "existing" && components && existingComponent ? <LoadComponent components={components} close={close} existingComponent={existingComponent} /> : null }
+    { value === "new" || components === undefined || existingComponent === undefined ? <CreateComponent newComponent={newComponent} close={close} /> : null }
   </Popover>
 }
 
@@ -145,17 +146,17 @@ export function ComponentPicker(props: ComponentPickerProps): JSX.Element {
   const close = (): void => {
     setShow(false)
   }
+  const newOnly = props.existingComponent === undefined || props.components === undefined
   return <div>
-    {/* <OverlayTrigger trigger="click" overlay={popover(props.components)}> */}
     <Button ref={target} onClick={(): void => setShow(!show)} className={props.className}>
-        <span className="material-icons material-icons-raised">add</span> Add component
+        <span className="material-icons material-icons-raised">add</span> 
+        { newOnly ? "New component" : "Add component" }
     </Button>
     <Overlay target={target.current} show={show}>{popover(
-      props.components, 
       close,
+      props.newComponent,
       props.existingComponent,
-      props.newComponent
+      props.components
     )}</Overlay>
-  {/* </OverlayTrigger> */}
   </div>
 }
