@@ -19,7 +19,7 @@ interface EditPanelProps {
   updateComponent: <T extends OSDComponent>(component: T) => void;
   removeComponent: (eventId: string, componentId: string) => void;
   addComponent: (eventId: string, componentId: string) => void;
-  newComponent: (eventId: string, componentId: string, name: string, type: string) => void;
+  newComponent: (componentId: string, name: string, type: string) => void;
 }
 
 interface ComponentEditPaneProps {
@@ -34,7 +34,7 @@ interface EventEditPaneProps {
   openTab: (pane: EditPanelReducer.EditPane) => void;
   removeComponent: (eventId: string, componentId: string) => void;
   addComponent: (eventId: string, componentId: string) => void;
-  newComponent: (eventId: string, componentId: string, name: string, type: string) => void;
+  newComponent: (componentId: string, name: string, type: string) => void;
   components: { [key: string]: OSDComponent };
 }
 
@@ -141,7 +141,8 @@ function EventEditPane(props: EventEditPaneProps): JSX.Element {
         existingComponent={(componentId): void => props.addComponent(props.event.id, componentId)} 
         newComponent={(name: string, type: string): void => {
           const componentId = uuid()
-          props.newComponent(props.event.id, componentId, name, type)
+          props.newComponent(componentId, name, type)
+          props.addComponent(props.event.id, componentId)
           // todo: opening tab doesn't work because it is fairly sync whereas create goes via server
           // props.openTab({
           //   type: EditPanelReducer.EditPaneType.Component,
@@ -180,7 +181,7 @@ export function createPane(
   openTab: (pane: EditPanelReducer.EditPane) => void,
   removeComponent: (eventId: string, componentId: string) => void,
   addComponent: (eventId: string, componentId: string) => void,
-  newComponent: (eventId: string, componentId: string, name: string, type: string) => void
+  newComponent: (componentId: string, name: string, type: string) => void
 ): JSX.Element {
   const pattern: EditPanelReducer.Pattern<JSX.Element> = {
 // eslint-disable-next-line react/display-name

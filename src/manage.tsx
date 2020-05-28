@@ -35,7 +35,7 @@ interface ManageProps {
   updateComponent: <T extends OSDComponent>(component: T) => void;
   addComponent: (eventId: string, componentId: string) => void;
   removeComponent: (eventId: string, componentId: string) => void;
-  newComponent: (eventId: string, componentId: string, name: string, type: string) => void;
+  newComponent: (componentId: string, name: string, type: string) => void;
 }
 
 let maybeStore: Store<ManageAppState, ManageAppActions.Action> | undefined = undefined
@@ -91,6 +91,7 @@ export class Manage extends Component<ManageProps> {
               components={this.props.components} 
               deleteComponent={this.props.deleteComponent}
               openTab={this.props.openTab}
+              newComponent={this.props.newComponent}
             /> 
             {/* todo: should only be shared components */}
             <ConnectivityPanelContainer /> 
@@ -185,7 +186,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
       }
       dispatch(send(action))
     },
-    newComponent: (eventId: string, componentId: string, name: string, type: string): void => {
+    newComponent: (componentId: string, name: string, type: string): void => {
       const create: ComponentMessage.Create = {
         type: ComponentMessage.MessageType.Create,
         id: componentId,
@@ -195,13 +196,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
           type
         }
       }
-      const add: EventMessage.AddComponent = {
-        type: EventMessage.MessageType.AddComponent,
-        id: eventId,
-        componentId
-      }
       dispatch(send(create))
-      dispatch(send(add))
     }
   }
 }
