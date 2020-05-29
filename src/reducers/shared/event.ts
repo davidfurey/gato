@@ -54,6 +54,34 @@ function AddComponent(action: Event.AddComponent, state: SharedState): SharedSta
   return state
 }
 
+function CreateEvent(action: Event.Create, state: SharedState): SharedState {
+  const newEvent = {
+    name: action.name,
+    id: action.id,
+    components: [],
+    lists: [],
+  }
+  return {
+    ...state,
+    events: {
+      ...state.events,
+      [newEvent.id]: newEvent
+    }
+  }
+}
+
+function DeleteEvent(action: Event.Delete, state: SharedState): SharedState {
+  if (state.eventId !== action.id) {
+    const { [action.id]: ignored, ...rest } = state.events;
+    return {
+      ...state,
+      events: rest,
+    }
+  }
+  console.warn("Refusing to delete current event")
+  return state
+}
+
 function RemoveComponent(action: Event.RemoveComponent, state: SharedState): SharedState {
   const event = state.events[action.id]
   if (event) {
@@ -77,10 +105,28 @@ function RemoveComponent(action: Event.RemoveComponent, state: SharedState): Sha
 function Load(action: Event.Load, state: SharedState): SharedState {
   const event = state.events[action.id]
   if (event) {
-    return {
+    if (!event.lists.some((ls) => ls.listType === "picked")) {
+      const lists = event.lists.concat({
+        name: "quick",
+        listType: "picked",
+        components: [null, null, null, null, null]
+      })
+      return updateDisplays({
+        ...state,
+        events: {
+          ...state.events,
+          [event.id]: {
+            ...event,
+            lists
+          }
+        },
+        eventId: action.id,
+      }, state.events[action.id])
+    }
+    return updateDisplays({
       ...state,
       eventId: action.id,
-    }
+    }, state.events[action.id])
   }
   console.warn(`Attempted to load mising event ${action.id}`)
   return state
@@ -92,8 +138,8 @@ const notImplemented = (_: Event.Message) => (state: SharedState): SharedState =
 
 const reducer: Event.Pattern<(s: SharedState) => SharedState> = {
   [Event.MessageType.AddComponent]: curry(AddComponent),
-  [Event.MessageType.Create]: notImplemented,
-  [Event.MessageType.Delete]: notImplemented,
+  [Event.MessageType.Create]: curry(CreateEvent),
+  [Event.MessageType.Delete]: curry(DeleteEvent),
   [Event.MessageType.RemoveComponent]: curry(RemoveComponent),
   [Event.MessageType.Update]: notImplemented,
   [Event.MessageType.Load]: curry(Load)

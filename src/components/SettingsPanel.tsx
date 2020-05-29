@@ -23,9 +23,6 @@ export function SettingsPanel(props: SettingsPanelProps): JSX.Element {
     <CollapsablePanel header="Settings" open={false}>
       <ListGroup>
         <ListGroupItem className="d-flex justify-content-between align-items-center">
-          {/* should probably be a regular select with a load button */}
-          {/* {setLoadEventId(event.target.value)} */}
-          {/* (): void => loadEventId !== null ? props.setEvent(loadEventId) : undefined */}
           <Row><Col sm="auto">Event:</Col><Col>
           {props.event?.name || "(empty)"}</Col></Row>
           <Button size="sm" variant="primary" onClick={handleShowLoadEvent}>Load</Button>

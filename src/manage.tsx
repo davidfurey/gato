@@ -28,6 +28,7 @@ interface ManageProps {
   components: { [key: string]: OSDComponent };
   events: { [key: string]: OSDLiveEvent };
   deleteComponent: (id: string) => void;
+  deleteEvent: (id: string) => void;
   editPanel: EditPanelState;
   closeTab: (id: string) => void;
   selectTab: (id: string) => void;
@@ -36,6 +37,8 @@ interface ManageProps {
   addComponent: (eventId: string, componentId: string) => void;
   removeComponent: (eventId: string, componentId: string) => void;
   newComponent: (componentId: string, name: string, type: string) => void;
+  newEvent: (eventId: string, name: string) => void;
+  liveEventId: string;
 }
 
 let maybeStore: Store<ManageAppState, ManageAppActions.Action> | undefined = undefined
@@ -90,8 +93,11 @@ export class Manage extends Component<ManageProps> {
               events={this.props.events} 
               components={this.props.components} 
               deleteComponent={this.props.deleteComponent}
+              liveEventId={this.props.liveEventId}
+              deleteEvent={this.props.deleteEvent}
               openTab={this.props.openTab}
               newComponent={this.props.newComponent}
+              newEvent={this.props.newEvent}
             /> 
             {/* todo: should only be shared components */}
             <ConnectivityPanelContainer /> 
@@ -128,7 +134,8 @@ const mapStateToProps = (state: ManageAppState) => {
     components: state.shared.components,
     displays: state.shared.displays,
     events: state.shared.events,
-    editPanel: state.editPanel
+    editPanel: state.editPanel,
+    liveEventId: state.shared.eventId
   }
 }
 
@@ -137,6 +144,13 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
     deleteComponent: (id: string): void => {
       const action: ComponentMessage.Delete = {
         type: ComponentMessage.MessageType.Delete,
+        id,
+      }
+      dispatch(send(action))
+    },
+    deleteEvent: (id: string): void => {
+      const action: EventMessage.Delete = {
+        type: EventMessage.MessageType.Delete,
         id,
       }
       dispatch(send(action))
@@ -195,6 +209,14 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
           name,
           type
         }
+      }
+      dispatch(send(create))
+    },
+    newEvent: (eventId: string, name: string): void => {
+      const create: EventMessage.Create = {
+        type: EventMessage.MessageType.Create,
+        id: eventId,
+        name
       }
       dispatch(send(create))
     }

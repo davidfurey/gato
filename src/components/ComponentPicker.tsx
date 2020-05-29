@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { OSDComponent } from "../OSDComponent";
-import { Button, Popover, Overlay, Form, Col, Container, Row, PopoverTitle, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
+import { Button, Popover, Overlay, Form, Col, Container, Row, Card } from 'react-bootstrap';
 import { ComponentList } from './ComponentList';
 import { LowerThirdsType } from './OSDComponents/LowerThirds';
+import { TabbedPanel, TabContainer } from './TabbedPanel'
 
 interface ComponentPickerProps {
   components?: OSDComponent[];
@@ -38,30 +39,26 @@ export function LoadComponent(props: {
           </Row>
         </div>
       </Container>
-      <Container className="flex-shrink-1 pt-2 pb-2">
-        <Row>
-          <Col className="text-center">
-            <Button 
-              size="sm" 
-              variant="primary" 
-              className="mr-2" 
-              disabled={selectedComponent == null}
-              onClick={(): void => {
-                  if (selectedComponent !== null) {
-                    props.existingComponent(selectedComponent)
-                    props.close()
-                  }
-                }
+      <Card.Footer className="flex-shrink-1 pt-2 pb-2 text-center">
+        <Button 
+          size="sm" 
+          variant="primary" 
+          className="mr-2" 
+          disabled={selectedComponent == null}
+          onClick={(): void => {
+              if (selectedComponent !== null) {
+                props.existingComponent(selectedComponent)
+                props.close()
               }
-            >
-              Add
-            </Button>
-            <Button size="sm" variant="secondary" onClick={props.close}>
-              Cancel
-            </Button>
-          </Col>
-        </Row>
-      </Container>
+            }
+          }
+        >
+          Add
+        </Button>
+        <Button size="sm" variant="secondary" onClick={props.close}>
+          Cancel
+        </Button>
+      </Card.Footer>
     </Container>
   </div>
 }
@@ -93,25 +90,48 @@ function CreateComponent(props: {
       </Form.Row>
       </Form.Group>
     </Container>
-    <Container className="flex-shrink-1 pt-2 pb-2">
-        <Row>
-            <Col className="text-center">
-            <Button 
-              size="sm" 
-              variant="success" 
-              className="mr-2"
-              disabled={name === ""}
-              onClick={(): void => { props.newComponent(name, type); props.close() }}
-            >
-              Create
-            </Button>
-            <Button size="sm" variant="secondary" onClick={props.close}>
-              Cancel
-            </Button>
-            </Col>
-        </Row>
-    </Container>
+    <Card.Footer className="flex-shrink-1 pt-2 pb-2 text-center">
+      <Button 
+        size="sm" 
+        variant="success" 
+        className="mr-2"
+        disabled={name === ""}
+        onClick={(): void => { props.newComponent(name, type); props.close() }}
+      >
+        Create
+      </Button>
+      <Button size="sm" variant="secondary" onClick={props.close}>
+        Cancel
+      </Button>
+    </Card.Footer>
   </Container>
+}
+
+function PickerDialog(props: { 
+  close: () => void;
+  newComponent: (name: string, type: string) => void;
+  existingComponent?: (id: string) => void;
+  components?: OSDComponent[];
+}): JSX.Element {
+  if (props.components && props.existingComponent) { 
+    return <TabbedPanel className="" variant="pills" size="sm">
+      <TabContainer name="Existing" eventKey="existing">  
+        <LoadComponent 
+          components={props.components} 
+          close={props.close} 
+          existingComponent={props.existingComponent} 
+        /> 
+      </TabContainer>
+      <TabContainer name="New" eventKey="new">
+        <CreateComponent newComponent={props.newComponent} close={props.close} />
+      </TabContainer>
+    </TabbedPanel>
+  } else {
+    return <Card>
+      <Card.Header className="px-3 py-2 bg-primary text-center">Component</Card.Header>
+      <CreateComponent newComponent={props.newComponent} close={props.close} />
+    </Card>
+  }
 }
 
 function popover(
@@ -120,23 +140,13 @@ function popover(
   existingComponent?: (id: string) => void,
   components?: OSDComponent[], 
 ): JSX.Element {
-  const [value, setValue] = useState("existing");
-  const handleChange = (val: string): void => setValue(val);
-
-  return <Popover id="popover-basic" className="bg-secondary">
-    <PopoverTitle className="text-center bg-primary">
-    { components !== undefined && existingComponent !== undefined ?
-      <ToggleButtonGroup size="sm" type="radio" name="options" value={value} onChange={handleChange}> {/* todo: switch to using tab panel pills variant? */}
-      <ToggleButton type="radio" name="radio" defaultChecked value="existing" variant="primary">
-        Existing
-      </ToggleButton>
-      <ToggleButton type="radio" name="radio" value="new" variant="primary">
-        New
-      </ToggleButton>
-      </ToggleButtonGroup> : "Component" }
-    </PopoverTitle>
-    { value === "existing" && components && existingComponent ? <LoadComponent components={components} close={close} existingComponent={existingComponent} /> : null }
-    { value === "new" || components === undefined || existingComponent === undefined ? <CreateComponent newComponent={newComponent} close={close} /> : null }
+  return <Popover id="popover-basic" className="bg-secondary p-0">
+    <PickerDialog 
+      close={close} 
+      newComponent={newComponent}
+      existingComponent={existingComponent}
+      components={components}
+    />
   </Popover>
 }
 

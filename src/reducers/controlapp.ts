@@ -54,7 +54,9 @@ export function createReducer(): ControlAppReducer {
       if (Response.isResponseMessage(message)) {
         return responseReducer(message, state)
       } else {
-        return {...state, shared: sharedStateReducer(state.shared, message) }
+        const r = {...state, shared: sharedStateReducer(state.shared, message) }
+        console.log(r)
+        return r
       }
     }
 
@@ -65,10 +67,10 @@ export function createReducer(): ControlAppReducer {
       }
     }
 
-    //if (!action.type.startsWith("REDUX_WEBSOCKET") && !action.type.startsWith("@@redux")) {
+    if (!action.type.startsWith("REDUX_WEBSOCKET") && !action.type.startsWith("@@redux")) {
       console.warn("Unhandled action:")
       console.warn(action)
-    //}
+    }
     return state
   }
 }
