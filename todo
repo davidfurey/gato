@@ -1,0 +1,69 @@
+Server
+- websockets
+- redux
+- https://redux.js.org/api/store#subscribelistener
+
+
+data:
+
+- groups
+  - references osd_components
+- events
+  - references osd_components
+- osd_components
+- displays
+  - preview
+  - live
+  - [arbitrary]
+
+
+
+-----
+
+- Save server state to disk - done
+- todo:
+   - versioned/backup
+   - more sensible location
+
+- Bug in quick select when first item in list is default selected rather than onChanged, it doesn't work
+ -- fixed (although need to check behaviour if selected component is deleted?)
+
+- Server connection indicator - DONE
+- split shared/local state - DONE
+- ping server and receive pong - DONE
+- show other connected devices (users and screens) - DONE
+- drop down for all side bar - DONE
+- Delete Components from manage page - DONE
+  - need to implement modal dialogs for confirmation - DONE
+- switch to material ui icons - DONE
+
+NB - requires node 10 (fs.promises)
+manually created empty groups.json [] file
+
+- CSS of lower third
+  - done
+
+- Rename events
+
+- Shared/not shared banners
+
+- Preview events in manage
+
+- Deployment
+
+- PNG component
+
+- viewer auto reconnect?
+
+Name:
+On Screen 
+Graphics
+Text
+Overlay
+Live
+Open
+
+Open Graphics Overlay Manager
+
+Graphics Overlay Manager
+
