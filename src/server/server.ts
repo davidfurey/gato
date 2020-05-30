@@ -69,25 +69,6 @@ let state: SharedState = {
   }],
 }
 
-// clients: [ {
-//   name: "OBS",
-//   interface: "view",
-//   lastSeen: Date.now() - 2000,
-//   screenName: "live"
-// },
-// {
-//   name: "Chrome",
-//   interface: "view",
-//   lastSeen: Date.now() - 2000,
-//   screenName: "preview"
-// },
-// {
-//   name: "Chrome",
-//   interface: "control",
-//   lastSeen: Date.now() - 2000,
-//   screenName: undefined
-// }]
-
 function handlePing(ws: WebSocket, message: Request.Ping, id: string): void {
   clients = clients.map((client) => client.id === id ? { ...client, lastSeen: Date.now() } : client)
   
@@ -145,7 +126,6 @@ const handleRequest = (ws: WebSocket, message: Request.Message, id: string): voi
 }
 
 function cleanupConnections(): void {
-  console.log("Cleaning connections")
   const now = Date.now()
   clients = clients.filter((item) => {
     if ((now - item.lastSeen) > 60000) {
@@ -329,8 +309,6 @@ app.use(express.static(path.resolve(__dirname, '../dist')));
 
 app.get('/healthcheck', (_req, res) => res.send("Ok"));
 
-// Request<P extends core.Params = core.ParamsDictionary, ResBody = any, ReqBody = any,
-// ReqQuery = core.Query> extends core.Request<P, ResBody, ReqBody, ReqQuery> { }
 server.on('upgrade', (request: ExpressRequest<any,any, any, any>, socket, head) => {
   const pathname = url.parse(request.url).pathname;
   console.log(request.headers['user-agent'])
@@ -351,10 +329,6 @@ server.on('upgrade', (request: ExpressRequest<any,any, any, any>, socket, head) 
     socket.destroy();
   }
 });
-
-// app.get('/*', bodyParser.raw(), serveArticle);
-
-// app.post('/article', bodyParser.raw(), serveArticlePost);
 
 server.listen(port, () => {
   if (process.env.NODE_ENV === "production") {
