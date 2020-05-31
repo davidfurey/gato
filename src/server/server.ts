@@ -305,7 +305,7 @@ app.all('*', (request, response, next) => {
     next();
 });
 
-app.use(express.static(path.resolve(__dirname, '../dist')));
+app.use(express.static(path.resolve(__dirname, 'public')));
 
 app.get('/healthcheck', (_req, res) => res.send("Ok"));
 

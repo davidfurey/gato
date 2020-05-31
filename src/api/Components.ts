@@ -1,6 +1,6 @@
 import { Uuid, BaseMessage, BaseMessageType } from './Messages'
 import { TypeMap, GenericPattern, genericMatcher, isTypeGroup, isType } from "./PatternHelpers"
-import { LowerThirdsComponent } from "../components/OSDComponents/LowerThirds"
+import { LowerThirdsComponent } from "../components/OSDComponents/LowerThirdsComponent"
 import { OSDComponent } from "../OSDComponent"
 
 export enum MessageType {

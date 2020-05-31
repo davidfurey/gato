@@ -1,30 +1,10 @@
 import React, { Component } from 'react';
-import { OSDComponent } from '../../OSDComponent';
 import { OnScreenComponentState } from '../../reducers/shared';
 import './lower-thirds.css';
+import { LowerThirdsComponent } from './LowerThirdsComponent'
 
 interface LowerThirdsProps { 
   components: { state: OnScreenComponentState; component: LowerThirdsComponent }[];
-}
-
-export const LowerThirdsType = "lower-thirds"
-
-export const template: LowerThirdsComponent = {
-  title: "(title)",
-  subtitle: "(subtitle)",
-  type: LowerThirdsType,
-  name: "default",
-  id: "default",
-}
-
-export interface LowerThirdsComponent extends OSDComponent {
-  title: string;
-  subtitle: string;
-  type: typeof LowerThirdsType;
-}
-
-export function isLowerThirdsComponent(component: OSDComponent): component is LowerThirdsComponent {
-  return component.type === LowerThirdsType
 }
 
 interface LowerThirdProps {

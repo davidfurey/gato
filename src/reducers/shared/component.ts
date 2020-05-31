@@ -1,7 +1,7 @@
 import { curry } from '../../api/FunctionalHelpers'
 import { SharedState, ComponentList, OSDComponentsGroup, Display } from '../shared'
 import * as Component from '../../api/Components'
-import * as LowerThirds from '../../components/OSDComponents/LowerThirds'
+import * as LowerThirds from '../../components/OSDComponents/LowerThirdsComponent'
 
 function createLowerThird(action: Component.CreateLowerThird, state: SharedState): SharedState {
   return {

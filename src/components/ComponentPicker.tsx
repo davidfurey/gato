@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { OSDComponent } from "../OSDComponent";
 import { Button, Popover, Overlay, Form, Col, Container, Row, Card } from 'react-bootstrap';
 import { ComponentList } from './ComponentList';
-import { LowerThirdsType } from './OSDComponents/LowerThirds';
+import { LowerThirdsType } from './OSDComponents/LowerThirdsComponent';
 import { TabbedPanel, TabContainer } from './TabbedPanel'
 
 interface ComponentPickerProps {

@@ -3,7 +3,7 @@ import { TabbedPanel, TabContainer } from '../components/TabbedPanel';
 import { Card, ListGroup, ButtonGroup, Button, ListGroupItem, Form, Row, Col, Container, Badge } from 'react-bootstrap';
 import * as EditPanelReducer from '../reducers/editpanel';
 import { OSDComponent } from '../OSDComponent';
-import { isLowerThirdsComponent } from './OSDComponents/LowerThirds';
+import { isLowerThirdsComponent } from './OSDComponents/LowerThirdsComponent';
 import { OSDLiveEvent } from '../reducers/shared';
 import { ComponentList } from './ComponentList';
 import { ComponentPicker } from './ComponentPicker';

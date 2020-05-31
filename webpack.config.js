@@ -24,7 +24,7 @@ const serverConfig = env => {
   const isProd = env && env.production;
   const isWatch = env && env.watch;
 
-  const plugins = [new MiniCssExtractPlugin()]
+  const plugins = []
 
   if (isWatch) {
     plugins.push(new LaunchServerPlugin());
@@ -71,10 +71,6 @@ const serverConfig = env => {
             }
           ],
         },
-        {
-          test: /\.css$/i,
-          use: [MiniCssExtractPlugin.loader, 'css-loader'],
-        },
       ]
     },
   }
@@ -117,8 +113,8 @@ const clientConfig = env => {
               options: {
                 name:       '[name].[ext]',
                 // name:        '[path][name].[ext]',
-                outputPath: '/public/fonts/',
-                publicPath: '/public/fonts/'
+                outputPath: '/fonts/',
+                publicPath: '/fonts/'
               }
             }
           ]
@@ -152,11 +148,13 @@ const clientConfig = env => {
         template: 'src/index.html',
         title: 'On Screen Graphics - Manage'
       }),
-      new MiniCssExtractPlugin(),
+      new MiniCssExtractPlugin({
+        filename: 'css/[name].[chunkhash].css',
+      }),
     ],
     output: {
-      filename: '[name].bundle.[chunkhash].js',
-      path: path.resolve(__dirname, 'dist'),
+      filename: 'js/[name].bundle.[chunkhash].js',
+      path: path.resolve(__dirname, 'dist/public'),
     },
   }
 };
