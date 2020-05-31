@@ -91,9 +91,6 @@ const clientConfig = env => {
       manage: './src/manage.tsx'
     },
     devtool: 'inline-source-map',
-    devServer: {
-      contentBase: path.join(__dirname, 'html')
-    },
     module: {
       rules: [
         {
@@ -111,10 +108,8 @@ const clientConfig = env => {
             {
               loader: 'file-loader',
               options: {
-                name:       '[name].[ext]',
-                // name:        '[path][name].[ext]',
-                outputPath: '/fonts/',
-                publicPath: '/fonts/'
+                name:       'fonts/[name].[ext]',
+                publicPath: '../'
               }
             }
           ]
