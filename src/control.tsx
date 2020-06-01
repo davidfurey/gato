@@ -46,13 +46,17 @@ maybeStore = store
 
 export type AppDispatch = typeof store.dispatch
 
-const socketUrl =((window.location.protocol === 'https:') ? 'wss://' : 'ws://') +
-  window.location.host +
-  (window.location.port ? `:${window.location.port}` : "") +
-  window.location.pathname.replace(/[^/]*$/, '') +
-  "control-connection"
+function socketUrl() {
+  if (process.env.NODE_ENV === 'production') {
+    return ((window.location.protocol === 'https:') ? 'wss://' : 'ws://') +
+      window.location.host +
+      window.location.pathname.replace(/[^/]*$/, '') +
+      "control-connection"
+  }
+  return 'ws://localhost:3040/control-connection'
+}
 
-store.dispatch(websocketConnect(socketUrl));
+store.dispatch(websocketConnect(socketUrl()));
 
 export class Control extends Component<ControlProps> {
   constructor(props: ControlProps) {
