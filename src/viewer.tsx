@@ -24,6 +24,7 @@ let maybeStore: Store<ViewerAppState, ViewAppActions.Action> | undefined = undef
 
 const reduxWebsocketMiddleware = reduxWebsocket({
   onOpen: (_: WebSocket) => { maybeStore ? maybeStore.dispatch(send({"type": RequestMessage.MessageType.GetSharedState })) : null },
+  reconnectOnClose: true,
 });
 
 const store = createStore(createReducer(), applyMiddleware(reduxWebsocketMiddleware))
