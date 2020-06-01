@@ -2,7 +2,7 @@ const path = require('path');
 const { fork } = require('child_process');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const CopyPlugin = require('copy-webpack-plugin');
 //how does this work?
 class LaunchServerPlugin {
   apply(compiler) {
@@ -24,7 +24,13 @@ const serverConfig = env => {
   const isProd = env && env.production;
   const isWatch = env && env.watch;
 
-  const plugins = []
+  const plugins = [
+    new CopyPlugin({
+      patterns: [
+        { from: 'config/gato.service', to: 'gato.service' }
+      ],
+    })
+  ]
 
   if (isWatch) {
     plugins.push(new LaunchServerPlugin());
