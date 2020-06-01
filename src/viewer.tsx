@@ -36,7 +36,13 @@ const params = new URLSearchParams(window.location.search)
 const displayName = params.get('display') || "live"
 const client = params.get('client') || "unknown"
 
-store.dispatch(websocketConnect(`ws://localhost:3040/view-connection?display=${displayName}&client=${client}`));
+const socketUrl =((window.location.protocol === 'https:') ? 'wss://' : 'ws://') +
+  window.location.host +
+  (window.location.port ? `:${window.location.port}` : "") +
+  window.location.pathname.replace(/[^/]*$/, '') +
+  `view-connection?display=${displayName}&client=${client}`
+
+store.dispatch(websocketConnect(socketUrl));
 
 export class Viewer extends Component<ViewerProps> {
 
