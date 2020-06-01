@@ -47,7 +47,7 @@ const serverConfig = env => {
       __dirname: false,
     },
     output: {
-      filename: isProd ? 'server/server.js': 'server.js',
+      filename: 'server.js',
     },
     watch: isWatch,
     watchOptions: {
