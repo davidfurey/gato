@@ -123,25 +123,25 @@ const clientConfig = env => {
       new HtmlWebpackPlugin({
         chunks: ['app'],
         template: 'src/index.html',
-        title: 'On Screen Graphics'
+        title: 'GATO'
       }),
       new HtmlWebpackPlugin({
         filename: "control.html",
         chunks: ['control'],
         template: 'src/index.html',
-        title: 'On Screen Graphics - Control'
+        title: 'GATO - Control'
       }),
       new HtmlWebpackPlugin({
         filename: "viewer.html",
         chunks: ['viewer'],
         template: 'src/index.html',
-        title: 'On Screen Graphics - Viewer'
+        title: 'GATO - Viewer'
       }),
       new HtmlWebpackPlugin({
         filename: "manage.html",
         chunks: ['manage'],
         template: 'src/index.html',
-        title: 'On Screen Graphics - Manage'
+        title: 'GATO - Manage'
       }),
       new MiniCssExtractPlugin({
         filename: 'css/[name].[chunkhash].css',

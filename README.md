@@ -1,5 +1,7 @@
-On Screen Graphics
-==================
+GATO
+====
+
+On screen graphic and text overlays for live streaming
 
 Dev setup
 ---------
