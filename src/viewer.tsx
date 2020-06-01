@@ -36,7 +36,7 @@ const params = new URLSearchParams(window.location.search)
 const displayName = params.get('display') || "live"
 const client = params.get('client') || "unknown"
 
-function socketUrl() {
+function socketUrl(): string {
   if (process.env.NODE_ENV === 'production') {
     return ((window.location.protocol === 'https:') ? 'wss://' : 'ws://') +
       window.location.host +

@@ -55,7 +55,7 @@ maybeStore = store
 
 export type AppDispatch = typeof store.dispatch
 
-function socketUrl() {
+function socketUrl(): string {
   if (process.env.NODE_ENV === 'production') {
     return ((window.location.protocol === 'https:') ? 'wss://' : 'ws://') +
       window.location.host +
