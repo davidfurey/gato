@@ -11,14 +11,12 @@ import reduxWebsocket from '@giantmachines/redux-websocket';
 import { connect as websocketConnect, send } from '@giantmachines/redux-websocket';
 import * as ManageAppActions from './actions/manageapp';
 import { uuid } from 'uuidv4';
-import { ManageSelectorPanel } from './components/ManageSelectorPanel';
+import { ManageSelectorPanelContainer } from './containers/ManageSelectorPanelContainer';
 import * as Connectivity from './actions/connectivity'
-import * as EditPanelActions from './actions/editpanel'
 import { EditPanelContainer } from './containers/EditPanelContainer'
 import * as RequestMessage from './api/Requests'
 import * as ComponentMessage from './api/Components'
-import * as EventMessage from './api/Events'
-import { EditPanelState, EditPane } from './reducers/editpanel';
+import { EditPanelState } from './reducers/editpanel';
 import { Col, Container, Row } from 'react-bootstrap';
 import { PageNav } from './components/PageNav';
 import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';
@@ -27,13 +25,8 @@ interface ManageProps {
   displays: Display[];
   components: { [key: string]: OSDComponent };
   events: { [key: string]: OSDLiveEvent };
-  deleteComponent: (id: string) => void;
-  deleteEvent: (id: string) => void;
   editPanel: EditPanelState;
-  openTab: (pane: EditPane) => void;
   updateComponent: <T extends OSDComponent>(component: T) => void;
-  newComponent: (componentId: string, name: string, type: string) => void;
-  newEvent: (eventId: string, name: string) => void;
   liveEventId: string;
 }
 
@@ -95,15 +88,10 @@ export class Manage extends Component<ManageProps> {
       <Container className="mt-4">
         <Row>
           <Col sm="auto" style={{ width: "25rem"}}>
-            <ManageSelectorPanel 
+            <ManageSelectorPanelContainer 
               events={this.props.events} 
               components={this.props.components} 
-              deleteComponent={this.props.deleteComponent}
               liveEventId={this.props.liveEventId}
-              deleteEvent={this.props.deleteEvent}
-              openTab={this.props.openTab}
-              newComponent={this.props.newComponent}
-              newEvent={this.props.newEvent}
             /> 
             {/* todo: should only be shared components */}
             <ConnectivityPanelContainer /> 
@@ -141,27 +129,6 @@ const mapStateToProps = (state: ManageAppState) => {
 
 const mapDispatchToProps = (dispatch: AppDispatch) => {
   return {
-    deleteComponent: (id: string): void => {
-      const action: ComponentMessage.Delete = {
-        type: ComponentMessage.MessageType.Delete,
-        id,
-      }
-      dispatch(send(action))
-    },
-    deleteEvent: (id: string): void => {
-      const action: EventMessage.Delete = {
-        type: EventMessage.MessageType.Delete,
-        id,
-      }
-      dispatch(send(action))
-    },
-    openTab: (pane: EditPane): void => {
-      const action: EditPanelActions.Open = {
-        type: EditPanelActions.ActionType.Open,
-        pane,
-      }
-      dispatch(action)
-    },
     updateComponent: <T extends OSDComponent>(component: T): void => {
       const action: ComponentMessage.Update = {
         type: ComponentMessage.MessageType.Update,
@@ -170,26 +137,6 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
       }
       dispatch(send(action))
     },
-    newComponent: (componentId: string, name: string, type: string): void => {
-      const create: ComponentMessage.Create = {
-        type: ComponentMessage.MessageType.Create,
-        id: componentId,
-        component: {
-          id: componentId,
-          name,
-          type
-        }
-      }
-      dispatch(send(create))
-    },
-    newEvent: (eventId: string, name: string): void => {
-      const create: EventMessage.Create = {
-        type: EventMessage.MessageType.Create,
-        id: eventId,
-        name
-      }
-      dispatch(send(create))
-    }
   }
 }
 

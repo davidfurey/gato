@@ -5,12 +5,12 @@ import { OSDLiveEvent } from '../reducers/shared';
 import { OSDComponent } from '../OSDComponent';
 import { TabbedPanel, TabContainer } from './TabbedPanel'
 import { EditPane } from '../reducers/editpanel';
-import { Button, Card } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { ComponentPicker } from './ComponentPicker'
 import { uuid } from 'uuidv4';
 import { CreateEventButton } from './CreateEventButton';
 
-interface ManageSelectorPanelProps {
+export interface ManageSelectorPanelProps {
   events: { [key: string]: OSDLiveEvent };
   components: { [key: string]: OSDComponent };
   liveEventId?: string,
