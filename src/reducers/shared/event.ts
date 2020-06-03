@@ -132,7 +132,22 @@ function Load(action: Event.Load, state: SharedState): SharedState {
   return state
 }
 
-const notImplemented = (_: Event.Message) => (state: SharedState): SharedState => {
+function Update(action: Event.Update, state: SharedState): SharedState {
+  const event = state.events[action.id]
+  if (event) {
+    const newEvent = {
+      ...event,
+      name: action.name,
+    }
+
+    return {
+      ...state,
+      events: {
+        ...state.events,
+        [action.id]: newEvent
+      }
+    }
+  }
   return state
 }
 
@@ -141,7 +156,7 @@ const reducer: Event.Pattern<(s: SharedState) => SharedState> = {
   [Event.MessageType.Create]: curry(CreateEvent),
   [Event.MessageType.Delete]: curry(DeleteEvent),
   [Event.MessageType.RemoveComponent]: curry(RemoveComponent),
-  [Event.MessageType.Update]: notImplemented,
+  [Event.MessageType.Update]: curry(Update),
   [Event.MessageType.Load]: curry(Load)
 }
 

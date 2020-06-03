@@ -2,10 +2,11 @@ import React from 'react';
 import * as EditPanelReducer from '../../reducers/editpanel';
 import { OSDLiveEvent } from '../../reducers/shared';
 import { OSDComponent } from '../../OSDComponent';
-import { Container, Card, Badge } from 'react-bootstrap';
+import { Container, Card, Badge, Form, Row } from 'react-bootstrap';
 import { ComponentList } from '../ComponentList';
 import { ComponentPicker } from '../ComponentPicker';
 import { uuid } from 'uuidv4';
+import { EditableText } from '../EditableText';
 
 interface EventEditPaneProps {
   pane: EditPanelReducer.EventEditPane;
@@ -14,6 +15,7 @@ interface EventEditPaneProps {
   removeComponent: (eventId: string, componentId: string) => void;
   addComponent: (eventId: string, componentId: string) => void;
   newComponent: (componentId: string, name: string, type: string) => void;
+  updateEvent: (event: OSDLiveEvent) => void;
   components: { [key: string]: OSDComponent };
 }
 
@@ -29,6 +31,22 @@ function capitalise(s: string): string {
 
 export function EventEditPane(props: EventEditPaneProps): JSX.Element {
   return <Container className="mt-3 mb-3">
+    <Card style={{ width: "30rem" }} className="mb-3">
+      <Card.Header><PaneIcon type="description" /> Metadata</Card.Header>
+      <Container className="mt-3 mb-3">
+      <Form.Group>
+        <Form.Group as={Row}>
+          <Form.Label column lg={2}>Name</Form.Label>
+          <EditableText value={props.event.name} update={(v): void => 
+            props.updateEvent({
+              ...props.event,
+              name: v
+            })
+          } />
+        </Form.Group>
+      </Form.Group>
+      </Container>
+    </Card>
     <Card style={{ width: "30rem" }} className="mb-3">
       <Card.Header><PaneIcon type="widgets" /> Components</Card.Header>
       <ComponentList
@@ -59,9 +77,6 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
       </Card.Footer>
     </Card>
 
-    {/* <Button className="w-100">
-          <span className="material-icons material-icons-raised">add</span> New event
-        </Button> */}
     {props.event.lists.map((eList) =>
       <Card style={{ width: "30rem" }} className="bg-secondary" key={eList.name}>
         <Card.Header><PaneIcon type="list" /> {capitalise(eList.name)} List</Card.Header>

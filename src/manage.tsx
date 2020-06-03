@@ -39,6 +39,7 @@ interface ManageProps {
   newComponent: (componentId: string, name: string, type: string) => void;
   newEvent: (eventId: string, name: string) => void;
   liveEventId: string;
+  updateEvent: (event: OSDLiveEvent) => void;
 }
 
 let maybeStore: Store<ManageAppState, ManageAppActions.Action> | undefined = undefined
@@ -131,6 +132,7 @@ export class Manage extends Component<ManageProps> {
               addComponent={this.props.addComponent}
               removeComponent={this.props.removeComponent}
               newComponent={this.props.newComponent}
+              updateEvent={this.props.updateEvent}
             />
           </Col>
         </Row>
@@ -191,6 +193,14 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         type: ComponentMessage.MessageType.Update,
         component: component,
         id: component.id
+      }
+      dispatch(send(action))
+    },
+    updateEvent: (event: OSDLiveEvent): void => {
+      const action: EventMessage.Update = {
+        type: EventMessage.MessageType.Update,
+        name: event.name,
+        id: event.id
       }
       dispatch(send(action))
     },

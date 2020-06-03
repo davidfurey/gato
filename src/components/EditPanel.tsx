@@ -17,6 +17,7 @@ interface EditPanelProps {
   removeComponent: (eventId: string, componentId: string) => void;
   addComponent: (eventId: string, componentId: string) => void;
   newComponent: (componentId: string, name: string, type: string) => void;
+  updateEvent: (event: OSDLiveEvent) => void;
 }
 
 export function createPane(
@@ -27,7 +28,8 @@ export function createPane(
   openTab: (pane: EditPanelReducer.EditPane) => void,
   removeComponent: (eventId: string, componentId: string) => void,
   addComponent: (eventId: string, componentId: string) => void,
-  newComponent: (componentId: string, name: string, type: string) => void
+  newComponent: (componentId: string, name: string, type: string) => void,
+  updateEvent: (event: OSDLiveEvent) => void
 ): JSX.Element {
   const pattern: EditPanelReducer.Pattern<JSX.Element> = {
 // eslint-disable-next-line react/display-name
@@ -47,6 +49,7 @@ export function createPane(
         removeComponent={removeComponent}
         addComponent={addComponent}
         newComponent={newComponent}
+        updateEvent={updateEvent}
       />
   }
   
@@ -74,7 +77,8 @@ export function EditPanel(props: EditPanelProps): JSX.Element {
               props.openTab, 
               props.removeComponent,
               props.addComponent,
-              props.newComponent
+              props.newComponent,
+              props.updateEvent
           ) }
         </TabContainer>
         )  
