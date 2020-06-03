@@ -65,7 +65,6 @@ export class Manage extends Component<ManageProps> {
       ) {
         store.dispatch({ type: Connectivity.ActionType.Disconnected})
       }
-// todo: this causes quite a lot of components to be re-rendered - how can we avoid this?
       store.dispatch(send({"type": RequestMessage.MessageType.Ping })) 
     }, 1000)
   }
