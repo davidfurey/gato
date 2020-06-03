@@ -14,7 +14,7 @@ import { uuid } from 'uuidv4';
 import { ManageSelectorPanel } from './components/ManageSelectorPanel';
 import * as Connectivity from './actions/connectivity'
 import * as EditPanelActions from './actions/editpanel'
-import { EditPanel } from './components/EditPanel'
+import { EditPanelContainer } from './containers/EditPanelContainer'
 import * as RequestMessage from './api/Requests'
 import * as ComponentMessage from './api/Components'
 import * as EventMessage from './api/Events'
@@ -30,8 +30,6 @@ interface ManageProps {
   deleteComponent: (id: string) => void;
   deleteEvent: (id: string) => void;
   editPanel: EditPanelState;
-  closeTab: (id: string) => void;
-  selectTab: (id: string) => void;
   openTab: (pane: EditPane) => void;
   updateComponent: <T extends OSDComponent>(component: T) => void;
   newComponent: (componentId: string, name: string, type: string) => void;
@@ -118,11 +116,8 @@ export class Manage extends Component<ManageProps> {
               preview={true}
               components={[]}
             /> */}
-            <EditPanel 
+            <EditPanelContainer 
               editPanel={this.props.editPanel}
-              closeTab={this.props.closeTab}
-              selectTab={this.props.selectTab}
-              openTab={this.props.openTab}
               components={this.props.components}
               events={this.props.events}
               updateComponent={this.props.updateComponent}
@@ -159,20 +154,6 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         id,
       }
       dispatch(send(action))
-    },
-    closeTab: (id: string): void => {
-      const action: EditPanelActions.Close = {
-        type: EditPanelActions.ActionType.Close,
-        id,
-      }
-      dispatch(action)
-    },
-    selectTab: (id: string): void => {
-      const action: EditPanelActions.Select = {
-        type: EditPanelActions.ActionType.Select,
-        id,
-      }
-      dispatch(action)
     },
     openTab: (pane: EditPane): void => {
       const action: EditPanelActions.Open = {

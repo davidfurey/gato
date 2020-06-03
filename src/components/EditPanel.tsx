@@ -6,7 +6,7 @@ import { OSDLiveEvent } from '../reducers/shared';
 import { ComponentEditPane } from './editpanes/ComponentEditPane';
 import { EventEditPaneContainer } from '../containers/EventEditPaneContainer';
 
-interface EditPanelProps {
+export interface EditPanelProps {
   editPanel: EditPanelReducer.EditPanelState;
   closeTab: (id: string) => void;
   selectTab: (id: string) => void;
