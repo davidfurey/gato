@@ -29,12 +29,6 @@ export function ComponentEditPane(props: ComponentEditPaneProps): JSX.Element {
       <ListGroupItem>Name: {props.component.name}</ListGroupItem>
       <ListGroupItem>Type: {props.component.type}</ListGroupItem>
       <ListGroupItem>Id: {props.component.id}</ListGroupItem>
-      {isLowerThirdsComponent(props.component) ?
-        <ListGroupItem>Title: {props.component.title}</ListGroupItem> : null
-      }
-      {isLowerThirdsComponent(props.component) ?
-        <ListGroupItem>Subtitle: {props.component.subtitle}</ListGroupItem> : null
-      }
     </ListGroup>
   }
 }
