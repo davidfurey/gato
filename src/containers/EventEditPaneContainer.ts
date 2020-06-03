@@ -46,14 +46,6 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<EventEditPaneProps,
         dispatch(send(action))
       },
     }
-  // pane: EditPanelReducer.EventEditPane;
-  // event: OSDLiveEvent;
-  // openTab: (pane: EditPanelReducer.EditPane) => void;
-  // removeComponent: (eventId: string, componentId: string) => void;
-  // addComponent: (eventId: string, componentId: string) => void;
-  // newComponent: (componentId: string, name: string, type: string) => void;
-  // updateEvent: (event: OSDLiveEvent) => void;
-  // components: { [key: string]: OSDComponent };
 }
 
 export const EventEditPaneContainer = connect(null, mapDispatchToProps)(EventEditPane)
