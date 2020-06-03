@@ -15,7 +15,6 @@ import { ManageSelectorPanelContainer } from './containers/ManageSelectorPanelCo
 import * as Connectivity from './actions/connectivity'
 import { EditPanelContainer } from './containers/EditPanelContainer'
 import * as RequestMessage from './api/Requests'
-import * as ComponentMessage from './api/Components'
 import { EditPanelState } from './reducers/editpanel';
 import { Col, Container, Row } from 'react-bootstrap';
 import { PageNav } from './components/PageNav';
@@ -26,7 +25,6 @@ interface ManageProps {
   components: { [key: string]: OSDComponent };
   events: { [key: string]: OSDLiveEvent };
   editPanel: EditPanelState;
-  updateComponent: <T extends OSDComponent>(component: T) => void;
   liveEventId: string;
 }
 
@@ -108,7 +106,6 @@ export class Manage extends Component<ManageProps> {
               editPanel={this.props.editPanel}
               components={this.props.components}
               events={this.props.events}
-              updateComponent={this.props.updateComponent}
             />
           </Col>
         </Row>
@@ -117,7 +114,7 @@ export class Manage extends Component<ManageProps> {
   }
 }
 
-const mapStateToProps = (state: ManageAppState) => {
+const mapStateToProps = (state: ManageAppState): ManageProps => {
   return {
     components: state.shared.components,
     displays: state.shared.displays,
@@ -127,20 +124,7 @@ const mapStateToProps = (state: ManageAppState) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: AppDispatch) => {
-  return {
-    updateComponent: <T extends OSDComponent>(component: T): void => {
-      const action: ComponentMessage.Update = {
-        type: ComponentMessage.MessageType.Update,
-        component: component,
-        id: component.id
-      }
-      dispatch(send(action))
-    },
-  }
-}
-
-const ManageContainer = connect(mapStateToProps, mapDispatchToProps)(Manage)
+const ManageContainer = connect(mapStateToProps)(Manage)
 
 ReactDOM.render(
   <Provider store={store}>

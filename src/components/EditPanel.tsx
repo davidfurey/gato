@@ -3,7 +3,7 @@ import { TabbedPanel, TabContainer } from '../components/TabbedPanel';
 import * as EditPanelReducer from '../reducers/editpanel';
 import { OSDComponent } from '../OSDComponent';
 import { OSDLiveEvent } from '../reducers/shared';
-import { ComponentEditPane } from './editpanes/ComponentEditPane';
+import { ComponentEditPaneContainer } from '../containers/ComponentEditPaneContainer';
 import { EventEditPaneContainer } from '../containers/EventEditPaneContainer';
 
 export interface EditPanelProps {
@@ -13,23 +13,20 @@ export interface EditPanelProps {
   openTab: (pane: EditPanelReducer.EditPane) => void;
   components: { [key: string]: OSDComponent };
   events: { [key: string]: OSDLiveEvent };
-  updateComponent: <T extends OSDComponent>(component: T) => void;
 }
 
 export function createPane(
   pane: EditPanelReducer.EditPane, 
   components: { [key: string]: OSDComponent },
   events: { [key: string]: OSDLiveEvent },
-  updateComponent: <T extends OSDComponent>(component: T) => void,
   openTab: (pane: EditPanelReducer.EditPane) => void
 ): JSX.Element {
   const pattern: EditPanelReducer.Pattern<JSX.Element> = {
 // eslint-disable-next-line react/display-name
     [EditPanelReducer.EditPaneType.Component]: (pane) =>
-      <ComponentEditPane 
+      <ComponentEditPaneContainer 
         pane={pane} 
         component={components[pane.id]} 
-        updateComponent={updateComponent} 
       />,
 // eslint-disable-next-line react/display-name
     [EditPanelReducer.EditPaneType.Event]: (pane) =>
@@ -61,7 +58,6 @@ export function EditPanel(props: EditPanelProps): JSX.Element {
               pane, 
               props.components, 
               props.events, 
-              props.updateComponent, 
               props.openTab
           ) }
         </TabContainer>

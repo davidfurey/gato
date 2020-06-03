@@ -7,7 +7,7 @@ import { isImageComponent } from '../OSDComponents/ImageComponent';
 import { ImageEditPane } from './ImageEditPane';
 import { ListGroup, ListGroupItem } from 'react-bootstrap';
 
-interface ComponentEditPaneProps {
+export interface ComponentEditPaneProps {
   pane: EditPanelReducer.ComponentEditPane;
   component: OSDComponent;
   updateComponent: <T extends OSDComponent>(component: T) => void;
