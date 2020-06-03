@@ -4,6 +4,7 @@ import { Button, Popover, Overlay, Form, Col, Container, Row, Card } from 'react
 import { ComponentList } from './ComponentList';
 import { LowerThirdsType } from './OSDComponents/LowerThirdsComponent';
 import { TabbedPanel, TabContainer } from './TabbedPanel'
+import { ImageType } from './OSDComponents/ImageComponent';
 
 interface ComponentPickerProps {
   components?: OSDComponent[];
@@ -84,7 +85,7 @@ function CreateComponent(props: {
           <Col>
           <Form.Control as="select" onChange={(event): void => setType(event.target.value)}>
             <option value={LowerThirdsType}>Banner</option>
-            <option>Slide</option>
+            <option value={ImageType}>Image</option>
           </Form.Control>
           </Col>
       </Form.Row>

@@ -1,6 +1,7 @@
 import * as Transistion from '../../api/Transitions'
 import { curry } from '../../api/FunctionalHelpers'
 import { SharedState, OnScreenComponent, Display } from '../shared'
+import { ImageType } from '../../components/OSDComponents/ImageComponent'
 
 function goTransistion(action: Transistion.GoTransistion, state: SharedState): SharedState {
   const selectedDisplay = state.displays.find((display) => display.id === action.displayId)
@@ -11,6 +12,30 @@ function goTransistion(action: Transistion.GoTransistion, state: SharedState): S
         (otherOnScreenComponent) => {
         const otherComponent = state.components[otherOnScreenComponent.id]
         if (otherComponent?.type === "lower-thirds") {
+          if (otherOnScreenComponent.id === action.inComponentId) {
+            return { ...otherOnScreenComponent, state: "entering" }
+          } else if (otherOnScreenComponent.state === "visible" || otherOnScreenComponent.state === "entering") {
+            return { ...otherOnScreenComponent, state: "exiting" }
+          }
+        }
+        return otherOnScreenComponent
+      })
+      const updatedLiveDisplay: Display = {
+        ...selectedDisplay,
+        onScreenComponents
+      }
+      return {
+        ...state,
+        displays: state.displays.map((display) => 
+          display.id === selectedDisplay?.id ? updatedLiveDisplay : display
+        )
+      }
+    }
+    if (component?.type === ImageType) {
+      const onScreenComponents: OnScreenComponent[] = selectedDisplay.onScreenComponents.map(
+        (otherOnScreenComponent) => {
+        const otherComponent = state.components[otherOnScreenComponent.id]
+        if (otherComponent?.type === ImageType) {
           if (otherOnScreenComponent.id === action.inComponentId) {
             return { ...otherOnScreenComponent, state: "entering" }
           } else if (otherOnScreenComponent.state === "visible" || otherOnScreenComponent.state === "entering") {

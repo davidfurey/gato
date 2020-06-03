@@ -2,6 +2,7 @@ import { curry } from '../../api/FunctionalHelpers'
 import { SharedState, ComponentList, OSDComponentsGroup, Display } from '../shared'
 import * as Component from '../../api/Components'
 import * as LowerThirds from '../../components/OSDComponents/LowerThirdsComponent'
+import * as Image from '../../components/OSDComponents/ImageComponent'
 
 function createLowerThird(action: Component.CreateLowerThird, state: SharedState): SharedState {
   return {
@@ -14,26 +15,28 @@ function createLowerThird(action: Component.CreateLowerThird, state: SharedState
 }
 
 function create(action: Component.Create, state: SharedState): SharedState {
-  console.log("Creating new component")
-  console.log(action)
   if (action.component.type === LowerThirds.LowerThirdsType) {
-    console.log("Creating new component 2")
-    const component = {
-      ...LowerThirds.template,
-      name: action.component.name,
-      id: action.component.id
-    }
-    console.log({
-      components: { 
-        ...state.components,
-        [action.component.id]: component
-      }
-    })
     return {
       ...state,
       components: { 
         ...state.components,
-        [action.component.id]: component
+        [action.component.id]: {
+          ...LowerThirds.template,
+          name: action.component.name,
+          id: action.component.id
+        }
+      }
+    }
+  } else if (action.component.type === Image.ImageType) {
+    return {
+      ...state,
+      components: { 
+        ...state.components,
+        [action.component.id]: {
+          ...Image.template,
+          name: action.component.name,
+          id: action.component.id
+        }
       }
     }
   } else {
