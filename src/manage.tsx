@@ -34,12 +34,9 @@ interface ManageProps {
   selectTab: (id: string) => void;
   openTab: (pane: EditPane) => void;
   updateComponent: <T extends OSDComponent>(component: T) => void;
-  addComponent: (eventId: string, componentId: string) => void;
-  removeComponent: (eventId: string, componentId: string) => void;
   newComponent: (componentId: string, name: string, type: string) => void;
   newEvent: (eventId: string, name: string) => void;
   liveEventId: string;
-  updateEvent: (event: OSDLiveEvent) => void;
 }
 
 let maybeStore: Store<ManageAppState, ManageAppActions.Action> | undefined = undefined
@@ -129,10 +126,6 @@ export class Manage extends Component<ManageProps> {
               components={this.props.components}
               events={this.props.events}
               updateComponent={this.props.updateComponent}
-              addComponent={this.props.addComponent}
-              removeComponent={this.props.removeComponent}
-              newComponent={this.props.newComponent}
-              updateEvent={this.props.updateEvent}
             />
           </Col>
         </Row>
@@ -193,30 +186,6 @@ const mapDispatchToProps = (dispatch: AppDispatch) => {
         type: ComponentMessage.MessageType.Update,
         component: component,
         id: component.id
-      }
-      dispatch(send(action))
-    },
-    updateEvent: (event: OSDLiveEvent): void => {
-      const action: EventMessage.Update = {
-        type: EventMessage.MessageType.Update,
-        name: event.name,
-        id: event.id
-      }
-      dispatch(send(action))
-    },
-    removeComponent: (eventId: string, componentId: string): void => {
-      const action: EventMessage.RemoveComponent = {
-        type: EventMessage.MessageType.RemoveComponent,
-        id: eventId,
-        componentId
-      }
-      dispatch(send(action))
-    },
-    addComponent: (eventId: string, componentId: string): void => {
-      const action: EventMessage.AddComponent = {
-        type: EventMessage.MessageType.AddComponent,
-        id: eventId,
-        componentId
       }
       dispatch(send(action))
     },

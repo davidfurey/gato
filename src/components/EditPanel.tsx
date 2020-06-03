@@ -14,10 +14,6 @@ interface EditPanelProps {
   components: { [key: string]: OSDComponent };
   events: { [key: string]: OSDLiveEvent };
   updateComponent: <T extends OSDComponent>(component: T) => void;
-  removeComponent: (eventId: string, componentId: string) => void;
-  addComponent: (eventId: string, componentId: string) => void;
-  newComponent: (componentId: string, name: string, type: string) => void;
-  updateEvent: (event: OSDLiveEvent) => void;
 }
 
 export function createPane(
