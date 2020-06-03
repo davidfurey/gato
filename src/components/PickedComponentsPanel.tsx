@@ -8,16 +8,18 @@ export interface PickedComponentsPanelProps {
   components: OSDComponent[];
   show: (id: string, displayId: string) => void;
   hide: (id: string, displayId: string) => void;
-  setComponent: (index: number, id: string) => void;
+  setComponent?: (index: number, id: string) => void;
   displays: Display[];
   pickedComponents: (string | null)[];
+  slots?: number;
+  title: string;
 }
 
 interface PickedComponentProps {
   availableComponents: OSDComponent[];
   show: (id: string, displayId: string) => void;
   hide: (id: string, displayId: string) => void;
-  setComponent: (id: string) => void;
+  setComponent?: (id: string) => void;
   displays: { 
     id: string; 
     name: string; 
@@ -101,7 +103,13 @@ function ComponentPicker(
 function PickedComponent(props: PickedComponentProps): JSX.Element {
   return <ButtonToolbar className="justify-content-between">
     <ButtonGroup>
-      <ComponentPicker selected={props.component} components={props.availableComponents} disabled={props.displays.some((d) => d.componentState === "entering" || d.componentState === "visible")} setComponent={props.setComponent} />
+      { props.setComponent !== undefined ?
+        <ComponentPicker 
+          selected={props.component} 
+          components={props.availableComponents} 
+          disabled={props.displays.some((d) => d.componentState === "entering" || d.componentState === "visible")} 
+          setComponent={props.setComponent} />
+          : props.component?.name }
     </ButtonGroup>
     <ButtonGroup>
       { props.displays.map((display) =>
@@ -122,10 +130,12 @@ function PickedComponent(props: PickedComponentProps): JSX.Element {
 
 //export class SettingsPanel extends Component<SettingsPanelProps, SettingsPanelState> {
 export function PickedComponentsPanel(props: PickedComponentsPanelProps): JSX.Element {
-  return <CollapsablePanel header="Picked components">
+  const slots = props.slots !== undefined ? props.slots : 5
+  const setComponent = props.setComponent
+  return <CollapsablePanel header={props.title}>
     <ListGroup variant="flush">
       { props.pickedComponents.concat(
-          Array(Math.max(0, 5 - props.pickedComponents.length)).fill(null)
+          Array(Math.max(0, slots - props.pickedComponents.length)).fill(null)
         ).map((c, i) => 
         <ListGroup.Item key={i}>
           <PickedComponent 
@@ -133,7 +143,8 @@ export function PickedComponentsPanel(props: PickedComponentsPanelProps): JSX.El
             availableComponents={props.components} 
             show={props.show} 
             hide={props.hide}
-            setComponent={(componentId: string): void => props.setComponent(i, componentId)}
+            setComponent={setComponent !== undefined ? 
+              (componentId: string): void => setComponent(i, componentId) : undefined}
             displays={props.displays.map((display) => {
               return { 
                 id: display.id, 

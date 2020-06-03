@@ -19,6 +19,7 @@ import * as RequestMessage from './api/Requests'
 import { PageNav } from './components/PageNav';
 import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';
 import { SettingsPanelContainer } from './containers/SettingsPanelContainer';
+import LiveComponentsPanelContainer from './containers/LiveComponentsPanelContainer';
 
 interface ControlProps {
   displays: Display[];
@@ -93,15 +94,24 @@ export class Control extends Component<ControlProps> {
   render(): JSX.Element {
     const liveDisplay = this.props.displays.find((d) => d.name === "live")
     const liveEvent = this.props.events[this.props.eventId]
+    const visibleComponents = liveDisplay?.onScreenComponents.filter((c) => c.state === "entering" || c.state === "visible").map((c) => c.id)
     return (
       <div className="container mt-4">
         <div className="row">
           <div className="col col-sm-auto" style={{ width: '25rem' }}>
-            { liveEvent ? <PickedComponentsPanelContainer 
+            { liveEvent ? <PickedComponentsPanelContainer
+              title="Picked Components"
               eventId={liveEvent.id} 
               pickedComponents={liveEvent.lists.find((l) => l.listType === "picked")?.components || []} 
               components={liveEvent.components.flatMap(this.lookupComponentById)} 
               displays={this.props.displays}/> : null 
+              }
+              { visibleComponents ? <LiveComponentsPanelContainer 
+              slots={0}
+              title="Live Components" 
+              pickedComponents={visibleComponents} 
+              components={visibleComponents.flatMap(this.lookupComponentById)} 
+              displays={liveDisplay ? [liveDisplay] : []}/> : null 
               }
             { liveDisplay ? <QuickCreatePanelContainer 
               display={liveDisplay} 
