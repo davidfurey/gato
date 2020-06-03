@@ -3,8 +3,8 @@ import { Display } from '../reducers/shared';
 import { Card, Form, Button, Col } from 'react-bootstrap'
 import { CollapsablePanel } from './CollapsablePanel';
 
-interface QuickCreatePanelProps {
-  show: (title: string, subtitle: string, display: Display, eventId: string) => undefined;
+export interface QuickCreatePanelProps {
+  show: (title: string, subtitle: string, display: Display, eventId: string) => void;
   display: Display;
   eventId: string;
 }

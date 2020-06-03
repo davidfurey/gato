@@ -3,7 +3,7 @@ import { Badge, ListGroup, ListGroupItem } from 'react-bootstrap'
 import { ClientStatus, ClientInterface } from '../api/Responses';
 import { CollapsablePanel } from './CollapsablePanel'
 
-interface ConnectivityPanelProps {
+export interface ConnectivityPanelProps {
   connected: boolean;
   serverName: string;
   clients: ClientStatus[];

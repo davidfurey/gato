@@ -3,7 +3,7 @@ import { Row, Modal, Button, Form, ListGroup, ListGroupItem, Col } from 'react-b
 import { OSDLiveEvent } from '../reducers/shared'
 import { CollapsablePanel } from './CollapsablePanel';
 
-interface SettingsPanelProps {
+export interface SettingsPanelProps {
   event: OSDLiveEvent | undefined;
   events: OSDLiveEvent[];
   setEvent: (eventId: string) => void;

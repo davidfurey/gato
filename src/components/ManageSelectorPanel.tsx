@@ -13,7 +13,7 @@ import { CreateEventButton } from './CreateEventButton';
 export interface ManageSelectorPanelProps {
   events: { [key: string]: OSDLiveEvent };
   components: { [key: string]: OSDComponent };
-  liveEventId?: string,
+  liveEventId?: string;
   deleteComponent: (id: string) => void;
   deleteEvent: (id: string) => void;
   openTab: (pane: EditPane) => void;

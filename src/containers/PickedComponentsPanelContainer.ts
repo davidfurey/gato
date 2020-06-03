@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { PickedComponentsPanel } from '../components/PickedComponentsPanel'
+import { PickedComponentsPanel, PickedComponentsPanelProps } from '../components/PickedComponentsPanel'
 import * as Transistion from '../api/Transitions'
 import { send } from '@giantmachines/redux-websocket';
 import * as List from '../api/Lists';
@@ -11,7 +11,8 @@ interface PickedComponentsPanelContainerProps {
 
 const mapDispatchToProps = (
   dispatch: AppDispatch, 
-  ownProps: PickedComponentsPanelContainerProps) => {
+  ownProps: PickedComponentsPanelContainerProps):
+  Pick<PickedComponentsPanelProps, "show" | "hide" | "setComponent"> => {
   return {
     show: (id: string, displayId: string): void => {
       const action: Transistion.GoTransistion = {

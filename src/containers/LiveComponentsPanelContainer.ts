@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { PickedComponentsPanel } from '../components/PickedComponentsPanel'
+import { PickedComponentsPanel, PickedComponentsPanelProps } from '../components/PickedComponentsPanel'
 import * as Transistion from '../api/Transitions'
 import { send } from '@giantmachines/redux-websocket';
 import { AppDispatch } from '../control';
@@ -9,7 +9,8 @@ interface LiveComponentsPanelContainerProps {
 }
 
 // todo: Live should be a cross for this panel
-const mapDispatchToProps = (dispatch: AppDispatch) => {
+const mapDispatchToProps = (dispatch: AppDispatch):
+  Pick<PickedComponentsPanelProps, "show" | "hide"> => {
   return {
     show: (id: string, displayId: string): void => {
       const action: Transistion.GoTransistion = {
