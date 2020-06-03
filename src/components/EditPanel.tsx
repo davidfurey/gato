@@ -4,7 +4,7 @@ import * as EditPanelReducer from '../reducers/editpanel';
 import { OSDComponent } from '../OSDComponent';
 import { OSDLiveEvent } from '../reducers/shared';
 import { ComponentEditPane } from './editpanes/ComponentEditPane';
-import { EventEditPane } from './editpanes/EventEditPane';
+import { EventEditPaneContainer } from '../containers/EventEditPaneContainer';
 
 interface EditPanelProps {
   editPanel: EditPanelReducer.EditPanelState;
@@ -25,11 +25,7 @@ export function createPane(
   components: { [key: string]: OSDComponent },
   events: { [key: string]: OSDLiveEvent },
   updateComponent: <T extends OSDComponent>(component: T) => void,
-  openTab: (pane: EditPanelReducer.EditPane) => void,
-  removeComponent: (eventId: string, componentId: string) => void,
-  addComponent: (eventId: string, componentId: string) => void,
-  newComponent: (componentId: string, name: string, type: string) => void,
-  updateEvent: (event: OSDLiveEvent) => void
+  openTab: (pane: EditPanelReducer.EditPane) => void
 ): JSX.Element {
   const pattern: EditPanelReducer.Pattern<JSX.Element> = {
 // eslint-disable-next-line react/display-name
@@ -41,15 +37,11 @@ export function createPane(
       />,
 // eslint-disable-next-line react/display-name
     [EditPanelReducer.EditPaneType.Event]: (pane) =>
-      <EventEditPane 
+      <EventEditPaneContainer 
         pane={pane} 
         event={events[pane.id]} 
         components={components} 
         openTab={openTab} 
-        removeComponent={removeComponent}
-        addComponent={addComponent}
-        newComponent={newComponent}
-        updateEvent={updateEvent}
       />
   }
   
@@ -74,11 +66,7 @@ export function EditPanel(props: EditPanelProps): JSX.Element {
               props.components, 
               props.events, 
               props.updateComponent, 
-              props.openTab, 
-              props.removeComponent,
-              props.addComponent,
-              props.newComponent,
-              props.updateEvent
+              props.openTab
           ) }
         </TabContainer>
         )  

@@ -8,7 +8,7 @@ import { ComponentPicker } from '../ComponentPicker';
 import { uuid } from 'uuidv4';
 import { EditableText } from '../EditableText';
 
-interface EventEditPaneProps {
+export interface EventEditPaneProps {
   pane: EditPanelReducer.EventEditPane;
   event: OSDLiveEvent;
   openTab: (pane: EditPanelReducer.EditPane) => void;
