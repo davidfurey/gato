@@ -71,6 +71,7 @@ function CreateEvent(action: Event.Create, state: SharedState): SharedState {
 }
 
 function DeleteEvent(action: Event.Delete, state: SharedState): SharedState {
+  // todo: if event has private components, deleting the events should delete the components
   if (state.eventId !== action.id) {
     const { [action.id]: ignored, ...rest } = state.events;
     return {
@@ -83,6 +84,7 @@ function DeleteEvent(action: Event.Delete, state: SharedState): SharedState {
 }
 
 function RemoveComponent(action: Event.RemoveComponent, state: SharedState): SharedState {
+  // todo: if component is private, removing it should delete it
   const event = state.events[action.id]
   if (event) {
     const newEvent = {
