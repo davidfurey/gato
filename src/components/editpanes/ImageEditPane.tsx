@@ -2,12 +2,23 @@ import React from 'react';
 import { Form, Row, Container } from 'react-bootstrap';
 import { ImageComponent } from '../OSDComponents/ImageComponent';
 import { EditableText } from '../EditableText';
+import { ViewPanel } from '../ViewPanel';
 
 export function ImageEditPane(props: { 
   component: ImageComponent;
   updateComponent: (component: ImageComponent) => void;
 }): JSX.Element {
-  return <Container className="mt-3 mb-3"><Form.Group>
+  return <Container className="mt-3 mb-3">
+    <ViewPanel 
+      name={"manage"} 
+      showCaption={false} 
+      preview={true}
+      components={[{
+        component: props.component,
+        state: "visible"
+      }]}
+    />
+    <Form.Group>
       <Form.Group as={Row}>
         <Form.Label column lg={2}>Name</Form.Label>
         <EditableText value={props.component.name} update={(v): void => 
