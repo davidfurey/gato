@@ -1,61 +1,31 @@
 import * as Transistion from '../../api/Transitions'
 import { curry } from '../../api/FunctionalHelpers'
 import { SharedState, OnScreenComponent, Display } from '../shared'
-import { ImageType } from '../../components/OSDComponents/ImageComponent'
 
 function goTransistion(action: Transistion.GoTransistion, state: SharedState): SharedState {
   const selectedDisplay = state.displays.find((display) => display.id === action.displayId)
-  if (selectedDisplay && action.inComponentId) {
-    const component = state.components[action.inComponentId]
-    if (component?.type === "lower-thirds") {
-      const onScreenComponents: OnScreenComponent[] = selectedDisplay.onScreenComponents.map(
-        (otherOnScreenComponent) => {
-        const otherComponent = state.components[otherOnScreenComponent.id]
-        if (otherComponent?.type === "lower-thirds") {
-          if (otherOnScreenComponent.id === action.inComponentId) {
-            return { ...otherOnScreenComponent, state: "entering" }
-          } else if (otherOnScreenComponent.state === "visible" || otherOnScreenComponent.state === "entering") {
-            return { ...otherOnScreenComponent, state: "exiting" }
-          }
-        }
-        return otherOnScreenComponent
-      })
-      const updatedLiveDisplay: Display = {
-        ...selectedDisplay,
-        onScreenComponents
+  if (selectedDisplay && action.inComponentId) {    
+    const onScreenComponents: OnScreenComponent[] = selectedDisplay.onScreenComponents.map(
+      (otherOnScreenComponent) => {
+      if (otherOnScreenComponent.id === action.inComponentId) {
+        return { ...otherOnScreenComponent, state: "entering" }
+      } else if (otherOnScreenComponent.state === "visible" || otherOnScreenComponent.state === "entering") {
+        return { ...otherOnScreenComponent, state: "exiting" }
       }
-      return {
-        ...state,
-        displays: state.displays.map((display) => 
-          display.id === selectedDisplay?.id ? updatedLiveDisplay : display
-        )
-      }
+      return otherOnScreenComponent
+    })
+    const updatedLiveDisplay: Display = {
+      ...selectedDisplay,
+      onScreenComponents
     }
-    if (component?.type === ImageType) {
-      const onScreenComponents: OnScreenComponent[] = selectedDisplay.onScreenComponents.map(
-        (otherOnScreenComponent) => {
-        const otherComponent = state.components[otherOnScreenComponent.id]
-        if (otherComponent?.type === ImageType) {
-          if (otherOnScreenComponent.id === action.inComponentId) {
-            return { ...otherOnScreenComponent, state: "entering" }
-          } else if (otherOnScreenComponent.state === "visible" || otherOnScreenComponent.state === "entering") {
-            return { ...otherOnScreenComponent, state: "exiting" }
-          }
-        }
-        return otherOnScreenComponent
-      })
-      const updatedLiveDisplay: Display = {
-        ...selectedDisplay,
-        onScreenComponents
-      }
-      return {
-        ...state,
-        displays: state.displays.map((display) => 
-          display.id === selectedDisplay?.id ? updatedLiveDisplay : display
-        )
-      }
+    return {
+      ...state,
+      displays: state.displays.map((display) => 
+        display.id === selectedDisplay?.id ? updatedLiveDisplay : display
+      )
     }
   }
+
 
   if (selectedDisplay && action.outComponentId) {
     const onScreenComponents: OnScreenComponent[] = selectedDisplay.onScreenComponents.map(
