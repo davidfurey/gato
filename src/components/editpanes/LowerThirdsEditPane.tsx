@@ -2,6 +2,7 @@ import React from "react";
 import { LowerThirdsComponent } from "../OSDComponents/LowerThirdsComponent";
 import { Container, Form, Row } from "react-bootstrap";
 import { EditableText } from "../EditableText";
+import { SharedStatusContainer } from "../../containers/SharedStatusContainer";
 
 export function LowerThirdsEditPane(props: { 
     component: LowerThirdsComponent;
@@ -35,6 +36,8 @@ export function LowerThirdsEditPane(props: {
             })
           } />
         </Form.Group>
-      </Form.Group></Container>
+        </Form.Group>
+        <SharedStatusContainer component={props.component} />
+      </Container>
   }
   

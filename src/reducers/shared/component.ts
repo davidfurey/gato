@@ -22,8 +22,7 @@ function create(action: Component.Create, state: SharedState): SharedState {
         ...state.components,
         [action.component.id]: {
           ...LowerThirds.template,
-          name: action.component.name,
-          id: action.component.id
+          ...action.component,
         }
       }
     }
@@ -34,8 +33,7 @@ function create(action: Component.Create, state: SharedState): SharedState {
         ...state.components,
         [action.component.id]: {
           ...Image.template,
-          name: action.component.name,
-          id: action.component.id
+          ...action.component,
         }
       }
     }
@@ -46,12 +44,69 @@ function create(action: Component.Create, state: SharedState): SharedState {
 }
 
 function updateComponent(action: Component.Update, state: SharedState): SharedState {
-  return {
-    ...state,
-    components: { 
-      ...state.components,
-      [action.component.id]: action.component
+  const component = state.components[action.id]
+  if (component) {
+    return {
+      ...state,
+      components: { 
+        ...state.components,
+        [action.id]: {
+          ...component,
+          ...action.component
+        }
+      }
     }
+  } else {
+    console.warn("Attempted to update missing component")
+    return state
+  }
+}
+
+function share(action: Component.Share, state: SharedState): SharedState {
+  const component = state.components[action.id]
+  if (component) {
+    return {
+      ...state,
+      components: { 
+        ...state.components,
+        [action.id]: {
+          ...component,
+          shared: true,
+        }
+      }
+    }
+  } else {
+    console.warn("Attempted to share missing component")
+    return state
+  }
+}
+
+function unshare(action: Component.Unshare, state: SharedState): SharedState {
+  const component = state.components[action.id]
+
+  if (component) {
+    const eventsUsingComponent = Object.values(
+        state.events
+    ).reduce((acc, curr) => acc + (curr.components.includes(action.id) ? 1 : 0), 0)
+
+    if (eventsUsingComponent === 1) {
+      return {
+        ...state,
+        components: { 
+          ...state.components,
+          [action.id]: {
+            ...component,
+            shared: false,
+          }
+        }
+      }
+    } else {
+      console.warn(`Refusing to unshare component in use by ${eventsUsingComponent} events`)
+      return state;
+    }
+  } else {
+    console.warn("Attempted to unshare missing component")
+    return state
   }
 }
 
@@ -117,11 +172,14 @@ function deleteComponent(action: Component.Delete, state: SharedState): SharedSt
   }
 }
 
+
 const reducer: Component.Pattern<(s: SharedState) => SharedState> = {
   [Component.MessageType.CreateLowerThird]: curry(createLowerThird),
   [Component.MessageType.Create]: curry(create),
   [Component.MessageType.Delete]: curry(deleteComponent),
   [Component.MessageType.Update]: curry(updateComponent),
+  [Component.MessageType.Share]: curry(share),
+  [Component.MessageType.Unshare]: curry(unshare),
 }
 
 export function reduce(message: Component.Message, state: SharedState): SharedState {

@@ -21,7 +21,8 @@ const mapDispatchToProps = (dispatch: AppDispatch):
           name: title,
           title,
           subtitle,
-          type: "lower-thirds"
+          type: "lower-thirds",
+          shared: false,
         }
       }
       dispatch(send(action))

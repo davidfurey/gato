@@ -38,7 +38,8 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<ManageSelectorPanelProp
           component: {
             id: componentId,
             name,
-            type
+            type,
+            shared: true,
           }
         }
         dispatch(send(create))

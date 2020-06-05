@@ -59,7 +59,9 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
       <Card.Footer className="p-2">
         <ComponentPicker
           components={
-            Object.values(props.components).filter((c) => !props.event.components.includes(c.id))
+            Object.values(props.components).filter((c) => 
+              c.shared && !props.event.components.includes(c.id)
+            )
           }
           existingComponent={(componentId): void => props.addComponent(props.event.id, componentId)}
           newComponent={(name: string, type: string): void => {

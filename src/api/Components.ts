@@ -8,6 +8,8 @@ export enum MessageType {
   CreateLowerThird = 'Component/Create/LowerThird',
   Delete = 'Component/Delete',
   Update = 'Component/Update',
+  Share = 'Component/Share',
+  Unshare = 'Component/Unshare',
 }
 
 export type Message = Create | Delete | CreateLowerThird | Update
@@ -21,9 +23,16 @@ export interface Create extends BaseMessage<MessageType.Create> {
 
 export interface Update extends BaseMessage<MessageType.Update> {
   id: Uuid;
-  component: OSDComponent;
+  component: Partial<OSDComponent>;
 }
 
+export interface Share extends BaseMessage<MessageType.Share> {
+  id: Uuid;
+}
+
+export interface Unshare extends BaseMessage<MessageType.Unshare> {
+  id: Uuid;
+}
 
 export interface CreateLowerThird extends BaseMessage<MessageType.CreateLowerThird> {
   id: Uuid;

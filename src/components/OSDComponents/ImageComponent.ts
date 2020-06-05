@@ -10,7 +10,8 @@ export const template: ImageComponent = {
   name: "Boat",
   id: "default",
   top: 0,
-  left: 0
+  left: 0,
+  shared: true,
 }
 
 export interface ImageComponent extends OSDComponent {

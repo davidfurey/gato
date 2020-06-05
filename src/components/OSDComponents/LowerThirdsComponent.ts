@@ -8,6 +8,7 @@ export const template: LowerThirdsComponent = {
   type: LowerThirdsType,
   name: "default",
   id: "default",
+  shared: true,
 }
 
 export interface LowerThirdsComponent extends OSDComponent {

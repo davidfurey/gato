@@ -32,7 +32,8 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<EventEditPaneProps,
           component: {
             id: componentId,
             name,
-            type
+            type,
+            shared: false,
           }
         }
         dispatch(send(create))
