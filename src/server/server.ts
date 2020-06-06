@@ -144,27 +144,30 @@ const emptyCallback = (): void => {
 }
 
 function storeComponents(components: { [key: string]: OSDComponent } ): void {
-  fs.writeFile('components.json', JSON.stringify(components), {}, emptyCallback)
+  fs.mkdirSync('config', { recursive: true })
+  fs.writeFile('config/components.json', JSON.stringify(components), {}, emptyCallback)
 }
 function storeDisplays(displays: Display[]): void {
-  fs.writeFile('displays.json', JSON.stringify(displays), {}, emptyCallback)
+  fs.mkdirSync('config', { recursive: true })
+  fs.writeFile('config/displays.json', JSON.stringify(displays), {}, emptyCallback)
 }
 function storeEvents(events: { [key: string]: OSDLiveEvent }): void {
-  fs.writeFile('events.json', JSON.stringify(events), {}, emptyCallback)
+  fs.mkdirSync('config', { recursive: true })
+  fs.writeFile('config/events.json', JSON.stringify(events), {}, emptyCallback)
 }
 
 function loadComponents(): Promise<{ [key: string]: OSDComponent }> {
-  const p = fs.promises.readFile('components.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: OSDComponent })
+  const p = fs.promises.readFile('config/components.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: OSDComponent })
   p.catch((error) => { console.log("Error parsing components"); console.log(error) })
   return p
 }
 function loadDisplays(): Promise<Display[]> {
-  const p = fs.promises.readFile('displays.json', 'utf8').then((data) => JSON.parse(data) as Display[])
+  const p = fs.promises.readFile('config/displays.json', 'utf8').then((data) => JSON.parse(data) as Display[])
   p.catch((error) => { console.log("Error parsing displays"); console.log(error) })
   return p
 }
 function loadEvents(): Promise<{ [key: string]: OSDLiveEvent }> {
-  const p = fs.promises.readFile('events.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: OSDLiveEvent })
+  const p = fs.promises.readFile('config/events.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: OSDLiveEvent })
   p.catch((error) => { console.log("Error parsing events"); console.log(error) })
   return p
 }
