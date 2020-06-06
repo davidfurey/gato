@@ -130,7 +130,7 @@ function PickedComponent(props: PickedComponentProps): JSX.Element {
 
 //export class SettingsPanel extends Component<SettingsPanelProps, SettingsPanelState> {
 export function PickedComponentsPanel(props: PickedComponentsPanelProps): JSX.Element {
-  const slots = props.slots !== undefined ? props.slots : 5
+  const slots = props.slots !== undefined ? props.slots : 10
   const setComponent = props.setComponent
   return <CollapsablePanel header={props.title}>
     <ListGroup variant="flush">
