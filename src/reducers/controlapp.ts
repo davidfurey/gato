@@ -18,7 +18,6 @@ const initialState: ControlAppState = {
   shared: {
     eventId: initialEvent.id,
     components: {},
-    groups: [],
     events: { [initialEvent.id]: initialEvent },
     displays: [{
       type: "OnAir",

@@ -13,17 +13,9 @@ type uuidv4 = string
 
 export interface SharedState {
   components: { [key: string]: OSDComponent };
-  groups: OSDComponentsGroup[];
   events: { [key: string]: OSDLiveEvent };
   displays: Display[];
   eventId: uuidv4;
-}
-
-export interface OSDComponentsGroup {
-  name: string;
-  id: uuidv4;
-  components: OSDComponent[];
-  hash: string;
 }
 
 export type ListType = "picked" | "slideshow"

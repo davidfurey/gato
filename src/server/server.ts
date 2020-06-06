@@ -8,7 +8,7 @@ import { Message } from '../api/Messages'
 import * as Request from '../api/Requests'
 import * as Response from '../api/Responses'
 import { ClientStatus, ClientInterface } from '../api/Responses'
-import { OSDLiveEvent, SharedState, reducer, Display, OSDComponentsGroup } from '../reducers/shared'
+import { OSDLiveEvent, SharedState, reducer, Display } from '../reducers/shared'
 import { uuid } from 'uuidv4'
 import fs from 'fs'
 import { OSDComponent } from '../OSDComponent';
@@ -45,7 +45,6 @@ let clients: ConnectionStatus[] = []
 
 let state: SharedState = {
   components: {},
-  groups: [],
   events: { [initialEvent.id]: initialEvent },
   eventId: initialEvent.id,
   displays: [{
@@ -153,9 +152,6 @@ function storeDisplays(displays: Display[]): void {
 function storeEvents(events: { [key: string]: OSDLiveEvent }): void {
   fs.writeFile('events.json', JSON.stringify(events), {}, emptyCallback)
 }
-function storeGroups(groups: OSDComponentsGroup[]): void {
-  fs.writeFile('groups.json', JSON.stringify(groups), {}, emptyCallback)
-}
 
 function loadComponents(): Promise<{ [key: string]: OSDComponent }> {
   const p = fs.promises.readFile('components.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: OSDComponent })
@@ -172,11 +168,6 @@ function loadEvents(): Promise<{ [key: string]: OSDLiveEvent }> {
   p.catch((error) => { console.log("Error parsing events"); console.log(error) })
   return p
 }
-function loadGroups(): Promise<OSDComponentsGroup[]> {
-  const p = fs.promises.readFile('groups.json', 'utf8').then((data) => JSON.parse(data) as OSDComponentsGroup[])
-  p.catch((error) => { console.log("Error parsing groups"); console.log(error) })
-  return p
-}
 
 function updateState(message: Message): void {
   const newState = reducer(state, message)
@@ -189,9 +180,6 @@ function updateState(message: Message): void {
   if (newState.events !== state.events) {
     storeEvents(newState.events)
   }
-  if (newState.groups !== state.groups) {
-    storeGroups(newState.groups)
-  }
   state = newState
 }
 
@@ -199,17 +187,15 @@ function loadStateFromDisk(): void {
   Promise.all<
     { [key: string]: OSDComponent }, 
     Display[], 
-    { [key: string]: OSDLiveEvent }, 
-    OSDComponentsGroup[]
+    { [key: string]: OSDLiveEvent }
   >(
-    [loadComponents(), loadDisplays(), loadEvents(), loadGroups()]
-  ).then(([components, displays, events, groups]) => {
+    [loadComponents(), loadDisplays(), loadEvents()]
+  ).then(([components, displays, events]) => {
     state = {
       eventId: Object.values(events)[0].id, // todo: should persist this to disk!
       components,
       displays,
-      events,
-      groups
+      events
     }
   })
 }

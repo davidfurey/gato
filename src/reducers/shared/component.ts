@@ -1,5 +1,5 @@
 import { curry } from '../../api/FunctionalHelpers'
-import { SharedState, ComponentList, OSDComponentsGroup, Display } from '../shared'
+import { SharedState, ComponentList, Display } from '../shared'
 import * as Component from '../../api/Components'
 import * as LowerThirds from '../../components/OSDComponents/LowerThirdsComponent'
 import * as Image from '../../components/OSDComponents/ImageComponent'
@@ -122,16 +122,6 @@ export function removeComponentFromList(l: ComponentList, componentId: string): 
   return l
 }
 
-function deleteComponentFromGroup(
-  group: OSDComponentsGroup, 
-  componentId: string
-): OSDComponentsGroup {
-  return {
-    ...group,
-    components: group.components.filter((c) => c.id !== componentId)
-  }
-}
-
 function deleteFromDisplay(
   display: Display, 
   componentId: string
@@ -167,7 +157,6 @@ function deleteComponent(action: Component.Delete, state: SharedState): SharedSt
     ...state,
     events,
     components: rest,
-    groups: state.groups.map((group) => deleteComponentFromGroup(group, action.id)),
     displays: state.displays.map((display) => deleteFromDisplay(display, action.id))
   }
 }
