@@ -187,19 +187,15 @@ function updateState(message: Message): void {
 }
 
 function loadStateFromDisk(): void {
-  Promise.all<
-    { [key: string]: OSDComponent }, 
-    Display[], 
-    { [key: string]: OSDLiveEvent }
-  >(
-    [loadComponents(), loadDisplays(), loadEvents()]
-  ).then(([components, displays, events]) => {
-    state = {
-      eventId: Object.values(events)[0].id, // todo: should persist this to disk!
-      components,
-      displays,
-      events
-    }
+  loadComponents().then((components) => {
+    state['components'] = components
+  })
+  loadDisplays().then((displays) => {
+    state['displays'] = displays
+  })
+  loadEvents().then((events) => {
+    state['events'] = events
+    state['eventId'] = Object.values(events)[0].id  // todo: should persist this to disk!
   })
 }
 // needs better error handling to avoid bad requests killing the server
