@@ -54,7 +54,12 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
         removeComponent={(componentId: string): void =>
           props.removeComponent(props.event.id, componentId)
         }
+        deleteComponent={(componentId: string): void =>
+          // if the component is not shared, this will delete it
+          props.removeComponent(props.event.id, componentId)
+        }
         openTab={props.openTab}
+        deleteSharedComponents={false}
       />
       <Card.Footer className="p-2">
         <ComponentPicker

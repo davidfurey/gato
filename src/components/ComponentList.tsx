@@ -11,6 +11,7 @@ export function ComponentListItem(
     openTab?: (pane: EditPane) => void;
     onClick?: () => void;
     active: boolean;
+    deleteSharedComponents: boolean;
   }
 ): JSX.Element {
   const [show, setShow] = useState(false);
@@ -36,8 +37,8 @@ export function ComponentListItem(
     {props.component.name}
     <ButtonGroup>
       { props.openTab ? <Button variant="info" size="sm" onClick={settings(props.openTab)}><span className="material-icons">settings</span></Button> : null }
-      { props.removeComponent ? <Button variant="danger" size="sm" onClick={props.removeComponent}><span className="material-icons">clear</span></Button> : null }
-      { props.deleteComponent ? <Button variant="danger" size="sm" onClick={handleShow}><span className="material-icons">delete</span></Button> : null }
+      { props.removeComponent && (props.component.shared && !props.deleteSharedComponents) ? <Button variant="secondary" size="sm" onClick={props.removeComponent}><span className="material-icons">clear</span></Button> : null }
+      { props.deleteComponent && (!props.component.shared || props.deleteSharedComponents) ? <Button variant="danger" size="sm" onClick={handleShow}><span className="material-icons">delete</span></Button> : null }
     </ButtonGroup>
     { props.deleteComponent ?
     <Modal show={show} onHide={handleClose} animation={false}>
@@ -45,7 +46,7 @@ export function ComponentListItem(
         <Modal.Title>Delete component</Modal.Title>
       </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete component &quot;{props.component.name}&quot;?
+          Are you sure you want to delete &quot;{props.component.name}&quot;?
         </Modal.Body>
       <Modal.Footer>
         <Button variant="danger" onClick={deleteHandler(props.deleteComponent)}>
@@ -67,7 +68,10 @@ export function ComponentList(props: {
   removeComponent?: (id: string) => void;
   onClick?: (id: string, active: boolean) => void;
   activeId?: string;
+  deleteSharedComponents?: boolean;
 }): JSX.Element {
+  const deleteSharedComponents = 
+    props.deleteSharedComponents === undefined ? true : props.deleteSharedComponents
   const deleteComponent = props.deleteComponent
   const removeComponent = props.removeComponent
   const onClick = props.onClick
@@ -90,6 +94,7 @@ export function ComponentList(props: {
           }
           openTab={openTab}
           active={component.id === props.activeId}
+          deleteSharedComponents={deleteSharedComponents}
         /> : <ListGroup.Item>Empty</ListGroup.Item>
     }
   })}

@@ -2,6 +2,7 @@ import { curry } from '../../api/FunctionalHelpers'
 import { OSDLiveEvent, SharedState, OnScreenComponent } from '../shared'
 import * as Event from '../../api/Events'
 import { removeComponentFromList } from './component'
+import { OSDComponent } from '../../OSDComponent'
 
 function updateDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
   if (state.eventId === event.id) {
@@ -83,10 +84,20 @@ function DeleteEvent(action: Event.Delete, state: SharedState): SharedState {
   return state
 }
 
+function removeComponent(
+  components: { [key: string]: OSDComponent }, 
+  id: string
+): { [key: string]: OSDComponent } {
+  const { [id]: ignored, ...rest } = components;
+  return rest
+}
+
 function RemoveComponent(action: Event.RemoveComponent, state: SharedState): SharedState {
-  // todo: if component is private, removing it should delete it
   const event = state.events[action.id]
   if (event) {
+    const component = state.components[action.componentId]
+    const sharedComponent = component ? component.shared : true
+    
     const newEvent = {
       ...event,
       components: event.components.filter((c) => c !== action.componentId),
@@ -98,7 +109,10 @@ function RemoveComponent(action: Event.RemoveComponent, state: SharedState): Sha
       events: {
         ...state.events,
         [action.id]: newEvent
-      }
+      },
+      components: sharedComponent ? 
+        state.components : 
+        removeComponent(state.components, action.componentId)
     }, newEvent)
   }
   return state
