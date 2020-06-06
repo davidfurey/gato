@@ -2,7 +2,6 @@ import { OSDLiveEvent } from "../reducers/shared";
 import { Badge, Col, Row } from "react-bootstrap";
 import React from "react";
 import { OSDComponent } from "../OSDComponent";
-import { ShareComponentButtonContainer } from "../containers/ShareComponentButtonContainer";
 import { ShareComponentButton } from "./ShareComponentButton";
 
 export interface SharedStatusProps {
