@@ -5,6 +5,7 @@ import { ViewPanel } from './components/ViewPanel';
 import { OSDComponent } from './OSDComponent';
 import { SharedState, Display, OnScreenComponent, OnScreenComponentState, OSDLiveEvent } from './reducers/shared'
 import { connect } from 'react-redux'
+import './viewer.css';
 import './style.css';
 import { createStore, applyMiddleware, Store } from 'redux'
 import { createReducer, ViewerAppState } from './reducers/viewerapp'
