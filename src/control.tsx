@@ -93,13 +93,16 @@ export class Control extends Component<ControlProps> {
   }
 
   render(): JSX.Element {
-    const liveDisplay = this.props.displays.find((d) => d.name === "live")
+    const overlayDisplay = this.props.displays.find((d) => d.name === "Overlay")
+    const onAirDisplays = this.props.displays.filter((d) => d.type === "OnAir")
     const liveEvent = this.props.events[this.props.eventId]
-    const visibleComponents = liveDisplay?.onScreenComponents.filter((c) => c.state === "entering" || c.state === "visible").map((c) => c.id)
+    const visibleComponents = onAirDisplays.flatMap((d) =>
+      d.onScreenComponents.filter((c) => c.state === "entering" || c.state === "visible").map((c) => c.id)
+    )
     return (
       <div className="container mt-4">
         <div className="row">
-          <div className="col col-sm-auto" style={{ width: '25rem' }}>
+          <div className="col col-sm-auto" style={{ width: '30rem' }}>
             { liveEvent ? <PickedComponentsPanelContainer
               title="Picked Components"
               eventId={liveEvent.id} 
@@ -112,10 +115,10 @@ export class Control extends Component<ControlProps> {
               title="Live Components" 
               pickedComponents={visibleComponents} 
               components={visibleComponents.flatMap(this.lookupComponentById)} 
-              displays={liveDisplay ? [liveDisplay] : []}/> : null 
+              displays={onAirDisplays}/> : null 
               }
-            { liveDisplay ? <QuickCreatePanelContainer 
-              display={liveDisplay} 
+            { overlayDisplay ? <QuickCreatePanelContainer 
+              display={overlayDisplay} 
               eventId={this.props.eventId} 
             /> : null }
             <SettingsPanelContainer />

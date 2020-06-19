@@ -35,7 +35,7 @@ maybeStore = store
 export type AppDispatch = typeof store.dispatch
 
 const params = new URLSearchParams(window.location.search)
-const displayName = params.get('display') || "live"
+const displayName = params.get('display') || "Overlay"
 const client = params.get('client') || "unknown"
 
 function socketUrl(): string {

@@ -49,7 +49,16 @@ let state: SharedState = {
   eventId: initialEvent.id,
   displays: [{
     type: "OnAir",
-    name: "live",
+    name: "Overlay",
+    id: uuid(),
+    resolution: {
+      width: 1920,
+      height: 1080
+    },
+    onScreenComponents: [],
+  },{
+    type: "OnAir",
+    name: "Picture Box",
     id: uuid(),
     resolution: {
       width: 1920,

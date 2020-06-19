@@ -30,16 +30,7 @@ const initialManageState: ManageAppState = {
     eventId: initialEvent.id,
     components: {},
     events: { [initialEvent.id]: initialEvent },
-    displays: [{
-      type: "OnAir",
-      name: "live",
-      id: uuid(),
-      resolution: {
-        width: 1920,
-        height: 1080
-      },
-      onScreenComponents: [],
-    }]
+    displays: []
   },
   connectivity: {
     serverName: undefined,
