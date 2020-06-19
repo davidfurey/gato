@@ -29,11 +29,12 @@ interface PickedComponentProps {
   component: OSDComponent | undefined;
 }
 
-function buttonVariant(screenType: ScreenType, componentState?: OnScreenComponentState): "danger" | "primary" | "outline-danger" | "outline-primary" {
-  if (screenType === "OnAir") {
-    return (componentState === "visible" || componentState === "entering") ? "danger" : "outline-danger"
-  } else {
-    return (componentState === "visible" || componentState === "entering") ? "primary" : "outline-primary"
+function buttonVariant(index: number, componentState?: OnScreenComponentState): 
+  "danger" | "primary" | "warning" | "outline-danger" | "outline-primary" | "outline-warning" {
+  switch (index % 3) {
+    case 1: return (componentState === "visible" || componentState === "entering") ? "warning" : "outline-warning"
+    case 2: return (componentState === "visible" || componentState === "entering") ? "primary" : "outline-primary"
+    default: return (componentState === "visible" || componentState === "entering") ? "danger" : "outline-danger"
   }
 }
 
@@ -45,6 +46,7 @@ function ShowHideButton(
     componentState?: OnScreenComponentState; 
     show: () => void; 
     hide: () => void;
+    index?: number;
   }
 ): JSX.Element {
   return <Button
@@ -52,7 +54,7 @@ function ShowHideButton(
     type="button"
     className={(props.componentState === "visible" || props.componentState === "entering") ? "" : "no-hover"}
     disabled={props.disabled}
-    variant={buttonVariant(props.displayType, props.componentState)}  
+    variant={buttonVariant(props.index || 0, props.componentState)}  
     onClick={(props.componentState === "visible" || props.componentState === "entering") ? props.hide : props.show}>{props.displayName}</Button>
 }
 
@@ -112,7 +114,7 @@ function PickedComponent(props: PickedComponentProps): JSX.Element {
           : props.component?.name }
     </ButtonGroup>
     <ButtonGroup>
-      { props.displays.map((display) =>
+      { props.displays.map((display, index) =>
         props.component?.id ?
         <ShowHideButton
           show={(): void => { 
@@ -123,6 +125,7 @@ function PickedComponent(props: PickedComponentProps): JSX.Element {
           }}
           componentState={display.componentState}
           disabled={!props.component?.id}
+          index={index}
           key={display.id} displayName={display.name} displayType={display.type} /> : null
       )}
     </ButtonGroup></ButtonToolbar>
