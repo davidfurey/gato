@@ -151,3 +151,7 @@ body {
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show>.btn-primary.dropdown-toggle {
 
 .btn-group>.btn:not(:first-child), .btn-group>.btn-group:not(:first-child) */
+
+.btn-group > .btn:not(:first-child) {
+  margin-left: 0px;
+}
