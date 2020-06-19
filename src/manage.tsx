@@ -19,6 +19,7 @@ import { EditPanelState } from './reducers/editpanel';
 import { Col, Container, Row } from 'react-bootstrap';
 import { PageNav } from './components/PageNav';
 import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';
+import { PageFooter } from './components/PageFooter';
 
 interface ManageProps {
   displays: Display[];
@@ -141,6 +142,7 @@ ReactDOM.render(
   <Provider store={store}>
     <PageNav page="manage" />
     <ManageContainer />
+    <PageFooter />
   </Provider>,
   document.getElementById("root")
 );

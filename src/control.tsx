@@ -20,6 +20,7 @@ import { PageNav } from './components/PageNav';
 import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';
 import { SettingsPanelContainer } from './containers/SettingsPanelContainer';
 import LiveComponentsPanelContainer from './containers/LiveComponentsPanelContainer';
+import { PageFooter } from './components/PageFooter';
 
 interface ControlProps {
   displays: Display[];
@@ -167,6 +168,7 @@ ReactDOM.render(
   <Provider store={store}>
     <ConnectedNav page="control" />
     <ControlContainer />
+    <PageFooter />
   </Provider>,
   document.getElementById("root")
 );

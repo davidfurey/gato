@@ -3,6 +3,10 @@ const { fork } = require('child_process');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack')
+const GitRevisionPlugin = require('git-revision-webpack-plugin');
+const gitRevisionPlugin = new GitRevisionPlugin();
+
 //how does this work?
 class LaunchServerPlugin {
   apply(compiler) {
@@ -126,6 +130,11 @@ const clientConfig = env => {
       extensions: [ '.tsx', '.ts', '.js' ],
     },
     plugins: [
+      new webpack.DefinePlugin({
+        'VERSION': JSON.stringify(gitRevisionPlugin.version()),
+        'COMMITHASH': JSON.stringify(gitRevisionPlugin.commithash()),
+        'BRANCH': JSON.stringify(gitRevisionPlugin.branch()),
+      }),
       new HtmlWebpackPlugin({
         chunks: ['app'],
         template: 'src/index.html',
