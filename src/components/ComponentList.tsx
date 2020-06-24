@@ -50,8 +50,8 @@ function ComponentListItem(
       setComponent={setComponent}
     /> : (props.component?.name || "Empty") }
     <ButtonGroup>
-      { swap ? <Button variant="secondary" disabled={props.last} size="sm" onClick={(): void => swap(false)}><span className="material-icons">keyboard_arrow_down</span></Button> : null }
-      { swap ? <Button variant="secondary" disabled={props.first} size="sm" onClick={(): void => swap(true)}><span className="material-icons">keyboard_arrow_up</span></Button> : null }
+      { swap ? <Button variant="outline-secondary" disabled={props.last} size="sm" onClick={(): void => swap(false)}><span className="material-icons material-icons-raised">keyboard_arrow_down</span></Button> : null }
+      { swap ? <Button variant="outline-secondary" disabled={props.first} size="sm" onClick={(): void => swap(true)}><span className="material-icons material-icons-raised">keyboard_arrow_up</span></Button> : null }
       { props.openTab && props.component ? <Button variant="info" size="sm" onClick={settings(props.openTab, props.component.id)}><span className="material-icons">settings</span></Button> : null }
       { props.removeComponent && (!props.removeOrDelete || props.removeOrDelete(props.component)) ? <Button variant="secondary" size="sm" onClick={props.removeComponent}><span className="material-icons">clear</span></Button> : null }
       { props.deleteComponent && (!props.removeOrDelete || !props.removeOrDelete(props.component)) ? <Button variant="danger" size="sm" onClick={handleShow}><span className="material-icons">delete</span></Button> : null }
