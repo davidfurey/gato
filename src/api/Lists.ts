@@ -38,6 +38,7 @@ export interface RemoveComponent extends BaseMessage<MessageType.RemoveComponent
   eventId: Uuid;
   name: string;
   componentId: Uuid;
+  position: number;
 }
 
 export interface ReplaceItem extends BaseMessage<MessageType.ReplaceItem> {

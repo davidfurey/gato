@@ -65,7 +65,9 @@ function removeComponent(action: List.RemoveComponent, state: SharedState): Shar
         if (l.name === action.name) {
           return {
             ...l,
-            components: l.components.filter((c) => c !== action.componentId)
+            components: l.components.filter((c, index) => 
+              index !== action.position || c !== action.componentId
+            )
           }
         } else {
           return l
