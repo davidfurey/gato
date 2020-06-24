@@ -30,7 +30,7 @@ export interface Create extends BaseMessage<MessageType.Create> {
 export interface AddComponent extends BaseMessage<MessageType.AddComponent> {
   eventId: Uuid;
   name: string;
-  componentId: Uuid;
+  componentId: Uuid | null;
   position: number;
 }
 
@@ -44,7 +44,7 @@ export interface MoveComponent extends BaseMessage<MessageType.MoveComponent> {
 export interface RemoveComponent extends BaseMessage<MessageType.RemoveComponent> {
   eventId: Uuid;
   name: string;
-  componentId: Uuid;
+  componentId: Uuid | null;
   position: number;
 }
 
