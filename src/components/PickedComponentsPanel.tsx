@@ -1,8 +1,9 @@
 import { OSDComponent } from '../OSDComponent'
 import React from 'react';
 import { Display, OnScreenComponentState, ScreenType } from '../reducers/shared'
-import { ButtonToolbar, DropdownButton,Dropdown, ButtonGroup, ListGroup, Button, Tooltip, OverlayTrigger } from 'react-bootstrap'
+import { ButtonToolbar, ButtonGroup, ListGroup, Button } from 'react-bootstrap'
 import { CollapsablePanel } from './CollapsablePanel';
+import { ComponentDropdown } from './ComponentDropdown';
 
 export interface PickedComponentsPanelProps {
   components: OSDComponent[];
@@ -58,55 +59,11 @@ function ShowHideButton(
     onClick={(props.componentState === "visible" || props.componentState === "entering") ? props.hide : props.show}>{props.displayName}</Button>
 }
 
-function ComponentPicker(
-  props: { 
-    selected: OSDComponent | undefined; 
-    components: OSDComponent[]; 
-    disabled: boolean; 
-    setComponent: (id: string) => void;
-  }
-): JSX.Element {
-  if (props.disabled) {
-    return <OverlayTrigger overlay={<Tooltip id="button-tooltip">On screen components cannot be changed</Tooltip>}>
-      <span className="d-inline-block">
-      <DropdownButton
-        size="sm"
-        variant="dark"
-        id="dropdown-basic-button" 
-        title={props.selected?.name || "(empty)"} 
-        disabled={props.disabled}
-        style={{ pointerEvents: 'none' }}
-      >
-      {props.components.map((component) => 
-        <Dropdown.Item 
-          key={component.id} 
-          onClick={(): void => props.setComponent(component.id)}
-        >{component.name}</Dropdown.Item> )}
-      </DropdownButton>
-      </span>
-    </OverlayTrigger>
-  } else {
-    return <DropdownButton
-      size="sm"
-      variant="dark"
-      id="dropdown-basic-button" 
-      title={props.selected?.name || "(empty)"} 
-      disabled={props.disabled}
-    >
-      <Dropdown.Item key={0} onClick={(): void => props.setComponent("0")}>(empty)</Dropdown.Item>
-    {props.components.map((component) => 
-      <Dropdown.Item key={component.id} onClick={(): void => props.setComponent(component.id)}>
-        {component.name}
-      </Dropdown.Item> 
-    )}
-    </DropdownButton>
-  }
-}
 function PickedComponent(props: PickedComponentProps): JSX.Element {
   return <ButtonToolbar className="justify-content-between">
     <ButtonGroup>
       { props.setComponent !== undefined ?
-        <ComponentPicker 
+        <ComponentDropdown 
           selected={props.component} 
           components={props.availableComponents} 
           disabled={props.displays.some((d) => d.componentState === "entering" || d.componentState === "visible")} 
