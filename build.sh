@@ -3,7 +3,7 @@
 set -e
 
 rm -rf dist/*
-rm gato.tar.gz
+[ -e gato.tar.gz ] && rm gato.tar.gz
 
 npm run build:prod
 
