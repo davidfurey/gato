@@ -39,6 +39,7 @@ module.exports =  {
               ignoreUrls: true,
           },
       ],
+      'no-trailing-spaces': 'error',
       "@typescript-eslint/no-unused-vars": ['error', { "argsIgnorePattern": "^_", "varsIgnorePattern": "^ignored?$" }]
     //   '@typescript-eslint/no-unused-vars': 'off'
   },
