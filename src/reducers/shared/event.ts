@@ -39,7 +39,7 @@ function updateDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
 
 function AddComponent(action: Event.AddComponent, state: SharedState): SharedState {
   const event = state.events[action.id]
-  if (event) {
+  if (event && !event.components.includes(action.componentId)) {
     const newEvent = {
       ...event,
       components: event.components.concat(action.componentId)
