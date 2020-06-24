@@ -13,7 +13,7 @@ interface ComponentPickerProps {
   className?: string;
 }
 
-export function LoadComponent(props: { 
+export function LoadComponent(props: {
   components: OSDComponent[];
   existingComponent: (id: string) => void;
   close: () => void;
@@ -27,10 +27,10 @@ export function LoadComponent(props: {
           <Row className="flex-fill d-flex">
             <Col className="overflow-auto flex-shrink-1 position-relative p-0">
               <div className="position-absolute w-100">
-                <ComponentList 
-                  components={props.components} 
+                <ComponentList
+                  components={props.components}
                   onClick={
-                    (id: string, active: boolean): void => 
+                    (id: string, active: boolean): void =>
                       active ? setSelectedComponent(null) : setSelectedComponent(id)
                   }
                   activeId={selectedComponent !== null ? selectedComponent : undefined}
@@ -41,10 +41,10 @@ export function LoadComponent(props: {
         </div>
       </Container>
       <Card.Footer className="flex-shrink-1 pt-2 pb-2 text-center">
-        <Button 
-          size="sm" 
-          variant="primary" 
-          className="mr-2" 
+        <Button
+          size="sm"
+          variant="primary"
+          className="mr-2"
           disabled={selectedComponent == null}
           onClick={(): void => {
               if (selectedComponent !== null) {
@@ -64,7 +64,7 @@ export function LoadComponent(props: {
   </div>
 }
 
-function CreateComponent(props: { 
+function CreateComponent(props: {
   newComponent: (name: string, type: string) => void;
   close: () => void;
 }): JSX.Element {
@@ -92,9 +92,9 @@ function CreateComponent(props: {
       </Form.Group>
     </Container>
     <Card.Footer className="flex-shrink-1 pt-2 pb-2 text-center">
-      <Button 
-        size="sm" 
-        variant="success" 
+      <Button
+        size="sm"
+        variant="success"
         className="mr-2"
         disabled={name === ""}
         onClick={(): void => { props.newComponent(name, type); props.close() }}
@@ -108,7 +108,7 @@ function CreateComponent(props: {
   </Container>
 }
 
-function PickerDialog(props: { 
+function PickerDialog(props: {
   close: () => void;
   newComponent: (name: string, type: string) => void;
   existingComponent?: (id: string) => void;
