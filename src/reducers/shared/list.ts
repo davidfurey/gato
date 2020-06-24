@@ -123,12 +123,39 @@ function replaceItem(action: List.ReplaceItem, state: SharedState): SharedState 
   }, state)
 }
 
+function swapItems(action: List.SwapItems, state: SharedState): SharedState {
+  return updateEvent(action.eventId, (event) => {
+    return {
+      ...event,
+      lists: event.lists.map((l) => {
+        if (l.name === action.name) {
+          const components = [...l.components]
+          if (
+            action.sourcePosition >= 0 && action.sourcePosition < l.components.length &&
+            action.destinationPosition >= 0 && action.destinationPosition < l.components.length &&
+            components[action.sourcePosition] === action.sourceComponent
+          ) {
+            components[action.sourcePosition] = components[action.destinationPosition]
+            components[action.destinationPosition] = action.sourceComponent
+            return {
+              ...l,
+              components
+            }
+          }
+        }
+        return l
+      })
+    }
+  }, state)
+}
+
 const reducer: List.Pattern<(s: SharedState) => SharedState> = {
   [List.MessageType.AddComponent]: curry(addComponent),
   [List.MessageType.RemoveComponent]: curry(removeComponent),
   [List.MessageType.Create]: curry(create),
   [List.MessageType.MoveComponent]: curry(moveComponent),
   [List.MessageType.ReplaceItem]: curry(replaceItem),
+  [List.MessageType.SwapItems]: curry(swapItems),
 }
 
 export function reduce(message: List.Message, state: SharedState): SharedState {
