@@ -2,16 +2,22 @@ import React, { useState } from 'react';
 import { Modal, Button, ListGroup, ButtonGroup } from 'react-bootstrap'
 import { OSDComponent } from '../OSDComponent';
 import { EditPane, EditPaneType } from '../reducers/editpanel';
+import { ComponentDropdown } from './ComponentDropdown'
 
-export function ComponentListItem( 
-  props: { 
-    component: OSDComponent; 
+function ComponentListItem(
+  props: {
+    component: OSDComponent | null;
     deleteComponent?: () => void;
     removeComponent?: () => void;
     openTab?: (pane: EditPane) => void;
+    swap?: (up: boolean) => void;
     onClick?: () => void;
+    setComponent?: (id: string) => void;
+    components?: OSDComponent[];
+    first: boolean;
+    last: boolean;
     active: boolean;
-    deleteSharedComponents: boolean;
+    removeOrDelete?: (component: OSDComponent | null) => boolean;
   }
 ): JSX.Element {
   const [show, setShow] = useState(false);
@@ -26,21 +32,31 @@ export function ComponentListItem(
   const handleClose = (): void => setShow(false)
   const handleShow = (): void => setShow(true)
 
-  function settings(openTab: (pane: EditPane) => void): () => void {
+  const swap = props.swap
+  const setComponent = props.setComponent
+
+  function settings(openTab: (pane: EditPane) => void, id: string): () => void {
     return (): void => openTab({
       type: EditPaneType.Component,
-      id: props.component.id,
+      id: id,
     })
   }
 
   return <ListGroup.Item active={props.active} action={props.onClick !== undefined} className="d-flex justify-content-between align-items-center" onClick={props.onClick}>
-    {props.component.name}
+    {setComponent ? <ComponentDropdown
+      selected={props.component || undefined}
+      components={props.components || []}
+      disabled={false}
+      setComponent={setComponent}
+    /> : (props.component?.name || "Empty") }
     <ButtonGroup>
-      { props.openTab ? <Button variant="info" size="sm" onClick={settings(props.openTab)}><span className="material-icons">settings</span></Button> : null }
-      { props.removeComponent && (props.component.shared && !props.deleteSharedComponents) ? <Button variant="secondary" size="sm" onClick={props.removeComponent}><span className="material-icons">clear</span></Button> : null }
-      { props.deleteComponent && (!props.component.shared || props.deleteSharedComponents) ? <Button variant="danger" size="sm" onClick={handleShow}><span className="material-icons">delete</span></Button> : null }
+      { swap ? <Button variant="secondary" disabled={props.last} size="sm" onClick={(): void => swap(false)}><span className="material-icons">keyboard_arrow_down</span></Button> : null }
+      { swap ? <Button variant="secondary" disabled={props.first} size="sm" onClick={(): void => swap(true)}><span className="material-icons">keyboard_arrow_up</span></Button> : null }
+      { props.openTab && props.component ? <Button variant="info" size="sm" onClick={settings(props.openTab, props.component.id)}><span className="material-icons">settings</span></Button> : null }
+      { props.removeComponent && (!props.removeOrDelete || props.removeOrDelete(props.component)) ? <Button variant="secondary" size="sm" onClick={props.removeComponent}><span className="material-icons">clear</span></Button> : null }
+      { props.deleteComponent && (!props.removeOrDelete || !props.removeOrDelete(props.component)) ? <Button variant="danger" size="sm" onClick={handleShow}><span className="material-icons">delete</span></Button> : null }
     </ButtonGroup>
-    { props.deleteComponent ?
+    { props.deleteComponent && props.component ?
     <Modal show={show} onHide={handleClose} animation={false}>
       <Modal.Header closeButton>
         <Modal.Title>Delete component</Modal.Title>
@@ -61,42 +77,51 @@ export function ComponentListItem(
   </ListGroup.Item>
 }
 
-export function ComponentList(props: { 
+export function ComponentList(props: {
   components: (OSDComponent | null)[];
+  availableComponents?: OSDComponent[];
+  setComponent?: (index: number, id: string) => void;
   deleteComponent?: (id: string) => void;
   openTab?: (pane: EditPane) => void;
-  removeComponent?: (id: string) => void;
+  removeComponent?: (id: string | null, index: number) => void;
+  removeOrDelete?: (component: OSDComponent | null) => boolean;
+  swap?: (componentId: string, position: number, newPosition: number) => void;
   onClick?: (id: string, active: boolean) => void;
   activeId?: string;
-  deleteSharedComponents?: boolean;
 }): JSX.Element {
-  const deleteSharedComponents = 
-    props.deleteSharedComponents === undefined ? true : props.deleteSharedComponents
   const deleteComponent = props.deleteComponent
   const removeComponent = props.removeComponent
   const onClick = props.onClick
   const openTab = props.openTab
+  const swap = props.swap
+  const setComponent = props.setComponent
   const seenIds: { [id: string]: number} = {} // list can contain duplicates
   return <ListGroup variant="flush">
-  {props.components.map((component) => {
-    if (component === null) {
-      return <ListGroup.Item>Empty</ListGroup.Item>
-    } else {
-      seenIds[component.id] = (seenIds[component.id] || 0) + 1
-      return component !== null ?
-        <ComponentListItem 
-          key={component.id + seenIds[component.id]} 
-          component={component} 
-          deleteComponent={deleteComponent ? (): void => deleteComponent(component.id) : undefined }
-          removeComponent={removeComponent ? (): void => removeComponent(component.id) : undefined }
-          onClick={onClick ? (): void => 
-            onClick(component.id, component.id === props.activeId) : undefined 
-          }
-          openTab={openTab}
-          active={component.id === props.activeId}
-          deleteSharedComponents={deleteSharedComponents}
-        /> : <ListGroup.Item>Empty</ListGroup.Item>
-    }
+  {props.components.map((component, index) => {
+    seenIds[component?.id || "empty"] = (seenIds[component?.id || "empty"] || 0) + 1
+    return <ComponentListItem
+      key={(component?.id || "empty") + seenIds[component?.id || "empty"]}
+      setComponent={setComponent ? (id: string): void => setComponent(index, id) : undefined}
+      components={props.availableComponents}
+      first={index === 0}
+      last={index === (props.components.length - 1)}
+      component={component}
+      deleteComponent={
+        deleteComponent && component ? (): void => deleteComponent(component.id) : undefined
+      }
+      removeComponent={
+        removeComponent ? (): void => removeComponent(component?.id || null, index) : undefined
+      }
+      swap={swap && component ? (up: boolean): void =>
+        swap(component.id, index, index + (up ? -1 : 1)) : undefined
+      }
+      onClick={onClick && component ? (): void =>
+        onClick(component.id, component.id === props.activeId) : undefined
+      }
+      openTab={component ? openTab : undefined}
+      active={component !== null && (component.id === props.activeId)}
+      removeOrDelete={props.removeOrDelete}
+    />
   })}
   </ListGroup>
 }

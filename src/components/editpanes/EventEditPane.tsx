@@ -2,7 +2,7 @@ import React from 'react';
 import * as EditPanelReducer from '../../reducers/editpanel';
 import { OSDLiveEvent } from '../../reducers/shared';
 import { OSDComponent } from '../../OSDComponent';
-import { Container, Card, Badge, Form, Row } from 'react-bootstrap';
+import { Container, Card, Badge, Form, Row, Button } from 'react-bootstrap';
 import { ComponentList } from '../ComponentList';
 import { ComponentPicker } from '../ComponentPicker';
 import { uuid } from 'uuidv4';
@@ -16,6 +16,26 @@ export interface EventEditPaneProps {
   addComponent: (eventId: string, componentId: string) => void;
   newComponent: (componentId: string, name: string, type: string) => void;
   updateEvent: (event: OSDLiveEvent) => void;
+  setComponent: (eventId: string, listName: string, index: number, id: string) => void;
+  swapComponent: (
+    eventId: string,
+    listName: string,
+    componentId: string,
+    sourcePosition: number,
+    destinationPosition: number
+    ) => void;
+  removeListComponent: (
+    eventId: string,
+    listName: string,
+    index: number,
+    componentId: string
+  ) => void;
+  addListComponent: (
+    eventId: string,
+    listName: string,
+    index: number,
+    componentId: string | null
+  ) => void;
   components: { [key: string]: OSDComponent };
 }
 
@@ -30,6 +50,7 @@ function capitalise(s: string): string {
 }
 
 export function EventEditPane(props: EventEditPaneProps): JSX.Element {
+  const eventComponents = props.event.components.flatMap((id) => props.components[id] || [])
   return <Container className="mt-3 mb-3">
     <Card style={{ width: "30rem" }} className="mb-3">
       <Card.Header><PaneIcon type="description" /> Metadata</Card.Header>
@@ -59,7 +80,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
           props.removeComponent(props.event.id, componentId)
         }
         openTab={props.openTab}
-        deleteSharedComponents={false}
+        removeOrDelete={(component): boolean => component?.shared || true}
       />
       <Card.Footer className="p-2">
         <ComponentPicker
@@ -94,7 +115,24 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
             )
           }  // todo: should be storing empty list items as null not as "0"
           openTab={props.openTab}
+          setComponent={(index: number, id: string): void =>
+            props.setComponent(props.event.id, eList.name, index, id)
+          }
+          availableComponents={eventComponents}
+          swap={(componentId: string, position: number, newPosition: number): void =>
+            props.swapComponent(props.event.id, eList.name, componentId, position, newPosition)
+          }
+          removeComponent={(id: string, index: number): void => {
+            props.removeListComponent(props.event.id, eList.name, index, id)
+          }}
         />
+        <Card.Footer className="p-2">
+        <Button onClick={(): void =>
+          props.addListComponent(props.event.id, eList.name, eList.components.length, null)}
+        >
+          <span className="material-icons material-icons-raised">add</span> Add
+        </Button>
+      </Card.Footer>
       </Card>
     )}
   </Container>

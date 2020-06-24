@@ -3,11 +3,19 @@ import { EventEditPane, EventEditPaneProps } from "../components/editpanes/Event
 import { AppDispatch } from "../manage";
 import * as EventMessage from '../api/Events'
 import * as ComponentMessage from '../api/Components'
+import * as ListMessage from '../api/Lists'
 import { send } from '@giantmachines/redux-websocket';
 import { OSDLiveEvent } from "../reducers/shared";
 
-const mapDispatchToProps = (dispatch: AppDispatch): Pick<EventEditPaneProps, 
-  "removeComponent" | "addComponent" | "newComponent" | "updateEvent"> => {
+const mapDispatchToProps = (dispatch: AppDispatch): Pick<EventEditPaneProps,
+  "removeComponent" |
+  "addComponent" |
+  "newComponent" |
+  "updateEvent" |
+  "swapComponent" |
+  "setComponent" |
+  "removeListComponent" |
+  "addListComponent"> => {
     return {
       removeComponent: (eventId: string, componentId: string): void => {
         const action: EventMessage.RemoveComponent = {
@@ -43,6 +51,63 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<EventEditPaneProps,
           type: EventMessage.MessageType.Update,
           name: event.name,
           id: event.id
+        }
+        dispatch(send(action))
+      },
+      swapComponent: (
+        eventId: string,
+        listName: string,
+        componentId: string,
+        sourcePosition: number,
+        destinationPosition: number
+      ): void => {
+        const action: ListMessage.SwapItems = {
+          type: ListMessage.MessageType.SwapItems,
+          eventId,
+          name: listName,
+          sourcePosition,
+          destinationPosition,
+          sourceComponent: componentId,
+        }
+        dispatch(send(action))
+      },
+      setComponent: (eventId: string, listName: string, index: number, id: string): void => {
+        const action: ListMessage.ReplaceItem = {
+          type: ListMessage.MessageType.ReplaceItem,
+          eventId,
+          name: listName,
+          componentId: id,
+          position: index
+        }
+        dispatch(send(action))
+      },
+      removeListComponent: (
+        eventId: string,
+        listName: string,
+        index: number,
+        componentId: string
+      ): void => {
+        const action: ListMessage.RemoveComponent = {
+          type: ListMessage.MessageType.RemoveComponent,
+          eventId,
+          name: listName,
+          componentId,
+          position: index,
+        }
+        dispatch(send(action))
+      },
+      addListComponent: (
+        eventId: string,
+        listName: string,
+        index: number,
+        componentId: string | null
+      ): void => {
+        const action: ListMessage.AddComponent = {
+          type: ListMessage.MessageType.AddComponent,
+          eventId,
+          name: listName,
+          componentId,
+          position: index,
         }
         dispatch(send(action))
       },
