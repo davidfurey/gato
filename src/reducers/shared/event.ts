@@ -56,11 +56,15 @@ function AddComponent(action: Event.AddComponent, state: SharedState): SharedSta
 }
 
 function CreateEvent(action: Event.Create, state: SharedState): SharedState {
-  const newEvent = {
+  const newEvent: OSDLiveEvent = {
     name: action.name,
     id: action.id,
     components: [],
-    lists: [],
+    lists: [{
+      name: "quick",
+      listType: "picked",
+      components: [null, null, null, null, null]
+    }],
   }
   return {
     ...state,
