@@ -1,9 +1,10 @@
 import 'core-js/features/object/from-entries';
 import path from 'path';
-import express, { Request as ExpressRequest } from 'express';
+import express from 'express';
 import compression from 'compression';
 import * as WebSocket from 'ws';
 import * as http from 'http';
+import * as net from 'net';
 import { Message } from '../api/Messages'
 import * as Request from '../api/Requests'
 import * as Response from '../api/Responses'
@@ -303,8 +304,12 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 
 app.get('/healthcheck', (_req, res) => res.send("Ok"));
 
-server.on('upgrade', (request: ExpressRequest<any,any, any, any>, socket, head) => {
-  const pathname = url.parse(request.url).pathname;
+server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
+  if (!request.url) {
+    socket.destroy()
+    return
+  }
+  const pathname = url.parse(request.url || "").pathname;
   console.log(request.headers['user-agent'])
   console.log(request.headers)
   if (pathname === '/control-connection') {
