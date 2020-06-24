@@ -9,7 +9,7 @@ import { ImageType } from './OSDComponents/ImageComponent';
 interface ComponentPickerProps {
   components?: OSDComponent[];
   existingComponent?: (id: string) => void;
-  newComponent: (name: string, type: string) => void;
+  newComponent?: (name: string, type: string) => void;
   className?: string;
 }
 
@@ -110,40 +110,51 @@ function CreateComponent(props: {
 
 function PickerDialog(props: {
   close: () => void;
-  newComponent: (name: string, type: string) => void;
+  newComponent?: (name: string, type: string) => void;
   existingComponent?: (id: string) => void;
   components?: OSDComponent[];
 }): JSX.Element {
-  if (props.components && props.existingComponent) { 
+  if (props.components && props.existingComponent && props.newComponent) {
     return <TabbedPanel className="" variant="pills" size="sm">
-      <TabContainer name="Existing" eventKey="existing">  
-        <LoadComponent 
-          components={props.components} 
-          close={props.close} 
-          existingComponent={props.existingComponent} 
-        /> 
+      <TabContainer name="Existing" eventKey="existing">
+        <LoadComponent
+          components={props.components}
+          close={props.close}
+          existingComponent={props.existingComponent}
+        />
       </TabContainer>
-      <TabContainer name="New" eventKey="new">
-        <CreateComponent newComponent={props.newComponent} close={props.close} />
-      </TabContainer>
+        <TabContainer name="New" eventKey="new">
+          <CreateComponent newComponent={props.newComponent} close={props.close} />
+        </TabContainer> : null
     </TabbedPanel>
-  } else {
+  } else if (props.newComponent) {
     return <Card>
       <Card.Header className="px-3 py-2 bg-primary text-center">Component</Card.Header>
       <CreateComponent newComponent={props.newComponent} close={props.close} />
     </Card>
+  } else if (props.components && props.existingComponent) {
+    return <Card>
+      <Card.Header className="px-3 py-2 bg-primary text-center">Component</Card.Header>
+      <LoadComponent
+        components={props.components}
+        close={props.close}
+        existingComponent={props.existingComponent}
+      />
+    </Card>
+  } else {
+    return <Card></Card>
   }
 }
 
 function popover(
   close: () => void,
-  newComponent: (name: string, type: string) => void,
+  newComponent?: (name: string, type: string) => void,
   existingComponent?: (id: string) => void,
-  components?: OSDComponent[], 
+  components?: OSDComponent[],
 ): JSX.Element {
   return <Popover id="popover-basic" className="bg-secondary p-0">
-    <PickerDialog 
-      close={close} 
+    <PickerDialog
+      close={close}
       newComponent={newComponent}
       existingComponent={existingComponent}
       components={components}
@@ -160,7 +171,7 @@ export function ComponentPicker(props: ComponentPickerProps): JSX.Element {
   const newOnly = props.existingComponent === undefined || props.components === undefined
   return <div>
     <Button ref={target} onClick={(): void => setShow(!show)} className={props.className}>
-        <span className="material-icons material-icons-raised">add</span> 
+        <span className="material-icons material-icons-raised">add</span>
         { newOnly ? "New component" : "Add component" }
     </Button>
     <Overlay placement="right" target={target.current} show={show}>{popover(
