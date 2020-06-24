@@ -129,7 +129,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
         <Button onClick={(): void =>
           props.addListComponent(props.event.id, eList.name, eList.components.length, null)}
         >
-          <span className="material-icons material-icons-raised">add</span> Add
+          <span className="material-icons material-icons-raised">add</span> Add slot
         </Button>
       </Card.Footer>
       </Card>
