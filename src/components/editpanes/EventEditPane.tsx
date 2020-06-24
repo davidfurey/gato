@@ -114,7 +114,6 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
               (cId) => cId !== null && props.components[cId] ? props.components[cId] : null
             )
           }  // todo: should be storing empty list items as null not as "0"
-          openTab={props.openTab}
           setComponent={(index: number, id: string): void =>
             props.setComponent(props.event.id, eList.name, index, id)
           }
