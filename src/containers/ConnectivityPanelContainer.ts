@@ -2,7 +2,7 @@ import { ConnectivityPanel, ConnectivityPanelProps } from "../components/Connect
 import { connect } from "react-redux";
 import { BaseAppState } from "../reducers/base";
 
-const mapStateToProps = (state: BaseAppState): 
+const mapStateToProps = (state: BaseAppState):
   Pick<ConnectivityPanelProps, "serverName" | "connected" | "clients"> => {
   return {
     serverName: state.connectivity.serverName || "streamer-1.yellowbill.co.uk",

@@ -32,7 +32,7 @@ interface ManageProps {
 let maybeStore: Store<ManageAppState, ManageAppActions.Action> | undefined = undefined
 
 const reduxWebsocketMiddleware = reduxWebsocket({
-  onOpen: (_: WebSocket) => { 
+  onOpen: (_: WebSocket) => {
     maybeStore? maybeStore.dispatch(send({"type": RequestMessage.MessageType.GetSharedState })) : null
   },
   reconnectOnClose: true,
@@ -57,9 +57,9 @@ function socketUrl(): string {
 store.dispatch(websocketConnect(socketUrl()));
 
 function objectFilter<T>(
-  obj: { [key: string]: T }, 
+  obj: { [key: string]: T },
   fn: (pv: T, pk: string, pi: number) => boolean
-): 
+):
 { [key: string]: T } {
   return Object.fromEntries(
     Object.entries(obj).filter(
@@ -73,12 +73,12 @@ export class Manage extends Component<ManageProps> {
     super(props)
     setInterval(() => {
       if (
-        store.getState().connectivity.connected && 
+        store.getState().connectivity.connected &&
         Date.now() - store.getState().connectivity.lastPong > 2000
       ) {
         store.dispatch({ type: Connectivity.ActionType.Disconnected})
       }
-      store.dispatch(send({"type": RequestMessage.MessageType.Ping })) 
+      store.dispatch(send({"type": RequestMessage.MessageType.Ping }))
     }, 1000)
   }
 
@@ -98,23 +98,23 @@ export class Manage extends Component<ManageProps> {
       <Container className="mt-4">
         <Row>
           <Col sm="auto" style={{ width: "25rem"}}>
-            <ManageSelectorPanelContainer 
-              events={this.props.events} 
-              components={objectFilter(this.props.components, (c) => c.shared)} 
+            <ManageSelectorPanelContainer
+              events={this.props.events}
+              components={objectFilter(this.props.components, (c) => c.shared)}
               liveEventId={this.props.liveEventId}
-            /> 
+            />
             {/* todo: should only be shared components */}
-            <ConnectivityPanelContainer /> 
+            <ConnectivityPanelContainer />
           </Col>
           <Col xl={true}>
-            {/* <ViewPanel 
-              key={this.privateDisplay.id} 
-              name={this.privateDisplay.name} 
-              showCaption={true} 
+            {/* <ViewPanel
+              key={this.privateDisplay.id}
+              name={this.privateDisplay.name}
+              showCaption={true}
               preview={true}
               components={[]}
             /> */}
-            <EditPanelContainer 
+            <EditPanelContainer
               editPanel={this.props.editPanel}
               components={this.props.components}
               events={this.props.events}

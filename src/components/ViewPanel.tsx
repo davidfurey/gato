@@ -37,14 +37,14 @@ export class ViewPanel extends Component<ViewPanelProps> {
   lowerThirdsComponents = (
     components: { state: OnScreenComponentState; component: OSDComponent }[]
   ): { state: OnScreenComponentState; component: LowerThirdsComponent }[] => {
-    return components.filter((c) => c.component.type === LowerThirdsType) as 
+    return components.filter((c) => c.component.type === LowerThirdsType) as
       { state: OnScreenComponentState; component: LowerThirdsComponent }[]
   }
 
   imageComponents = (
     components: { state: OnScreenComponentState; component: OSDComponent }[]
   ): { state: OnScreenComponentState; component: ImageComponent }[] => {
-    return components.filter((c) => c.component.type === ImageType) as 
+    return components.filter((c) => c.component.type === ImageType) as
       { state: OnScreenComponentState; component: ImageComponent }[]
   }
 
@@ -55,9 +55,9 @@ export class ViewPanel extends Component<ViewPanelProps> {
         <LowerThirds components={this.lowerThirdsComponents(this.props.components)} />
         <Images components={this.imageComponents(this.props.components)} />
         </div>
-        { this.props.showCaption ? 
+        { this.props.showCaption ?
         <div className="view-panel-caption">
-          <span className="view-panel-name">{this.props.name}</span>:&nbsp; 
+          <span className="view-panel-name">{this.props.name}</span>:&nbsp;
           <span className="view-panel-component">{this.visibleComponentSummary()}</span>
         </div>
         : null}

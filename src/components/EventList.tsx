@@ -3,7 +3,7 @@ import { Button, ListGroup, ButtonGroup, Modal } from 'react-bootstrap'
 import { OSDLiveEvent } from '../reducers/shared';
 import { EditPane, EditPaneType } from '../reducers/editpanel';
 
-function EventListItem(props: { 
+function EventListItem(props: {
   event: OSDLiveEvent;
   liveEventId?: string;
   openTab: (pane: EditPane) => void;
@@ -56,7 +56,7 @@ function EventListItem(props: {
 }
 
 export function EventList(
-  props: { 
+  props: {
     events: OSDLiveEvent[];
     liveEventId?: string;
     openTab: (pane: EditPane) => void;
@@ -65,12 +65,12 @@ export function EventList(
 ): JSX.Element {
   const deleteEvent = props.deleteEvent
   return <ListGroup variant="flush">
-    {props.events.map((event) => 
-      <EventListItem 
-        key={event.id} 
+    {props.events.map((event) =>
+      <EventListItem
+        key={event.id}
         event={event}
         liveEventId={props.liveEventId}
-        openTab={props.openTab} 
+        openTab={props.openTab}
         deleteEvent={deleteEvent ? (): void => deleteEvent(event.id) : undefined }
       />
     )}

@@ -8,7 +8,7 @@ import { send } from '@giantmachines/redux-websocket';
 import { Display } from '../reducers/shared'
 import { AppDispatch } from '../control'
 
-const mapDispatchToProps = (dispatch: AppDispatch): 
+const mapDispatchToProps = (dispatch: AppDispatch):
   Pick<QuickCreatePanelProps, "show"> => {
   return {
     show: (title: string, subtitle: string, display: Display, eventId: string): void => {
@@ -40,7 +40,7 @@ const mapDispatchToProps = (dispatch: AppDispatch):
           transition: "default",
           transistionDuration: 500,
         }
-        dispatch(send(action2)) 
+        dispatch(send(action2))
 // this should work without the timeout because each dispatched action forces a re-render
       }, 100);
     }

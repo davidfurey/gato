@@ -24,26 +24,26 @@ export interface ManageSelectorPanelProps {
 export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Element {
   return <TabbedPanel variant="pills">
     <TabContainer name="Event" eventKey="events">
-      <EventList 
-        events={Object.values(props.events)} 
+      <EventList
+        events={Object.values(props.events)}
         liveEventId={props.liveEventId}
-        openTab={props.openTab} 
+        openTab={props.openTab}
         deleteEvent={props.deleteEvent}
       />
       <Card.Footer className="p-2">
-        <CreateEventButton newEvent={(name): void => 
+        <CreateEventButton newEvent={(name): void =>
           props.newEvent(uuid(), name)
         }/>
       </Card.Footer>
     </TabContainer>
     <TabContainer name="Components" eventKey="components">
-      <ComponentList 
-        components={Object.values(props.components)} 
+      <ComponentList
+        components={Object.values(props.components)}
         deleteComponent={props.deleteComponent}
         openTab={props.openTab}
       />
       <Card.Footer className="p-2">
-        <ComponentPicker 
+        <ComponentPicker
           newComponent={(name: string, type: string): void => {
             props.newComponent(uuid(), name, type)
           }

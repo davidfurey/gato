@@ -56,10 +56,10 @@ export function createReducer(): ManageAppReducer {
         return responseReducer(message, state)
       } else {
         return {
-          ...state, 
+          ...state,
           shared: sharedStateReducer(state.shared, message),
-          editPanel: Component.isDelete(message) || Event.isDelete(message) ? 
-            editPanelReducer(state.editPanel, { 'type': EditPanel.ActionType.Close, id: message.id }) 
+          editPanel: Component.isDelete(message) || Event.isDelete(message) ?
+            editPanelReducer(state.editPanel, { 'type': EditPanel.ActionType.Close, id: message.id })
           : state.editPanel
         }
       }

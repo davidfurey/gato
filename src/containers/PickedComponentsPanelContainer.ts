@@ -10,7 +10,7 @@ interface PickedComponentsPanelContainerProps {
 }
 
 const mapDispatchToProps = (
-  dispatch: AppDispatch, 
+  dispatch: AppDispatch,
   ownProps: PickedComponentsPanelContainerProps):
   Pick<PickedComponentsPanelProps, "show" | "hide" | "setComponent"> => {
   return {

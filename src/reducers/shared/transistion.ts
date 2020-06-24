@@ -4,7 +4,7 @@ import { SharedState, OnScreenComponent, Display } from '../shared'
 
 function goTransistion(action: Transistion.GoTransistion, state: SharedState): SharedState {
   const selectedDisplay = state.displays.find((display) => display.id === action.displayId)
-  if (selectedDisplay && action.inComponentId) {    
+  if (selectedDisplay && action.inComponentId) {
     const onScreenComponents: OnScreenComponent[] = selectedDisplay.onScreenComponents.map(
       (otherOnScreenComponent) => {
       if (otherOnScreenComponent.id === action.inComponentId) {
@@ -20,7 +20,7 @@ function goTransistion(action: Transistion.GoTransistion, state: SharedState): S
     }
     return {
       ...state,
-      displays: state.displays.map((display) => 
+      displays: state.displays.map((display) =>
         display.id === selectedDisplay?.id ? updatedLiveDisplay : display
       )
     }
@@ -38,7 +38,7 @@ function goTransistion(action: Transistion.GoTransistion, state: SharedState): S
     }
     return {
       ...state,
-      displays: state.displays.map((display) => 
+      displays: state.displays.map((display) =>
         display.id === selectedDisplay?.id ? updatedLiveDisplay : display
       )
     }

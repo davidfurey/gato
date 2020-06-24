@@ -13,19 +13,19 @@ export interface SharedStatusProps {
 }
 
 function renderList(ls: string[], maxLength: number): JSX.Element | null {
-  return <span>{ls.slice(0, maxLength).map((event) => 
-    <><Badge key={event} variant="warning"><span className="material-icons material-icons-raised mr-0">event</span> {event}</Badge> </>    
+  return <span>{ls.slice(0, maxLength).map((event) =>
+    <><Badge key={event} variant="warning"><span className="material-icons material-icons-raised mr-0">event</span> {event}</Badge> </>
   )}
     {maxLength < ls.length ? <><Badge variant="light">More</Badge> </> : null }
   </span>
 }
 
 export function SharedStatus(props: SharedStatusProps): JSX.Element {
-  return !props.shared && props.events[0] ? 
+  return !props.shared && props.events[0] ?
     <Row className="mb-3">
       <Col>
         <span className="material-icons material-icons-raised">lock</span> Private to {props.events[0].name} event
-        <ShareComponentButton 
+        <ShareComponentButton
           enabled={props.events.length === 1}
           shared={props.shared}
           share={props.share}
@@ -37,7 +37,7 @@ export function SharedStatus(props: SharedStatusProps): JSX.Element {
       <Col lg={2}>Events</Col>
       <Col>
         {props.events.length > 0 ? renderList(props.events.map((e) => e.name), 5) : "(none)"}
-        <ShareComponentButton 
+        <ShareComponentButton
           enabled={props.events.length === 1}
           shared={props.shared}
           share={props.share}

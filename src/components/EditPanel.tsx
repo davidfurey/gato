@@ -16,7 +16,7 @@ export interface EditPanelProps {
 }
 
 export function createPane(
-  pane: EditPanelReducer.EditPane, 
+  pane: EditPanelReducer.EditPane,
   components: { [key: string]: OSDComponent },
   events: { [key: string]: OSDLiveEvent },
   openTab: (pane: EditPanelReducer.EditPane) => void
@@ -24,44 +24,44 @@ export function createPane(
   const pattern: EditPanelReducer.Pattern<JSX.Element> = {
 // eslint-disable-next-line react/display-name
     [EditPanelReducer.EditPaneType.Component]: (pane) =>
-      <ComponentEditPaneContainer 
-        pane={pane} 
-        component={components[pane.id]} 
+      <ComponentEditPaneContainer
+        pane={pane}
+        component={components[pane.id]}
       />,
 // eslint-disable-next-line react/display-name
     [EditPanelReducer.EditPaneType.Event]: (pane) =>
-      <EventEditPaneContainer 
-        pane={pane} 
-        event={events[pane.id]} 
-        components={components} 
-        openTab={openTab} 
+      <EventEditPaneContainer
+        pane={pane}
+        event={events[pane.id]}
+        components={components}
+        openTab={openTab}
       />
   }
-  
+
   return EditPanelReducer.matcher(pattern)(pane)
 }
 
 export function EditPanel(props: EditPanelProps): JSX.Element {
-  return <TabbedPanel 
-      defaultActiveKey={props.editPanel.selected} 
+  return <TabbedPanel
+      defaultActiveKey={props.editPanel.selected}
       onSelect={props.selectTab}
       activeKey={props.editPanel.selected}
     >
       {
-        props.editPanel.panes.map((pane) => <TabContainer 
-          key={pane.id} 
+        props.editPanel.panes.map((pane) => <TabContainer
+          key={pane.id}
           name={pane.type === "Event" ? props.events[pane.id].name : props.components[pane.id].name}
           eventKey={pane.id}
           closeTab={(): void => props.closeTab(pane.id)}
         >
           { createPane(
-              pane, 
-              props.components, 
-              props.events, 
+              pane,
+              props.components,
+              props.events,
               props.openTab
           ) }
         </TabContainer>
-        )  
+        )
       }
   </TabbedPanel>
 }

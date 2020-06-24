@@ -5,7 +5,7 @@ import { AppDispatch } from '../control'
 import * as Event from '../api/Events'
 import { send } from '@giantmachines/redux-websocket';
 
-const mapStateToProps = (state: ControlAppState): 
+const mapStateToProps = (state: ControlAppState):
   Pick<SettingsPanelProps, "events" | "event"> => {
   return {
     events: Object.values(state.shared.events),

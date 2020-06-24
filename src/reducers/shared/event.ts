@@ -89,7 +89,7 @@ function DeleteEvent(action: Event.Delete, state: SharedState): SharedState {
 }
 
 function removeComponent(
-  components: { [key: string]: OSDComponent }, 
+  components: { [key: string]: OSDComponent },
   id: string
 ): { [key: string]: OSDComponent } {
   const { [id]: ignored, ...rest } = components;
@@ -101,7 +101,7 @@ function RemoveComponent(action: Event.RemoveComponent, state: SharedState): Sha
   if (event) {
     const component = state.components[action.componentId]
     const sharedComponent = component ? component.shared : true
-    
+
     const newEvent = {
       ...event,
       components: event.components.filter((c) => c !== action.componentId),
@@ -114,8 +114,8 @@ function RemoveComponent(action: Event.RemoveComponent, state: SharedState): Sha
         ...state.events,
         [action.id]: newEvent
       },
-      components: sharedComponent ? 
-        state.components : 
+      components: sharedComponent ?
+        state.components :
         removeComponent(state.components, action.componentId)
     }, newEvent)
   }

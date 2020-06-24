@@ -19,12 +19,12 @@ export function ConnectivityPanel(props: ConnectivityPanelProps): JSX.Element {
         case "yes":
           return <Badge variant="success" className="ml-1"><span className="material-icons material-icons-raised">wifi</span> Online</Badge>
         case "no":
-          return <Badge variant="danger" className="ml-1"><span className="material-icons material-icons-raised">wifi</span> Offline</Badge> 
+          return <Badge variant="danger" className="ml-1"><span className="material-icons material-icons-raised">wifi</span> Offline</Badge>
         case "missed-ping":
-          return <Badge variant="warning" className="ml-1"><span className="material-icons material-icons-raised">wifi</span> Unknown</Badge> 
+          return <Badge variant="warning" className="ml-1"><span className="material-icons material-icons-raised">wifi</span> Unknown</Badge>
       }
     } else {
-      return <Badge variant="secondary" className="ml-1"><span className="material-icons material-icons-raised">wifi</span> Unknown</Badge> 
+      return <Badge variant="secondary" className="ml-1"><span className="material-icons material-icons-raised">wifi</span> Unknown</Badge>
     }
   }
 
@@ -38,11 +38,11 @@ export function ConnectivityPanel(props: ConnectivityPanelProps): JSX.Element {
         return <Badge variant="primary" className="ml-1"><span className="material-icons material-icons-raised">tv</span> {props.screenName}</Badge>
       case "manage":
         return <Badge variant="light" className="ml-1"><span className="material-icons material-icons-raised">videogame_asset</span> Manage</Badge>
-    } 
+    }
   }
   const header = <div>
-    streamer-1 
-    { props.connected ? 
+    streamer-1
+    { props.connected ?
         <Badge variant="success" className="ml-1">
         <span className='material-icons material-icons-raised'>wifi</span> Online
         </Badge>
@@ -54,10 +54,10 @@ export function ConnectivityPanel(props: ConnectivityPanelProps): JSX.Element {
   return (
     <CollapsablePanel header={header} open={false}>
       <ListGroup>
-        { props.clients.map((client) => 
+        { props.clients.map((client) =>
           <ListGroupItem key={client.id}>
             {client.name}
-            <p className="mb-1">  
+            <p className="mb-1">
               <ConnectionBadge clientConnected={client.connected} usConnected={props.connected} />
               <InterfaceBadge interface={client.interface} screenName={client.screenName} />
             </p>

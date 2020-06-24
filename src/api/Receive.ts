@@ -19,7 +19,7 @@ function create(msg: Display.Create, state: State): State {
   }
 }
 
-function deleteDisplay(msg: Display.Delete, state: State): State { 
+function deleteDisplay(msg: Display.Delete, state: State): State {
   return {
     ...state,
     displays: state.displays.filter((display) => display.id !== msg.id)
@@ -44,7 +44,7 @@ function update(msg: Display.Update, state: State): State {
       }
     })
   }
-} 
+}
 
 export const reducer: Display.Pattern<(s: State) => State> = {
   [Display.MessageType.Create]: curry(create),

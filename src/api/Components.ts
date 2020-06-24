@@ -40,12 +40,12 @@ export interface CreateLowerThird extends BaseMessage<MessageType.CreateLowerThi
 }
 
 export interface Delete extends BaseMessage<MessageType.Delete> {
-  id: Uuid;  
+  id: Uuid;
 }
 
 export const isComponentMessage = isTypeGroup<BaseMessageType, Message>("Component/")
 export const isCreate = isType<BaseMessageType, Create>(MessageType.Create)
-export const isCreateLowerThird = 
+export const isCreateLowerThird =
   isType<BaseMessageType, CreateLowerThird>(MessageType.CreateLowerThird)
 export const isDelete = isType<BaseMessageType, Delete>(MessageType.Delete)
 

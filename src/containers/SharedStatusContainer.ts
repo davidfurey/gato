@@ -10,8 +10,8 @@ interface ShareComponentButtonContainerProps {
   component: OSDComponent;
 }
 
-const mapDispatchToProps = (dispatch: AppDispatch, 
-  ownProps: ShareComponentButtonContainerProps): Pick<SharedStatusProps, 
+const mapDispatchToProps = (dispatch: AppDispatch,
+  ownProps: ShareComponentButtonContainerProps): Pick<SharedStatusProps,
   "share" | "unshare"> => {
     return {
       share: (): void => {
@@ -32,7 +32,7 @@ const mapDispatchToProps = (dispatch: AppDispatch,
 }
 
 const mapStateToProps = (state: ManageAppState,
-  ownProps: ShareComponentButtonContainerProps): Pick<SharedStatusProps, 
+  ownProps: ShareComponentButtonContainerProps): Pick<SharedStatusProps,
   "events" | "shared"> => {
     return {
       events: Object.values(state.shared.events).filter(
@@ -41,5 +41,5 @@ const mapStateToProps = (state: ManageAppState,
     }
 }
 
-export const SharedStatusContainer = 
+export const SharedStatusContainer =
   connect(mapStateToProps, mapDispatchToProps)(SharedStatus)

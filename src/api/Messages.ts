@@ -11,21 +11,21 @@ export type Uuid = string
 
 export type BaseMessage<T extends MessageType> = AnnotatedType<T>
 
-export type MessageType = 
-  Component.MessageType | 
-  Display.MessageType | 
-  Event.MessageType | 
-  List.MessageType | 
-  Transistion.MessageType | 
+export type MessageType =
+  Component.MessageType |
+  Display.MessageType |
+  Event.MessageType |
+  List.MessageType |
+  Transistion.MessageType |
   Request.MessageType |
   Response.MessageType
 
-export type Message = 
-  Component.Message | 
-  Display.Message | 
-  Event.Message | 
-  List.Message | 
-  Transistion.Message | 
+export type Message =
+  Component.Message |
+  Display.Message |
+  Event.Message |
+  List.Message |
+  Transistion.Message |
   Request.Message |
   Response.Message
 

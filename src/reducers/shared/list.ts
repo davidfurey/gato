@@ -3,8 +3,8 @@ import { SharedState, OSDLiveEvent } from '../shared'
 import * as List from '../../api/Lists'
 
 function updateEvent(
-  eventId: string, 
-  update: (event: OSDLiveEvent) => OSDLiveEvent, 
+  eventId: string,
+  update: (event: OSDLiveEvent) => OSDLiveEvent,
   state: SharedState
 ): SharedState {
   if (state.events[eventId]) {
@@ -65,7 +65,7 @@ function removeComponent(action: List.RemoveComponent, state: SharedState): Shar
         if (l.name === action.name) {
           return {
             ...l,
-            components: l.components.filter((c, index) => 
+            components: l.components.filter((c, index) =>
               index !== action.position || c !== action.componentId
             )
           }
@@ -108,7 +108,7 @@ function replaceItem(action: List.ReplaceItem, state: SharedState): SharedState 
         if (l.name === action.name) {
           return {
             ...l,
-            components: 
+            components:
               l.components.slice(
                 0, action.position
               ).concat(

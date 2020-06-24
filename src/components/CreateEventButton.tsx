@@ -6,7 +6,7 @@ interface CreateEventButtonProps {
   className?: string;
 }
 
-function CreateEventPanel(props: { 
+function CreateEventPanel(props: {
   newEvent: (name: string) => void;
   close: () => void;
 }): JSX.Element {
@@ -26,9 +26,9 @@ function CreateEventPanel(props: {
       </Form.Group>
     </Container>
     <Card.Footer className="flex-shrink-1 pt-2 pb-2 text-center">
-      <Button 
-        size="sm" 
-        variant="success" 
+      <Button
+        size="sm"
+        variant="success"
         className="mr-2"
         disabled={name === ""}
         onClick={(): void => { props.newEvent(name); props.close() }}
@@ -48,8 +48,8 @@ function popover(
   newEvent: (name: string) => void,
 ): JSX.Element {
   return <Popover id="popover-basic" className="bg-secondary p-0">
-    <CreateEventPanel 
-      close={close} 
+    <CreateEventPanel
+      close={close}
       newEvent={newEvent}
     />
   </Popover>

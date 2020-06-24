@@ -79,7 +79,7 @@ let state: SharedState = {
 
 function handlePing(ws: WebSocket, message: Request.Ping, id: string): void {
   clients = clients.map((client) => client.id === id ? { ...client, lastSeen: Date.now() } : client)
-  
+
   const clientState: ClientStatus[] = clients.map((client) => {
     const duration = Date.now() - client.lastSeen
     const connected = duration < 2000 ? "yes" : duration < 5000 ? "missed-ping" : "no"
@@ -93,9 +93,9 @@ function handlePing(ws: WebSocket, message: Request.Ping, id: string): void {
   })
 
   const mergedClients = clientState.reduce(function (clients, client) {
-    const existingClient = clients.find((c) => 
-      c.name === client.name && 
-      c.interface === client.interface && 
+    const existingClient = clients.find((c) =>
+      c.name === client.name &&
+      c.interface === client.interface &&
       c.screenName === client.screenName
     )
     if (!existingClient) {
@@ -259,7 +259,7 @@ viewerServer.on('connection', (ws, req) => {
     const query = url.parse(req.url, true).query
     const screenName = (Array.isArray(query['display'])) ? query['display'][0] : query['display']
     const client = (Array.isArray(query['client'])) ? query['client'][0] : query['client']
-  
+
     // bail if client and screen name not set
     clients.push({
       ip: ip || "unknown",

@@ -3,7 +3,7 @@ import { OnScreenComponentState } from '../../reducers/shared';
 import './lower-thirds.css';
 import { LowerThirdsComponent } from './LowerThirdsComponent'
 
-interface LowerThirdsProps { 
+interface LowerThirdsProps {
   components: { state: OnScreenComponentState; component: LowerThirdsComponent }[];
 }
 
@@ -29,11 +29,11 @@ export class LowerThirds extends Component<LowerThirdsProps> {
     return (
       <div className={this.props.components.find((c) => c.state === "entering" || c.state === "visible") ? "lower-thirds visible" : "lower-thirds"}>
         { this.props.components.map((c) =>
-          <LowerThird 
-            key={c.component.id} 
-            title={c.component.title} 
-            subtitle={c.component.subtitle} 
-            state={c.state} 
+          <LowerThird
+            key={c.component.id}
+            title={c.component.title}
+            subtitle={c.component.subtitle}
+            state={c.state}
           />
         )}
       </div>

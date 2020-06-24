@@ -7,7 +7,7 @@ import * as ComponentMessage from '../api/Components'
 import * as EventMessage from '../api/Events'
 import { send } from '@giantmachines/redux-websocket';
 
-const mapDispatchToProps = (dispatch: AppDispatch): Pick<ManageSelectorPanelProps, 
+const mapDispatchToProps = (dispatch: AppDispatch): Pick<ManageSelectorPanelProps,
   "deleteComponent" | "deleteEvent" | "openTab" | "newComponent" | "newEvent"> => {
     return {
       deleteComponent: (id: string): void => {

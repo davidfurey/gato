@@ -32,16 +32,16 @@ export function SettingsPanel(props: SettingsPanelProps): JSX.Element {
             </Modal.Header>
               <Modal.Body>
               <Form.Group>
-                <Form.Control as="select" value={loadEventId} 
+                <Form.Control as="select" value={loadEventId}
                   onChange={(event): void => setLoadEventId(event.target.value)}>
-                {props.events.map((component) => 
-                  <option key={component.id} value={component.id}>{component.name}</option> 
+                {props.events.map((component) =>
+                  <option key={component.id} value={component.id}>{component.name}</option>
                 )}
                 </Form.Control>
               </Form.Group>
               </Modal.Body>
             <Modal.Footer>
-              <Button variant="danger" onClick={(): void => { 
+              <Button variant="danger" onClick={(): void => {
                 props.setEvent(loadEventId)
                 handleCloseLoadEvent()
               }}>

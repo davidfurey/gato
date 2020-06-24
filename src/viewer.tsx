@@ -59,7 +59,7 @@ export class Viewer extends Component<ViewerProps> {
     // }, 1000)
     setInterval(() => {
       if (
-        store.getState().connectivity.connected 
+        store.getState().connectivity.connected
         && Date.now() - store.getState().connectivity.lastPong > 2000) {
         store.dispatch({ type: Connectivity.ActionType.Disconnected})
       }
@@ -67,7 +67,7 @@ export class Viewer extends Component<ViewerProps> {
     }, 1000)
   }
 
-  lookupComponent = 
+  lookupComponent =
   (osc: OnScreenComponent): { state: OnScreenComponentState; component: OSDComponent}[] => {
     const component = this.props.components[osc.id]
     if (component) {
@@ -84,10 +84,10 @@ export class Viewer extends Component<ViewerProps> {
     return (
       <div>
       {display ?
-        <ViewPanel 
-          key={display.id} 
-          name={display.name} 
-          showCaption={false} 
+        <ViewPanel
+          key={display.id}
+          name={display.name}
+          showCaption={false}
           preview={false}
           components={display.onScreenComponents.flatMap(this.lookupComponent)}
         /> : null}

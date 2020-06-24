@@ -56,7 +56,7 @@ export class QuickCreatePanel extends Component<QuickCreatePanelProps, QuickCrea
           <Col>
           <Form.Control size="sm" type="text" onChange={this.subtitleChanged} />
           </Col>
-        </Form.Row> 
+        </Form.Row>
         <Button variant="danger" size="sm" type="submit" onClick={this.create}>Show</Button>
         </Card.Body>
       </CollapsablePanel>

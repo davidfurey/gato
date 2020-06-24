@@ -4,7 +4,7 @@ import { AppDispatch } from "../manage";
 import * as EditPanelActions from '../actions/editpanel'
 import { EditPane } from "../reducers/editpanel";
 
-const mapDispatchToProps = (dispatch: AppDispatch): Pick<EditPanelProps, 
+const mapDispatchToProps = (dispatch: AppDispatch): Pick<EditPanelProps,
   "closeTab" | "selectTab" | "openTab"> => {
     return {
       closeTab: (id: string): void => {

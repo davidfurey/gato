@@ -7,7 +7,7 @@ import * as Image from '../../components/OSDComponents/ImageComponent'
 function createLowerThird(action: Component.CreateLowerThird, state: SharedState): SharedState {
   return {
     ...state,
-    components: { 
+    components: {
       ...state.components,
       [action.component.id]: action.component
     }
@@ -18,7 +18,7 @@ function create(action: Component.Create, state: SharedState): SharedState {
   if (action.component.type === LowerThirds.LowerThirdsType) {
     return {
       ...state,
-      components: { 
+      components: {
         ...state.components,
         [action.component.id]: {
           ...LowerThirds.template,
@@ -29,7 +29,7 @@ function create(action: Component.Create, state: SharedState): SharedState {
   } else if (action.component.type === Image.ImageType) {
     return {
       ...state,
-      components: { 
+      components: {
         ...state.components,
         [action.component.id]: {
           ...Image.template,
@@ -48,7 +48,7 @@ function updateComponent(action: Component.Update, state: SharedState): SharedSt
   if (component) {
     return {
       ...state,
-      components: { 
+      components: {
         ...state.components,
         [action.id]: {
           ...component,
@@ -67,7 +67,7 @@ function share(action: Component.Share, state: SharedState): SharedState {
   if (component) {
     return {
       ...state,
-      components: { 
+      components: {
         ...state.components,
         [action.id]: {
           ...component,
@@ -92,7 +92,7 @@ function unshare(action: Component.Unshare, state: SharedState): SharedState {
     if (eventsUsingComponent === 1) {
       return {
         ...state,
-        components: { 
+        components: {
           ...state.components,
           [action.id]: {
             ...component,
@@ -114,8 +114,8 @@ export function removeComponentFromList(l: ComponentList, componentId: string): 
   if (l.components.includes(componentId)) {
     return {
       ...l,
-      components: l.listType === "slideshow" ? 
-        l.components.filter((c) => c !== componentId) : 
+      components: l.listType === "slideshow" ?
+        l.components.filter((c) => c !== componentId) :
         l.components.map((c) => c === componentId ? null : c)
     }
   }
@@ -123,7 +123,7 @@ export function removeComponentFromList(l: ComponentList, componentId: string): 
 }
 
 function deleteFromDisplay(
-  display: Display, 
+  display: Display,
   componentId: string
 ): Display {
   return {
@@ -135,13 +135,13 @@ function deleteFromDisplay(
 function deleteComponent(action: Component.Delete, state: SharedState): SharedState {
   const { [action.id]: ignored, ...rest } = state.components;
 
-  const objectMap = <T>(obj: { [key: string]: T }, fn: (pv: T, pk: string, pi: number) => T): 
+  const objectMap = <T>(obj: { [key: string]: T }, fn: (pv: T, pk: string, pi: number) => T):
   { [key: string]: T } => Object.fromEntries(
     Object.entries(obj).map(
       ([k, v], i) => [k, fn(v, k, i)]
     )
   )
-  
+
   const events = objectMap(state.events, (event) => {
     if (event.components.includes(action.id)) {
       return {

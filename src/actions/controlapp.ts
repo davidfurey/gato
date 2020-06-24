@@ -7,7 +7,7 @@ export type Uuid = string
 export type ActionType =
   Connectivity.ActionType
 
-export type Action = 
+export type Action =
   Connectivity.Action |
   WebsocketConnect |
   WebsocketMessage |

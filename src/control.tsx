@@ -37,14 +37,14 @@ interface ControlProps {
 let maybeStore: Store<ControlAppState, ControlAppActions.Action> | undefined = undefined
 
 const reduxWebsocketMiddleware = reduxWebsocket({
-  onOpen: (_: WebSocket) => { 
+  onOpen: (_: WebSocket) => {
     maybeStore ? maybeStore.dispatch(send({"type": RequestMessage.MessageType.GetSharedState })) : null
   },
   reconnectOnClose: true,
 });
 
 const store = createStore(createReducer(), applyMiddleware(reduxWebsocketMiddleware))
- 
+
 maybeStore = store
 
 export type AppDispatch = typeof store.dispatch
@@ -66,7 +66,7 @@ export class Control extends Component<ControlProps> {
     super(props)
     setInterval(() => {
       if (
-        store.getState().connectivity.connected && 
+        store.getState().connectivity.connected &&
         Date.now() - store.getState().connectivity.lastPong > 2000
       ) {
         store.dispatch({ type: Connectivity.ActionType.Disconnected})
@@ -75,7 +75,7 @@ export class Control extends Component<ControlProps> {
     }, 1000)
   }
 
-  lookupComponent = (osc: OnScreenComponent): 
+  lookupComponent = (osc: OnScreenComponent):
     { state: OnScreenComponentState; component: OSDComponent}[] => {
     const component = this.props.components[osc.id]
     if (component) {
@@ -105,36 +105,36 @@ export class Control extends Component<ControlProps> {
           <div className="col col-sm-auto" style={{ width: '30rem' }}>
             { liveEvent ? <PickedComponentsPanelContainer
               title="Picked Components"
-              eventId={liveEvent.id} 
-              pickedComponents={liveEvent.lists.find((l) => l.listType === "picked")?.components || []} 
-              components={liveEvent.components.flatMap(this.lookupComponentById)} 
-              displays={this.props.displays}/> : null 
+              eventId={liveEvent.id}
+              pickedComponents={liveEvent.lists.find((l) => l.listType === "picked")?.components || []}
+              components={liveEvent.components.flatMap(this.lookupComponentById)}
+              displays={this.props.displays}/> : null
               }
-              { visibleComponents ? <LiveComponentsPanelContainer 
-              title="Live Components" 
-              pickedComponents={visibleComponents} 
-              components={visibleComponents.flatMap(this.lookupComponentById)} 
-              displays={onAirDisplays}/> : null 
+              { visibleComponents ? <LiveComponentsPanelContainer
+              title="Live Components"
+              pickedComponents={visibleComponents}
+              components={visibleComponents.flatMap(this.lookupComponentById)}
+              displays={onAirDisplays}/> : null
               }
-            { overlayDisplay ? <QuickCreatePanelContainer 
-              display={overlayDisplay} 
-              eventId={this.props.eventId} 
+            { overlayDisplay ? <QuickCreatePanelContainer
+              display={overlayDisplay}
+              eventId={this.props.eventId}
             /> : null }
             <SettingsPanelContainer />
-            <ConnectivityPanelContainer /> 
+            <ConnectivityPanelContainer />
           </div>
           <div className="col-md-auto">
             {this.props.displays.map((display =>
-              <ViewPanel 
-                key={display.id} 
-                name={display.name} 
-                showCaption={true} 
+              <ViewPanel
+                key={display.id}
+                name={display.name}
+                showCaption={true}
                 preview={true}
                 components={display.onScreenComponents.flatMap(this.lookupComponent)}
-              />  
+              />
             ))}
 {/* <ViewPanel name="Preview" components={this.props.components} showCaption={true} /> */}
-            
+
           </div>
         </div>
       </div>
@@ -154,7 +154,7 @@ const mapStateToProps = (state: ControlAppState): ControlProps => {
 
 const ControlContainer = connect(mapStateToProps)(Control)
 
-const mapStateToNavProps = 
+const mapStateToNavProps =
   (state: ControlAppState, ownProps: { page: string }): { event?: string; page: string } => {
   const event = state.shared.events[state.shared.eventId]
   return {

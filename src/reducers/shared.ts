@@ -43,7 +43,7 @@ export interface OnScreenComponent {
   stateStartTimeMs: number;
 }
 
-export type ScreenType = "OnAir" | "Preview" 
+export type ScreenType = "OnAir" | "Preview"
 
 export interface Display {
   name: string;

@@ -27,8 +27,8 @@ export interface EditPanelState {
 }
 
 function findNewSelectedTab(
-  oldPanes: EditPane[], 
-  newPanes: EditPane[], 
+  oldPanes: EditPane[],
+  newPanes: EditPane[],
   removedId: string
 ): string | undefined {
   if (newPanes.length === 0) {
@@ -44,7 +44,7 @@ function handleClose(action: EditPanel.Close, state: EditPanelState): EditPanelS
   return {
     ...state,
     panes,
-    selected: state.selected === action.id ? 
+    selected: state.selected === action.id ?
       findNewSelectedTab(state.panes, panes, action.id) : state.selected
   }
 }
@@ -52,7 +52,7 @@ function handleClose(action: EditPanel.Close, state: EditPanelState): EditPanelS
 function handleSelect(action: EditPanel.Select, state: EditPanelState): EditPanelState {
   if (state.panes.some((p) => p.id === action.id)) {
     return {
-      ...state,    
+      ...state,
       selected: action.id
     }
   } else {
@@ -61,7 +61,7 @@ function handleSelect(action: EditPanel.Select, state: EditPanelState): EditPane
 }
 
 function handleOpen(action: EditPanel.Open, state: EditPanelState): EditPanelState {
-  const panes = state.panes.some((c) => c.id === action.pane.id) ? 
+  const panes = state.panes.some((c) => c.id === action.pane.id) ?
     state.panes : state.panes.concat([action.pane]);
   return {
     ...state,

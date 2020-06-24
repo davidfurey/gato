@@ -5,7 +5,7 @@ import { send } from '@giantmachines/redux-websocket';
 import * as ComponentMessage from '../api/Components'
 import { OSDComponent } from "../OSDComponent";
 
-const mapDispatchToProps = (dispatch: AppDispatch): Pick<ComponentEditPaneProps, 
+const mapDispatchToProps = (dispatch: AppDispatch): Pick<ComponentEditPaneProps,
   "updateComponent"> => {
     return {
       updateComponent: <T extends OSDComponent>(component: T): void => {

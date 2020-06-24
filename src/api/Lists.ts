@@ -11,12 +11,12 @@ export enum MessageType {
   SwapItems = 'Lists/SwapItems'
 }
 
-export type Message = 
-  Create | 
-  AddComponent | 
-  MoveComponent | 
-  RemoveComponent | 
-  ReplaceItem | 
+export type Message =
+  Create |
+  AddComponent |
+  MoveComponent |
+  RemoveComponent |
+  ReplaceItem |
   SwapItems
 
 export type Pattern<T> = GenericPattern<TypeMap<MessageType, Message>, T>
@@ -37,7 +37,7 @@ export interface AddComponent extends BaseMessage<MessageType.AddComponent> {
 export interface MoveComponent extends BaseMessage<MessageType.MoveComponent> {
   eventId: Uuid;
   name: string;
-  componentId: Uuid; 
+  componentId: Uuid;
   position: number;
 }
 
@@ -58,7 +58,7 @@ export interface ReplaceItem extends BaseMessage<MessageType.ReplaceItem> {
 export interface SwapItems extends BaseMessage<MessageType.SwapItems> {
   eventId: Uuid;
   name: string;
-  sourceComponent: Uuid; 
+  sourceComponent: Uuid;
   sourcePosition: number;
   destinationPosition: number;
 }

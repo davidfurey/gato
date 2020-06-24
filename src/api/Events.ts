@@ -47,7 +47,7 @@ export const isCreate = isType<BaseMessageType, Create>(MessageType.Create)
 export const isDelete = isType<BaseMessageType, Delete>(MessageType.Delete)
 export const isUpdate = isType<BaseMessageType, Update>(MessageType.Update)
 export const isAddComponent = isType<BaseMessageType, AddComponent>(MessageType.AddComponent)
-export const isRemoveComponent = 
+export const isRemoveComponent =
   isType<BaseMessageType, RemoveComponent>(MessageType.RemoveComponent)
 
 export const matcher: <T>(pattern: Pattern<T>) => (message: Message) => T = genericMatcher

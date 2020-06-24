@@ -12,7 +12,7 @@ interface TabbedPanelProps {
 }
 
 interface TabContainerProps {
-  name: string; 
+  name: string;
   eventKey: string;
   closeTab?: () => void;
 }
@@ -26,8 +26,8 @@ export class TabContainer extends Component<TabContainerProps> {
 function isTabContainer(node: React.ReactNode): node is TabContainer {
   const tabContainer = node as TabContainer
   return tabContainer !== null &&
-    tabContainer.props !== undefined && 
-    tabContainer.props.name !== undefined && 
+    tabContainer.props !== undefined &&
+    tabContainer.props.name !== undefined &&
     tabContainer.props.eventKey !== undefined
 }
 
@@ -41,7 +41,7 @@ export function TabbedPanel(props: TabbedPanelProps): JSX.Element {
         { props.variant === "pills" ?
         <Nav variant={props.variant || "tabs"} className="text-center justify-content-center">
         { React.Children.map(props.children, (child) =>
-          isTabContainer(child) ? 
+          isTabContainer(child) ?
             <Nav.Item className="d-flex justify-content-center">
               <Nav.Link eventKey={child.props.eventKey} bsPrefix="custom-nav-link" className={"btn btn-primary px-1 d-flex justify-content-center" + (props.size === "sm" ? " btn-sm" : "")}>
                 {child.props.name}
@@ -52,7 +52,7 @@ export function TabbedPanel(props: TabbedPanelProps): JSX.Element {
         </Nav> :
         <Nav variant={props.variant || "tabs"} className="text-center">
         { React.Children.map(props.children, (child) =>
-          isTabContainer(child) ? 
+          isTabContainer(child) ?
             <Nav.Item className="d-flex justify-content-between align-items-center">
               <Nav.Link eventKey={child.props.eventKey} className="d-flex justify-content-between align-items-center">
                 {child.props.name}
