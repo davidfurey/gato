@@ -25,8 +25,8 @@ function PaneIcon(props: { type: string }): JSX.Element {
   </Badge>
 }
 
-function capitalise(s: string): string { 
-  return s.length > 0 ? s.charAt(0).toUpperCase() + s.slice(1) : s 
+function capitalise(s: string): string {
+  return s.length > 0 ? s.charAt(0).toUpperCase() + s.slice(1) : s
 }
 
 export function EventEditPane(props: EventEditPaneProps): JSX.Element {
@@ -37,7 +37,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
       <Form.Group>
         <Form.Group as={Row}>
           <Form.Label column lg={2}>Name</Form.Label>
-          <EditableText value={props.event.name} update={(v): void => 
+          <EditableText value={props.event.name} update={(v): void =>
             props.updateEvent({
               ...props.event,
               name: v
@@ -64,7 +64,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
       <Card.Footer className="p-2">
         <ComponentPicker
           components={
-            Object.values(props.components).filter((c) => 
+            Object.values(props.components).filter((c) =>
               c.shared && !props.event.components.includes(c.id)
             )
           }
