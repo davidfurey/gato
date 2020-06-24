@@ -80,7 +80,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
           props.removeComponent(props.event.id, componentId)
         }
         openTab={props.openTab}
-        removeOrDelete={(component): boolean => component?.shared || true}
+        removeOrDelete={(component): boolean => component ? component.shared : true}
       />
       <Card.Footer className="p-2">
         <ComponentPicker
