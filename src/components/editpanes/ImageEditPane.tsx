@@ -3,6 +3,7 @@ import { Form, Row, Container } from 'react-bootstrap';
 import { ImageComponent } from '../OSDComponents/ImageComponent';
 import { EditableText } from '../EditableText';
 import { ViewPanel } from '../ViewPanel';
+import { SharedStatusContainer } from '../../containers/SharedStatusContainer';
 
 export function ImageEditPane(props: {
   component: ImageComponent;
@@ -73,5 +74,7 @@ export function ImageEditPane(props: {
           })
         } />
       </Form.Group>
-    </Form.Group></Container>
+    </Form.Group>
+    <SharedStatusContainer component={props.component} />
+  </Container>
 }
