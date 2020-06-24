@@ -12,7 +12,6 @@ export interface PickedComponentsPanelProps {
   setComponent?: (index: number, id: string) => void;
   displays: Display[];
   pickedComponents: (string | null)[];
-  slots?: number;
   title: string;
 }
 
@@ -88,15 +87,11 @@ function PickedComponent(props: PickedComponentProps): JSX.Element {
     </ButtonGroup></ButtonToolbar>
 }
 
-//export class SettingsPanel extends Component<SettingsPanelProps, SettingsPanelState> {
 export function PickedComponentsPanel(props: PickedComponentsPanelProps): JSX.Element {
-  const slots = props.slots !== undefined ? props.slots : 10
   const setComponent = props.setComponent
   return <CollapsablePanel header={props.title}>
     <ListGroup variant="flush">
-      { props.pickedComponents.concat(
-          Array(Math.max(0, slots - props.pickedComponents.length)).fill(null)
-        ).map((c, i) => 
+      { props.pickedComponents.map((c, i) => 
         <ListGroup.Item key={i}>
           <PickedComponent 
             component={props.components.find((a) => a.id === c)} 

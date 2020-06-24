@@ -111,7 +111,6 @@ export class Control extends Component<ControlProps> {
               displays={this.props.displays}/> : null 
               }
               { visibleComponents ? <LiveComponentsPanelContainer 
-              slots={0}
               title="Live Components" 
               pickedComponents={visibleComponents} 
               components={visibleComponents.flatMap(this.lookupComponentById)} 
