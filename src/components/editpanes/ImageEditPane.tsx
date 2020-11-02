@@ -1,9 +1,10 @@
 import React from 'react';
-import { Form, Row, Container } from 'react-bootstrap';
+import { Form, Row, Container, Col, InputGroup } from 'react-bootstrap';
 import { ImageComponent } from '../OSDComponents/ImageComponent';
 import { EditableText } from '../EditableText';
 import { ViewPanel } from '../ViewPanel';
 import { SharedStatusContainer } from '../../containers/SharedStatusContainer';
+import { ImagePicker } from '../ImagePicker';
 
 export function ImageEditPane(props: {
   component: ImageComponent;
@@ -31,12 +32,25 @@ export function ImageEditPane(props: {
       </Form.Group>
       <Form.Group as={Row}>
         <Form.Label column lg={2}>Source</Form.Label>
-        <EditableText value={props.component.src} update={(v): void =>
-          props.updateComponent({
-            ...props.component,
-            src: v
-          })
-        } />
+        <Col>
+          <InputGroup>
+            <InputGroup.Prepend>
+            <InputGroup.Text>
+              {props.component.src}
+            </InputGroup.Text>
+            </InputGroup.Prepend>
+            <InputGroup.Append>
+            <ImagePicker
+              initialPath={new URL(props.component.src).pathname.replace(/^\/[^/]*/, '')}
+              style={{border: "1px solid var(--gray-dark)" }}
+              image={(img: string): void => props.updateComponent({
+                ...props.component,
+                src: img
+              })
+            } />
+            </InputGroup.Append>
+          </InputGroup>
+        </Col>
       </Form.Group>
       <Form.Group as={Row}>
         <Form.Label column lg={2}>Width</Form.Label>
