@@ -52,6 +52,8 @@
   },
   "dependencies": {
     "@giantmachines/redux-websocket": "^1.2.0",
+    "@types/array.prototype.flat": "^1.2.1",
+    "array.prototype.flat": "^1.2.3",
     "bootswatch": "^4.4.1",
     "compression": "^1.7.4",
     "core-js": "^3.6.5",
