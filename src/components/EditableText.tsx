@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ButtonGroup, Button, Form, Col, InputGroup, FormLabel, ColProps } from 'react-bootstrap';
+import { Button, Form, Col, InputGroup, ColProps } from 'react-bootstrap';
 
 export function EditableText(props: {
   value: string;
