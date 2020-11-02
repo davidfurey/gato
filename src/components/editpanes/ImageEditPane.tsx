@@ -22,7 +22,7 @@ export function ImageEditPane(props: {
     <Form.Group>
       <Form.Group as={Row}>
         <Form.Label column lg={2}>Name</Form.Label>
-        <EditableText value={props.component.name} update={(v): void =>
+        <EditableText lg={7} value={props.component.name} update={(v): void =>
           props.updateComponent({
             ...props.component,
             name: v
@@ -40,7 +40,7 @@ export function ImageEditPane(props: {
       </Form.Group>
       <Form.Group as={Row}>
         <Form.Label column lg={2}>Width</Form.Label>
-        <EditableText value={props.component.width.toString()} update={(v): void =>
+        <EditableText lg={3}  value={props.component.width.toString()} update={(v): void =>
           props.updateComponent({
             ...props.component,
             width: parseInt(v)
@@ -49,7 +49,7 @@ export function ImageEditPane(props: {
       </Form.Group>
       <Form.Group as={Row}>
         <Form.Label column lg={2}>Height</Form.Label>
-        <EditableText value={props.component.height.toString()} update={(v): void =>
+        <EditableText lg={3}  value={props.component.height.toString()} update={(v): void =>
           props.updateComponent({
             ...props.component,
             height: parseInt(v)
@@ -58,7 +58,7 @@ export function ImageEditPane(props: {
       </Form.Group>
       <Form.Group as={Row}>
         <Form.Label column lg={2}>Top</Form.Label>
-        <EditableText value={props.component.top.toString()} update={(v): void =>
+        <EditableText lg={3}  value={props.component.top.toString()} update={(v): void =>
           props.updateComponent({
             ...props.component,
             top: parseInt(v)
@@ -67,7 +67,7 @@ export function ImageEditPane(props: {
       </Form.Group>
       <Form.Group as={Row}>
         <Form.Label column lg={2}>Left</Form.Label>
-        <EditableText value={props.component.left.toString()} update={(v): void =>
+        <EditableText lg={3}  value={props.component.left.toString()} update={(v): void =>
           props.updateComponent({
             ...props.component,
             left: parseInt(v)
