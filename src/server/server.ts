@@ -14,6 +14,10 @@ import { uuid } from 'uuidv4'
 import fs from 'fs'
 import { OSDComponent } from '../OSDComponent';
 import url from 'url'
+import flat from 'array.prototype.flat'
+import { Config, loadConfig } from '../config';
+
+flat.shim()
 
 const port = 3040;
 
@@ -303,6 +307,70 @@ app.all('*', (request, response, next) => {
 app.use(express.static(path.resolve(__dirname, 'public')));
 
 app.get('/healthcheck', (_req, res) => res.send("Ok"));
+
+let config: Config | undefined = undefined
+
+loadConfig().then((c) => {
+  config = c
+})
+
+app.get('/drive/:path(*)', (req, res) => {
+  if (process.env.NODE_ENV !== 'production') {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+  }
+  if (config === undefined) {
+    res.status(400)
+    res.send("Bad request")
+    return
+  }
+  const extensions: string[] | undefined = (typeof req.query['extensions'] === 'string') ?
+    req.query['extensions'].split(',') : undefined
+
+  function extensionsFilter(filename: string): boolean {
+    if (extensions) {
+      return extensions.includes(path.extname(filename).toLowerCase().slice(1))
+    }
+    return true
+  }
+
+  const reqPath: string = req.params['path']
+  const basePath = config.drive.basePath
+  const absPath = path.normalize(basePath + reqPath)
+
+  if (!absPath.startsWith(basePath)) {
+    res.status(400)
+    res.send("Bad request")
+  } else {
+    fs.promises.readdir(absPath).then((dir) =>
+      Promise.all(dir.map((file) => {
+        const filePath = path.join(absPath, file)
+        return fs.promises.stat(filePath).then((stat) => {
+          if (stat.isDirectory() || extensionsFilter(file)) {
+            return [{
+              filename: file,
+              path: "/" + filePath.substring(basePath.length),
+              type: stat.isDirectory() ? "folder" : "image",
+              url: config?.drive.baseUrl + filePath.substring(basePath.length)
+            }]
+          }
+          return []
+        })
+      }))
+    ).then((array) => {
+      res.send({
+        path: "/" + absPath.substring(basePath.length),
+        name: absPath === basePath ? "Drive" : path.basename(absPath),
+        items: array.flat(),
+        parent: absPath === basePath ? undefined : "/" + path.dirname(absPath).substring(basePath.length)
+      })
+    }).catch((e) => {
+      console.log(e)
+      res.status(500)
+      res.send("Server error")
+    })
+  }
+});
+
 
 server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
   if (!request.url) {
