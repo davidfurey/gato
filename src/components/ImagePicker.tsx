@@ -55,7 +55,7 @@ interface FolderData {
   [path: string]: Item[];
 }
 
-const apiUrl = process.env.NODE_ENV === 'production' ? '/drive' : 'http://localhost:3040/drive'
+const apiUrl = process.env.NODE_ENV === 'production' ? '/gato/drive' : 'http://localhost:3040/drive'
 
 function getFolder(path: string): Promise<DriveResponse> {
   return fetch(`${apiUrl}${path}`).then((response) =>
