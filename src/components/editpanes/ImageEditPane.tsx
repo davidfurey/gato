@@ -6,6 +6,10 @@ import { ViewPanel } from '../ViewPanel';
 import { SharedStatusContainer } from '../../containers/SharedStatusContainer';
 import { ImagePicker } from '../ImagePicker';
 
+function pathFromUrl(s: string): string {
+  return new URL(s, "https://streamer-1").pathname
+}
+
 export function ImageEditPane(props: {
   component: ImageComponent;
   updateComponent: (component: ImageComponent) => void;
@@ -36,7 +40,7 @@ export function ImageEditPane(props: {
           <InputGroup>
             <InputGroup.Prepend>
             <InputGroup.Text>
-              {props.component.src}
+              {pathFromUrl(props.component.src)}
             </InputGroup.Text>
             </InputGroup.Prepend>
             <InputGroup.Append>
