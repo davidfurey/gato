@@ -1,6 +1,6 @@
 import React, { useState, useRef, CSSProperties } from 'react';
 import { Button, Popover, Overlay, Card, ListGroup } from 'react-bootstrap';
-import { DriveResponse, Item } from '../api/Drive';
+import { DriveResponse, Item, getFolder } from '../api/Drive';
 import path from 'path'
 
 interface ImagePickerProps {
@@ -49,18 +49,6 @@ function PickerDialog(props: {
       }
     </ListGroup>
   </Card>
-}
-
-interface FolderData {
-  [path: string]: Item[];
-}
-
-const apiUrl = process.env.NODE_ENV === 'production' ? '/gato/drive' : 'http://localhost:3040/drive'
-
-function getFolder(path: string): Promise<DriveResponse> {
-  return fetch(`${apiUrl}${path}`).then((response) =>
-    response.json()
-  )
 }
 
 function popover(
