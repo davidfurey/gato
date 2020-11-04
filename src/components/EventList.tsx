@@ -64,8 +64,8 @@ export function EventList(
   }
 ): JSX.Element {
   const deleteEvent = props.deleteEvent
-  return <ListGroup variant="flush">
-    {props.events.map((event) =>
+  return <ListGroup variant="flush" style={{maxHeight: "30em", overflowY: "auto"}}>
+    {props.events.slice(0).reverse().map((event) =>
       <EventListItem
         key={event.id}
         event={event}
