@@ -1,7 +1,7 @@
 {
-  "name": "webpack-demo",
+  "name": "gato",
   "version": "1.0.0",
-  "description": "",
+  "description": "On screen graphic and text overlays for live streaming",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -14,7 +14,16 @@
     "watch:client": "webpack-dev-server --config webpack.config.js --config-name client",
     "watch": "npm run watch:server & npm run watch:client",
     "lint": "node_modules/eslint/bin/eslint.js -c .eslintrc.js ./ --ext '.ts,.tsx'",
-    "lint:fix": "node_modules/eslint/bin/eslint.js -c .eslintrc.js ./ --ext '.ts,.tsx' --fix"
+    "lint:fix": "node_modules/eslint/bin/eslint.js -c .eslintrc.js ./ --ext '.ts,.tsx' --fix",
+    "package": "npm run build:prod; cd dist; node-deb --install-strategy copy -- server.js public"
+  },
+  "node_deb": {
+    "dependencies": "npm",
+    "entrypoints": {
+      "daemon": "server.js"
+    },
+    "user": "www-data",
+    "group": "www-data"
   },
   "keywords": [],
   "author": "",
@@ -34,6 +43,7 @@
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.0.1",
     "css-loader": "^3.5.2",
     "eslint": "^7.0.0",
@@ -43,12 +53,14 @@
     "git-revision-webpack-plugin": "^3.0.6",
     "html-webpack-plugin": "^4.0.2",
     "mini-css-extract-plugin": "^0.9.0",
+    "node-deb": "^0.10.7",
     "source-map-loader": "^0.2.4",
     "ts-loader": "^6.2.2",
     "typescript": "^3.8.3",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.10.3",
+    "webpack-permissions-plugin": "^1.0.7"
   },
   "dependencies": {
     "@giantmachines/redux-websocket": "^1.2.0",

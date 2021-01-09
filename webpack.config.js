@@ -6,6 +6,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack')
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const gitRevisionPlugin = new GitRevisionPlugin();
+const PermissionsOutputPlugin = require('webpack-permissions-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 //how does this work?
 class LaunchServerPlugin {
@@ -29,10 +31,19 @@ const serverConfig = env => {
   const isWatch = env && env.watch;
 
   const plugins = [
+    new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [
-        { from: 'config/gato.service', to: 'gato.service' }
+        { from: 'package.json', to: 'package.json' },
+        { from: 'package-lock.json', to: 'package-lock.json' },
+        { from: 'node_modules', to: 'node_modules' }
       ],
+    }),
+    new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
+    new PermissionsOutputPlugin({
+      buildFiles: [
+        path.resolve(__dirname, 'dist/server.js'),
+      ]
     })
   ]
 

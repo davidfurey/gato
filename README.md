@@ -9,3 +9,8 @@ Dev setup
 * `npm install`
 * `npm run watch:server`
 * `npm run watch:client`
+
+Packaging
+---------
+
+Run `npm run package` to create a Debian package
