@@ -31,7 +31,7 @@ export function EditableText(props: {
         <InputGroup>
           <InputGroup.Prepend>
           <InputGroup.Text>
-            {props.value}
+            {props.value === "" ? "(empty)" : props.value}
           </InputGroup.Text>
           </InputGroup.Prepend>
           <InputGroup.Append>
