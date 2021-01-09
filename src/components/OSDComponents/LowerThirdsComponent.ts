@@ -15,6 +15,7 @@ export interface LowerThirdsComponent extends OSDComponent {
   title: string;
   subtitle: string;
   type: typeof LowerThirdsType;
+  className?: string | null;
 }
 
 export function isLowerThirdsComponent(component: OSDComponent): component is LowerThirdsComponent {

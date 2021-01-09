@@ -11,10 +11,13 @@ interface LowerThirdProps {
   title: string;
   subtitle: string;
   state: OnScreenComponentState;
+  className: string | null;
 }
 
 function LowerThird(props: LowerThirdProps): JSX.Element {
-  return <div className={props.state === "entering" || props.state === "visible" ?  "lower-third lower-third-visible" : "lower-third lower-third-hidden"}>
+  const customClassName = props.className ? ` ${props.className}` : ""
+  const className = props.state === "entering" || props.state === "visible" ?  "lower-third lower-third-visible" : "lower-third lower-third-hidden"
+  return <div className={className + customClassName}>
     <div className="title">{props.title}</div>
     <div className="subtitle">{props.subtitle}</div>
   </div>
@@ -34,6 +37,7 @@ export class LowerThirds extends Component<LowerThirdsProps> {
             title={c.component.title}
             subtitle={c.component.subtitle}
             state={c.state}
+            className={c.component.className === undefined ? null : c.component.className}
           />
         )}
       </div>

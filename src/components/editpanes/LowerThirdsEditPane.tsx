@@ -47,6 +47,15 @@ export function LowerThirdsEditPane(props: {
             })
           } />
         </Form.Group>
+        <Form.Group as={Row}>
+          <Form.Label column lg={2}>Class name</Form.Label>
+          <EditableText value={props.component.className || ""} update={(v): void =>
+            props.updateComponent({
+              ...props.component,
+              className: v === "" ? null : v
+            })
+          } />
+        </Form.Group>
         </Form.Group>
         <SharedStatusContainer component={props.component} />
       </Container>
