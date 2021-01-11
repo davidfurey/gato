@@ -17,9 +17,10 @@ interface LowerThirdProps {
 function LowerThird(props: LowerThirdProps): JSX.Element {
   const customClassName = props.className ? ` ${props.className}` : ""
   const className = props.state === "entering" || props.state === "visible" ?  "lower-third lower-third-visible" : "lower-third lower-third-hidden"
+  const subtitle = props.subtitle.split('\n').map ((item, i) => <p key={i}>{item}</p>)
   return <div className={className + customClassName}>
     <div className="title">{props.title}</div>
-    <div className="subtitle">{props.subtitle}</div>
+    <div className="subtitle">{subtitle}</div>
   </div>
 }
 

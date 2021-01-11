@@ -64,7 +64,7 @@ div.lower-third-visible {
   font-style: normal;
 }
 
-.psalm>.subtitle:before {
+.psalm>.subtitle p:first-child:before {
   content:"R: ";
   font-weight: normal;
 }
