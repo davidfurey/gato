@@ -44,6 +44,38 @@ div.lower-third-visible {
   margin: 0;
 }
 
+.acclamation {
+  font-style: normal;
+  height: 240px;
+  background: linear-gradient(0deg, rgba(255,255,255,0.95), rgba(255,255,255,0.95)) no-repeat;
+  background-size: 100% 78px;
+}
+.acclamation p {
+  margin-top: -30px;
+}
+.acclamation>.subtitle p:first-child:before {
+  content:"Alleluia, alleluia! ";
+  font-weight: bold;
+}
+.acclamation>.subtitle p:last-child:after {
+  content:" Alleluia!";
+  font-weight: bold;
+}
+.acclamation>.subtitle {
+  font-weight: normal;
+}
+
+.acclamation.three-line {
+  height: 320px;
+  background-size: 100% 158px;
+}
+
+.acclamation.four-line {
+  height: 400px;
+  background-size: 100% 238px;
+}
+
+
 .lower-third .title {
   font-family: Arial;
   font-size: 77px;
