@@ -2,9 +2,11 @@ import { OSDComponent } from '../OSDComponent'
 import React, { Component } from 'react';
 import { LowerThirds } from './OSDComponents/LowerThirds';
 import { Images } from './OSDComponents/Image';
+import { Slides } from './OSDComponents/Slide';
 import { ImageComponent, ImageType } from './OSDComponents/ImageComponent';
 import { LowerThirdsComponent, LowerThirdsType } from './OSDComponents/LowerThirdsComponent';
 import { OnScreenComponentState } from '../reducers/shared'
+import { SlideComponent, SlideType } from './OSDComponents/SlideComponent';
 
 interface ViewPanelProps {
   name: string;
@@ -48,12 +50,20 @@ export class ViewPanel extends Component<ViewPanelProps> {
       { state: OnScreenComponentState; component: ImageComponent }[]
   }
 
+  slideComponents = (
+    components: { state: OnScreenComponentState; component: OSDComponent }[]
+  ): { state: OnScreenComponentState; component: SlideComponent }[] => {
+    return components.filter((c) => c.component.type === SlideType) as
+      { state: OnScreenComponentState; component: SlideComponent }[]
+  }
+
   render(): JSX.Element {
     return (
       <div className="view-panel">
         <div className={this.props.preview ? "view-panel-content view-panel-content-preview" : "view-panel-content"}>
         <LowerThirds components={this.lowerThirdsComponents(this.props.components)} />
         <Images components={this.imageComponents(this.props.components)} />
+        <Slides components={this.slideComponents(this.props.components)} />
         </div>
         { this.props.showCaption ?
         <div className="view-panel-caption">

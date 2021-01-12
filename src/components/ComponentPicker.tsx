@@ -5,6 +5,7 @@ import { ComponentList } from './ComponentList';
 import { LowerThirdsType } from './OSDComponents/LowerThirdsComponent';
 import { TabbedPanel, TabContainer } from './TabbedPanel'
 import { ImageType } from './OSDComponents/ImageComponent';
+import { SlideType } from './OSDComponents/SlideComponent';
 
 interface ComponentPickerProps {
   components?: OSDComponent[];
@@ -86,6 +87,7 @@ function CreateComponent(props: {
           <Form.Control as="select" onChange={(event): void => setType(event.target.value)}>
             <option value={LowerThirdsType}>Banner</option>
             <option value={ImageType}>Image</option>
+            <option value={SlideType}>Slide</option>
           </Form.Control>
           </Col>
       </Form.Row>

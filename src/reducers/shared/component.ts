@@ -3,6 +3,7 @@ import { SharedState, ComponentList, Display } from '../shared'
 import * as Component from '../../api/Components'
 import * as LowerThirds from '../../components/OSDComponents/LowerThirdsComponent'
 import * as Image from '../../components/OSDComponents/ImageComponent'
+import * as Slide from '../../components/OSDComponents/SlideComponent'
 
 function createLowerThird(action: Component.CreateLowerThird, state: SharedState): SharedState {
   return {
@@ -33,6 +34,17 @@ function create(action: Component.Create, state: SharedState): SharedState {
         ...state.components,
         [action.component.id]: {
           ...Image.template,
+          ...action.component,
+        }
+      }
+    }
+  } else if (action.component.type === Slide.SlideType) {
+    return {
+      ...state,
+      components: {
+        ...state.components,
+        [action.component.id]: {
+          ...Slide.template,
           ...action.component,
         }
       }

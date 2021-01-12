@@ -1,0 +1,82 @@
+div.slide-components {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+.slide-components {
+  -webkit-transition: 1.0s;
+  -moz-transition: 1.0s;
+  -o-transition: 1.0s;
+  transition: 1.0s;
+  visibility: hidden;
+}
+
+div.slide-components.visible {
+  visibility: visible;
+}
+
+div.slide-component-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.slide-component {
+  position: absolute;
+  -webkit-transition: 1.0s;
+  -moz-transition: 1.0s;
+  -o-transition: 1.0s;
+  transition: 1.0s;
+  opacity: 0;
+  visibility: visible;
+  padding: 0;
+  margin: 0;
+}
+
+.slide-component.welcome .extra1 {
+  background: url(/drive/templates/welcome.png);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+}
+
+.slide-component.welcome div.image {
+  position: absolute;
+}
+
+.slide-component.welcome .extra2 :first-child:before {
+  content: "HOLY MASS";
+}
+
+.slide-component.welcome div {
+  font-family: Arial;
+  position: absolute;
+  color: black;
+  text-align: center;
+  width: 1000px;
+  padding: 0;
+  margin: 0;
+  left: 70px;
+  line-height: 1.2;
+}
+
+.slide-component.welcome .extra2 { 
+  font-size: 120px;
+  top: 190px;
+}
+
+.slide-component.welcome .title { 
+  font-size: 65px;
+  top: 345px;
+  z-index: 100;
+}
+
+.slide-component.welcome .subtitle { 
+  font-size: 65px;
+  top: 423px;
+  z-index: 100;
+}
