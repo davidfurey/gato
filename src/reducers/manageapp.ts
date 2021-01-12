@@ -53,7 +53,20 @@ export function createReducer(): ManageAppReducer {
     if (ManageActions.isWebsocketAction(action)) {
       const message = JSON.parse(action.payload.message)
       if (Response.isResponseMessage(message)) {
-        return responseReducer(message, state)
+        const newState = responseReducer(message, state)
+        if (message.type === Response.MessageType.SharedState) {
+          const editPanelStateLS = window.localStorage.getItem("gato.editPanel")
+          const editPanelState = editPanelStateLS ? JSON.parse(editPanelStateLS) : {
+            panes: [],
+            selected: undefined
+          }
+          return {
+            ...newState,
+            editPanel: editPanelState
+          }
+        } else {
+          return newState
+        }
       } else {
         return {
           ...state,
@@ -73,9 +86,11 @@ export function createReducer(): ManageAppReducer {
     }
 
     if (EditPanel.isEditPanelAction(action)) {
+      const editPanel = editPanelReducer(state.editPanel, action)
+      window.localStorage.setItem("gato.editPanel", JSON.stringify(editPanel))
       return {
         ...state,
-        editPanel: editPanelReducer(state.editPanel, action)
+        editPanel
       }
     }
 
