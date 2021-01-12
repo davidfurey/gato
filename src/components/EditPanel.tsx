@@ -21,12 +21,18 @@ export function createPane(
   events: { [key: string]: OSDLiveEvent },
   openTab: (pane: EditPanelReducer.EditPane) => void
 ): JSX.Element {
+  const missingComponent: OSDComponent = {
+    id: "",
+    name: "Missing component",
+    type: "missing",
+    shared: false
+  }
   const pattern: EditPanelReducer.Pattern<JSX.Element> = {
 // eslint-disable-next-line react/display-name
     [EditPanelReducer.EditPaneType.Component]: (pane) =>
       <ComponentEditPaneContainer
         pane={pane}
-        component={components[pane.id]}
+        component={components[pane.id] || { ...missingComponent, id: pane.id }}
       />,
 // eslint-disable-next-line react/display-name
     [EditPanelReducer.EditPaneType.Event]: (pane) =>
@@ -50,7 +56,7 @@ export function EditPanel(props: EditPanelProps): JSX.Element {
       {
         props.editPanel.panes.map((pane) => <TabContainer
           key={pane.id}
-          name={pane.type === "Event" ? props.events[pane.id].name : props.components[pane.id].name}
+          name={(pane.type === "Event" ? props.events[pane.id]?.name : props.components[pane.id]?.name) || "Missing"}
           eventKey={pane.id}
           closeTab={(): void => props.closeTab(pane.id)}
         >

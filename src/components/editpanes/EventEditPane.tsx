@@ -51,6 +51,12 @@ function capitalise(s: string): string {
 
 export function EventEditPane(props: EventEditPaneProps): JSX.Element {
   const eventComponents = props.event.components.flatMap((id) => props.components[id] || [])
+  const missingComponent: OSDComponent = {
+    id: "",
+    name: "Missing component",
+    type: "missing",
+    shared: false
+  }
   return <Container className="mt-3 mb-3">
     <Card style={{ width: "30rem" }} className="mb-3">
       <Card.Header><PaneIcon type="description" /> Metadata</Card.Header>
@@ -71,7 +77,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
     <Card style={{ width: "30rem" }} className="mb-3">
       <Card.Header><PaneIcon type="widgets" /> Components</Card.Header>
       <ComponentList
-        components={props.event.components.map((cId) => props.components[cId])}
+        components={props.event.components.map((cId) => props.components[cId] || { ...missingComponent, id: cId })}
         removeComponent={(componentId: string): void =>
           props.removeComponent(props.event.id, componentId)
         }

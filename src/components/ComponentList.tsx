@@ -99,9 +99,6 @@ export function ComponentList(props: {
   return <ListGroup variant="flush">
   {props.components.map((component, index) => {
     seenIds[component?.id || "empty"] = (seenIds[component?.id || "empty"] || 0) + 1
-    if (component === null || component === undefined) {
-      return <ListGroup.Item>Null component</ListGroup.Item>
-    }
     return <ComponentListItem
       key={(component?.id || "empty") + seenIds[component?.id || "empty"]}
       setComponent={setComponent ? (id: string): void => setComponent(index, id) : undefined}
