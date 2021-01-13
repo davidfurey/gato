@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, ListGroup, ButtonGroup } from 'react-bootstrap'
 import { OSDComponent } from '../OSDComponent';
-import { EditPane, EditPaneType } from '../reducers/editpanel';
+import { EditPane, EditPaneType } from '../types/editpane';
 import { ComponentDropdown } from './ComponentDropdown'
 
 function ComponentListItem(

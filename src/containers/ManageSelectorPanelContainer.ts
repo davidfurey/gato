@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { ManageSelectorPanel, ManageSelectorPanelProps } from "../components/ManageSelectorPanel";
 import { AppDispatch } from "../manage";
 import * as EditPanelActions from '../actions/editpanel'
-import { EditPane } from "../reducers/editpanel";
+import { EditPane, EditPaneType } from "../types/editpane";
 import * as ComponentMessage from '../api/Components'
 import * as EventMessage from '../api/Events'
 import { send } from '@giantmachines/redux-websocket';

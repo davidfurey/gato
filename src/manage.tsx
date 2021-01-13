@@ -10,12 +10,14 @@ import { ManageAppState, createReducer } from './reducers/manageapp'
 import reduxWebsocket from '@giantmachines/redux-websocket';
 import { connect as websocketConnect, send } from '@giantmachines/redux-websocket';
 import * as ManageAppActions from './actions/manageapp';
+import * as EditPanelActions from './actions/editpanel';
 import { uuid } from 'uuidv4';
 import { ManageSelectorPanelContainer } from './containers/ManageSelectorPanelContainer';
 import * as Connectivity from './actions/connectivity'
 import { EditPanelContainer } from './containers/EditPanelContainer'
 import * as RequestMessage from './api/Requests'
 import { EditPanelState } from './reducers/editpanel';
+import { EditPane, EditPaneType } from './types/editpane';
 import { Col, Container, Row } from 'react-bootstrap';
 import { PageNav } from './components/PageNav';
 import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';

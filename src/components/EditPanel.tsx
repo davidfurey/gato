@@ -1,25 +1,26 @@
 import React from 'react';
 import { TabbedPanel, TabContainer } from '../components/TabbedPanel';
-import * as EditPanelReducer from '../reducers/editpanel';
+import * as EditPane from '../types/editpane';
+import { EditPanelState } from '../reducers/editpanel';
 import { OSDComponent } from '../OSDComponent';
 import { OSDLiveEvent } from '../reducers/shared';
 import { ComponentEditPaneContainer } from '../containers/ComponentEditPaneContainer';
 import { EventEditPaneContainer } from '../containers/EventEditPaneContainer';
 
 export interface EditPanelProps {
-  editPanel: EditPanelReducer.EditPanelState;
+  editPanel: EditPanelState;
   closeTab: (id: string) => void;
   selectTab: (id: string) => void;
-  openTab: (pane: EditPanelReducer.EditPane) => void;
+  openTab: (pane: EditPane.EditPane) => void;
   components: { [key: string]: OSDComponent };
   events: { [key: string]: OSDLiveEvent };
 }
 
 export function createPane(
-  pane: EditPanelReducer.EditPane,
+  pane: EditPane.EditPane,
   components: { [key: string]: OSDComponent },
   events: { [key: string]: OSDLiveEvent },
-  openTab: (pane: EditPanelReducer.EditPane) => void
+  openTab: (pane: EditPane.EditPane) => void
 ): JSX.Element {
   const missingComponent: OSDComponent = {
     id: "",
@@ -27,7 +28,7 @@ export function createPane(
     type: "missing",
     shared: false
   }
-  const pattern: EditPanelReducer.Pattern<JSX.Element> = {
+  const pattern: EditPane.Pattern<JSX.Element> = {
 // eslint-disable-next-line react/display-name
     [EditPanelReducer.EditPaneType.Component]: (pane) =>
       <ComponentEditPaneContainer
@@ -35,8 +36,8 @@ export function createPane(
         component={components[pane.id] || { ...missingComponent, id: pane.id }}
       />,
 // eslint-disable-next-line react/display-name
-    [EditPanelReducer.EditPaneType.Event]: (pane) =>
       <EventEditPaneContainer
+    [EditPane.EditPaneType.Event]: (pane) =>
         pane={pane}
         event={events[pane.id]}
         components={components}
@@ -44,7 +45,7 @@ export function createPane(
       />
   }
 
-  return EditPanelReducer.matcher(pattern)(pane)
+  return EditPane.matcher(pattern)(pane)
 }
 
 export function EditPanel(props: EditPanelProps): JSX.Element {

@@ -1,5 +1,5 @@
 import { AnnotatedType, TypeMap, isTypeGroup, GenericPattern, genericMatcher } from "../api/PatternHelpers";
-import { EditPane } from "../reducers/editpanel";
+import { EditPane, EditPaneType } from "../types/editpane";
 
 export enum ActionType {
   Close = 'EditPanel/Close',
