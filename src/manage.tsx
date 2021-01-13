@@ -20,6 +20,8 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { PageNav } from './components/PageNav';
 import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';
 import { PageFooter } from './components/PageFooter';
+import thunkMiddleware from 'redux-thunk'
+import { ThunkMiddleware } from 'redux-thunk'
 
 interface ManageProps {
   displays: Display[];
@@ -38,7 +40,13 @@ const reduxWebsocketMiddleware = reduxWebsocket({
   reconnectOnClose: true,
 });
 
-const store = createStore(createReducer(), applyMiddleware(reduxWebsocketMiddleware))
+const store = createStore(
+  createReducer(),
+  applyMiddleware(
+    thunkMiddleware as ThunkMiddleware<{}, ManageAppActions.Action>,
+    reduxWebsocketMiddleware
+  )
+)
 
 maybeStore = store
 
