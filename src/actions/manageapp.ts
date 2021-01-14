@@ -1,4 +1,5 @@
 import { TypeMap, GenericPattern, genericMatcher } from "../api/PatternHelpers"
+import * as Navigation from './navigation'
 import * as Connectivity from './connectivity'
 import * as EditPanel from './editpanel'
 import { WebsocketConnect, WebsocketMessage, GenericWebsocketsAction } from "./websocket"
@@ -9,6 +10,7 @@ export type ActionType =
   Connectivity.ActionType
 
 export type Action =
+  Navigation.Action |
   Connectivity.Action |
   EditPanel.Action |
   WebsocketConnect |

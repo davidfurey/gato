@@ -2,6 +2,7 @@ import { uuid } from 'uuidv4'
 import * as ManageActions from '../actions/manageapp'
 import * as Connectivity from '../actions/connectivity'
 import * as EditPanel from '../actions/editpanel'
+import * as NavigationActions from '../actions/navigation'
 import { SharedState, reducer as sharedStateReducer, OSDLiveEvent } from './shared'
 import * as Response from '../api/Responses'
 import * as Component from '../api/Components'
@@ -10,12 +11,14 @@ import { reducer as connectivityReducer, ConnectivityState } from './connectivit
 import { createReducer as createResponseReducer } from './response'
 import { BaseAppState } from './base'
 import { reducer as editPanelReducer, EditPanelState } from './editpanel'
+import * as Navigation from '../libs/navigation'
 
 
 export interface ManageAppState extends BaseAppState {
   shared: SharedState;
   connectivity: ConnectivityState;
   editPanel: EditPanelState;
+  windowHash: string | null;
 }
 
 const initialEvent: OSDLiveEvent = {
@@ -40,8 +43,9 @@ const initialManageState: ManageAppState = {
   },
   editPanel: {
     panes: [],
-    selected: undefined
-  }
+    selected: undefined,
+  },
+  windowHash: null
 }
 
 type ManageAppReducer = (state: ManageAppState, action: ManageActions.Action) => ManageAppState
@@ -53,20 +57,7 @@ export function createReducer(): ManageAppReducer {
     if (ManageActions.isWebsocketAction(action)) {
       const message = JSON.parse(action.payload.message)
       if (Response.isResponseMessage(message)) {
-        const newState = responseReducer(message, state)
-        if (message.type === Response.MessageType.SharedState) {
-          const editPanelStateLS = window.localStorage.getItem("gato.editPanel")
-          const editPanelState = editPanelStateLS ? JSON.parse(editPanelStateLS) : {
-            panes: [],
-            selected: undefined
-          }
-          return {
-            ...newState,
-            editPanel: editPanelState
-          }
-        } else {
-          return newState
-        }
+        return responseReducer(message, state)
       } else {
         return {
           ...state,
@@ -87,13 +78,23 @@ export function createReducer(): ManageAppReducer {
 
     if (EditPanel.isEditPanelAction(action)) {
       const editPanel = editPanelReducer(state.editPanel, action)
-      window.localStorage.setItem("gato.editPanel", JSON.stringify(editPanel))
       return {
         ...state,
-        editPanel
+        editPanel,
+        windowHash: Navigation.windowHashFromPanels(editPanel)
       }
     }
 
+    if (NavigationActions.isNavigationAction(action)) {
+      if (state.windowHash === action.windowHash) {
+        return state
+      }
+      return {
+        ...state,
+        editPanel: Navigation.panelsFromWindowHash(action.windowHash),
+        windowHash: state.windowHash
+      }
+    }
 
     if (!action.type.startsWith("REDUX_WEBSOCKET") && !action.type.startsWith("@@redux")) {
       console.warn("Unhandled action:")
