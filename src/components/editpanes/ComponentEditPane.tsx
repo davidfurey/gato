@@ -1,5 +1,5 @@
 import React from 'react';
-import * as EditPanelReducer from '../../reducers/editpanel';
+import * as EditPane from '../../types/editpane';
 import { OSDComponent } from '../../OSDComponent';
 import { isLowerThirdsComponent } from '../OSDComponents/LowerThirdsComponent';
 import { LowerThirdsEditPane } from './LowerThirdsEditPane';
@@ -10,7 +10,7 @@ import { isSlideComponent } from '../OSDComponents/SlideComponent';
 import { SlideEditPane } from './SlideEditPane';
 
 export interface ComponentEditPaneProps {
-  pane: EditPanelReducer.ComponentEditPane;
+  pane: EditPane.ComponentEditPane;
   component: OSDComponent;
   updateComponent: <T extends OSDComponent>(component: T) => void;
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import * as EditPanelReducer from '../../reducers/editpanel';
+import * as EditPane from '../../types/editpane';
 import { OSDLiveEvent } from '../../reducers/shared';
 import { OSDComponent } from '../../OSDComponent';
 import { Container, Card, Badge, Form, Row, Button } from 'react-bootstrap';
@@ -9,9 +9,9 @@ import { uuid } from 'uuidv4';
 import { EditableText } from '../EditableText';
 
 export interface EventEditPaneProps {
-  pane: EditPanelReducer.EventEditPane;
+  pane: EditPane.EventEditPane;
   event: OSDLiveEvent;
-  openTab: (pane: EditPanelReducer.EditPane) => void;
+  openTab: (pane: EditPane.EditPane) => void;
   removeComponent: (eventId: string, componentId: string) => void;
   addComponent: (eventId: string, componentId: string) => void;
   newComponent: (componentId: string, name: string, type: string) => void;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, ListGroup, ButtonGroup, Modal } from 'react-bootstrap'
 import { OSDLiveEvent } from '../reducers/shared';
-import { EditPane, EditPaneType } from '../reducers/editpanel';
+import { EditPane, EditPaneType } from '../types/editpane';
 
 function EventListItem(props: {
   event: OSDLiveEvent;
