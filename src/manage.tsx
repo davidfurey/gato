@@ -57,18 +57,6 @@ function socketUrl(): string {
 
 store.dispatch(websocketConnect(socketUrl()));
 
-function objectFilter<T>(
-  obj: { [key: string]: T },
-  fn: (pv: T, pk: string, pi: number) => boolean
-):
-{ [key: string]: T } {
-  return Object.fromEntries(
-    Object.entries(obj).filter(
-      ([k, v], i) => fn(v, k, i)
-    )
-  )
-}
-
 export class Manage extends Component<ManageProps> {
   constructor(props: ManageProps) {
     super(props)
@@ -101,7 +89,7 @@ export class Manage extends Component<ManageProps> {
           <Col sm="auto" style={{ width: "25rem"}}>
             <ManageSelectorPanelContainer
               events={this.props.events}
-              components={objectFilter(this.props.components, (c) => c.shared)}
+              components={this.props.components}
               liveEventId={this.props.liveEventId}
             />
             {/* todo: should only be shared components */}

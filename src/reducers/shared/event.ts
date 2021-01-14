@@ -65,6 +65,7 @@ function CreateEvent(action: Event.Create, state: SharedState): SharedState {
       listType: "picked",
       components: [null, null, null, null, null]
     }],
+    ...action.event
   }
   return {
     ...state,

@@ -6,9 +6,11 @@ import { EditPane } from "../types/editpane";
 import * as ComponentMessage from '../api/Components'
 import * as EventMessage from '../api/Events'
 import { send } from '@giantmachines/redux-websocket';
+import * as EventActions from '../api/Events'
+import * as ComponentActions from '../api/Components'
 
 const mapDispatchToProps = (dispatch: AppDispatch): Pick<ManageSelectorPanelProps,
-  "deleteComponent" | "deleteEvent" | "openTab" | "newComponent" | "newEvent"> => {
+  "deleteComponent" | "deleteEvent" | "openTab" | "newComponent" | "newEvent" | "copyEvent"> => {
     return {
       deleteComponent: (id: string): void => {
         const action: ComponentMessage.Delete = {
@@ -51,6 +53,9 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<ManageSelectorPanelProp
           name
         }
         dispatch(send(create))
+      },
+      copyEvent: (actions: (EventActions.Create | ComponentActions.Create)[]): void => {
+        actions.forEach((action) => dispatch(send(action)))
       }
     }
 }

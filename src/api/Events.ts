@@ -1,3 +1,4 @@
+import { OSDLiveEvent } from '../reducers/shared'
 import { Uuid, BaseMessage, BaseMessageType } from './Messages'
 import { TypeMap, GenericPattern, genericMatcher, isTypeGroup, isType } from "./PatternHelpers"
 
@@ -17,6 +18,7 @@ export type Pattern<T> = GenericPattern<TypeMap<MessageType, Message>, T>
 export interface Create extends BaseMessage<MessageType.Create> {
   id: Uuid;
   name: string;
+  event?: Partial<OSDLiveEvent>;
 }
 
 export interface Delete extends BaseMessage<MessageType.Delete> {

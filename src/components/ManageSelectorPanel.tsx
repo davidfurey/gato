@@ -9,6 +9,9 @@ import { Card } from 'react-bootstrap';
 import { ComponentPicker } from './ComponentPicker'
 import { uuid } from 'uuidv4';
 import { CreateEventButton } from './CreateEventButton';
+import { copyEvent } from '../libs/events';
+import * as EventActions from '../api/Events'
+import * as ComponentActions from '../api/Components'
 
 export interface ManageSelectorPanelProps {
   events: { [key: string]: OSDLiveEvent };
@@ -19,6 +22,7 @@ export interface ManageSelectorPanelProps {
   openTab: (pane: EditPane) => void;
   newComponent: (componentId: string, name: string, type: string) => void;
   newEvent: (eventId: string, name: string) => void;
+  copyEvent: (actions: (EventActions.Create | ComponentActions.Create)[]) => void;
 }
 
 export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Element {
@@ -32,13 +36,19 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
       />
       <Card.Footer className="p-2">
         <CreateEventButton newEvent={(name): void =>
-          props.newEvent(uuid(), name)
-        }/>
+            props.newEvent(uuid(), name)
+          }
+          selectEvent={(id): void => {
+            const eventName = `${(props.events[id]?.name || "<unknown>")} (copy)`
+            props.copyEvent(copyEvent(eventName, id, props.events, props.components))
+          }}
+          events={Object.values(props.events)}
+        />
       </Card.Footer>
     </TabContainer>
     <TabContainer name="Components" eventKey="components">
       <ComponentList
-        components={Object.values(props.components)}
+        components={Object.values(props.components).filter((c) => c.shared)}
         deleteComponent={props.deleteComponent}
         openTab={props.openTab}
       />
