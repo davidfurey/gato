@@ -29,7 +29,7 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
   return <TabbedPanel variant="pills">
     <TabContainer name="Event" eventKey="events">
       <EventList
-        events={Object.values(props.events)}
+        events={Object.values(props.events).filter((evt) => !evt.template)}
         liveEventId={props.liveEventId}
         openTab={props.openTab}
         deleteEvent={props.deleteEvent}

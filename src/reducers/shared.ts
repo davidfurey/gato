@@ -31,6 +31,7 @@ export interface OSDLiveEvent {
   id: uuidv4;
   components: uuidv4[];
   lists: ComponentList[];
+  template?: boolean;
 }
 
 export type OnScreenComponentState = "entering" | "exiting" | "visible" | "hidden"

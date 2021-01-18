@@ -2,7 +2,7 @@ import React from 'react';
 import * as EditPane from '../../types/editpane';
 import { OSDLiveEvent } from '../../reducers/shared';
 import { OSDComponent } from '../../OSDComponent';
-import { Container, Card, Badge, Form, Row, Button } from 'react-bootstrap';
+import { Container, Card, Badge, Form, Row, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import { ComponentList } from '../ComponentList';
 import { ComponentPicker } from '../ComponentPicker';
 import { uuid } from 'uuidv4';
@@ -63,13 +63,28 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
       <Container className="mt-3 mb-3">
       <Form.Group>
         <Form.Group as={Row}>
-          <Form.Label column lg={2}>Name</Form.Label>
+          <Form.Label column lg={3}>Name</Form.Label>
           <EditableText value={props.event.name} update={(v): void =>
-            props.updateEvent({
-              ...props.event,
+            props.updateEvent(props.event.id, {
               name: v
             })
           } />
+        </Form.Group>
+        <Form.Group as={Row}>
+          <Form.Label column lg={3}>Type</Form.Label>
+          <DropdownButton
+            size="sm"
+            variant="dark"
+            id="dropdown-basic-button"
+            title={props.event.template ? "Template" : "Event"}
+          >
+            <Dropdown.Item key={0} onClick={(): void => props.updateEvent(props.event.id, {
+              template: false
+            })}>Event</Dropdown.Item>
+            <Dropdown.Item key={1} onClick={(): void => props.updateEvent(props.event.id, {
+              template: true
+            })}>Template</Dropdown.Item>
+          </DropdownButton>
         </Form.Group>
       </Form.Group>
       </Container>
