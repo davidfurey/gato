@@ -4,7 +4,7 @@ import { EventList } from './EventList'
 import { OSDLiveEvent } from '../reducers/shared';
 import { OSDComponent } from '../OSDComponent';
 import { TabbedPanel, TabContainer } from './TabbedPanel'
-import { EditPane } from '../types/editpane';
+import { EditPane, EditPaneType } from '../types/editpane';
 import { Card } from 'react-bootstrap';
 import { ComponentPicker } from './ComponentPicker'
 import { uuid } from 'uuidv4';
@@ -44,9 +44,8 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
               })
             }
           }
-          selectEvent={(id): void => {
-            const eventName = `${(props.events[id]?.name || "<unknown>")} (copy)`
-            props.copyEvent(copyEvent(eventName, id, props.events, props.components))
+          copy={(sourceId: string, name: string): void => {
+            props.copyEvent(copyEvent(name, sourceId, props.events, props.components))
           }}
           events={Object.values(props.events)}
         />
