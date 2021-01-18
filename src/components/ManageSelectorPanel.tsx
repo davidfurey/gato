@@ -35,8 +35,14 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
         deleteEvent={props.deleteEvent}
       />
       <Card.Footer className="p-2">
-        <CreateEventButton newEvent={(name): void =>
-            props.newEvent(uuid(), name)
+        <CreateEventButton newEvent={(name): void => {
+              const eventId = uuid()
+              props.newEvent(eventId, name)
+              props.openTab({
+                type: EditPaneType.Event,
+                id: eventId,
+              })
+            }
           }
           selectEvent={(id): void => {
             const eventName = `${(props.events[id]?.name || "<unknown>")} (copy)`
@@ -55,7 +61,12 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
       <Card.Footer className="p-2">
         <ComponentPicker
           newComponent={(name: string, type: string): void => {
-            props.newComponent(uuid(), name, type)
+            const componentId = uuid()
+            props.newComponent(componentId, name, type)
+            props.openTab({
+              type: EditPaneType.Component,
+              id: componentId,
+            })
           }
           }
         />

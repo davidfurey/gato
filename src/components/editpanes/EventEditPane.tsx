@@ -115,11 +115,10 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
             const componentId = uuid()
             props.newComponent(componentId, name, type)
             props.addComponent(props.event.id, componentId)
-// todo: opening tab doesn't work because it is fairly sync whereas create goes via server
-// props.openTab({
-//   type: EditPanelReducer.EditPaneType.Component,
-//   id: componentId,
-// })
+            props.openTab({
+              type: EditPane.EditPaneType.Component,
+              id: componentId,
+            })
           }
           }
         />
