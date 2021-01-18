@@ -15,7 +15,7 @@ export interface EventEditPaneProps {
   removeComponent: (eventId: string, componentId: string) => void;
   addComponent: (eventId: string, componentId: string) => void;
   newComponent: (componentId: string, name: string, type: string) => void;
-  updateEvent: (event: OSDLiveEvent) => void;
+  updateEvent: (id: string, event: Partial<OSDLiveEvent>) => void;
   setComponent: (eventId: string, listName: string, index: number, id: string) => void;
   swapComponent: (
     eventId: string,

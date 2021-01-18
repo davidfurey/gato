@@ -46,11 +46,11 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<EventEditPaneProps,
         }
         dispatch(send(create))
       },
-      updateEvent: (event: OSDLiveEvent): void => {
+      updateEvent: (id: string, event: Partial<OSDLiveEvent>): void => {
         const action: EventMessage.Update = {
           type: EventMessage.MessageType.Update,
-          name: event.name,
-          id: event.id
+          event,
+          id,
         }
         dispatch(send(action))
       },

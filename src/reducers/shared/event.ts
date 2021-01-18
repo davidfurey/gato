@@ -158,7 +158,7 @@ function Update(action: Event.Update, state: SharedState): SharedState {
   if (event) {
     const newEvent = {
       ...event,
-      name: action.name,
+      ...action.event,
     }
 
     return {

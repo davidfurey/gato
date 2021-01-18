@@ -27,7 +27,7 @@ export interface Delete extends BaseMessage<MessageType.Delete> {
 
 export interface Update extends BaseMessage<MessageType.Update> {
   id: Uuid;
-  name: string;
+  event: Partial<OSDLiveEvent>;
 }
 
 export interface AddComponent extends BaseMessage<MessageType.AddComponent> {
