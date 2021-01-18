@@ -71,7 +71,7 @@ export function EventList(
 ): JSX.Element {
   const deleteEvent = props.deleteEvent
   const onClick = props.onClick
-  const style: CSSProperties = (props.scroll === undefined || props.scroll) ? {maxHeight: "30em", overflowY: "auto"} : {}
+  const style: CSSProperties = props.scroll ? {height: "30em", overflowY: "scroll"} : {}
   return <ListGroup variant="flush" style={style}>
     {props.events.slice(0).reverse().map((event) =>
       <EventListItem

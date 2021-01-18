@@ -33,6 +33,7 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
         liveEventId={props.liveEventId}
         openTab={props.openTab}
         deleteEvent={props.deleteEvent}
+        scroll={true}
       />
       <Card.Footer className="p-2">
         <CreateEventButton newEvent={(name): void => {
