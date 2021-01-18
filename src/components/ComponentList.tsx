@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import { Modal, Button, ListGroup, ButtonGroup } from 'react-bootstrap'
 import { OSDComponent } from '../OSDComponent';
 import { EditPane, EditPaneType } from '../types/editpane';
@@ -88,6 +88,7 @@ export function ComponentList(props: {
   swap?: (componentId: string, position: number, newPosition: number) => void;
   onClick?: (id: string, active: boolean) => void;
   activeId?: string;
+  scroll?: boolean;
 }): JSX.Element {
   const deleteComponent = props.deleteComponent
   const removeComponent = props.removeComponent
@@ -96,7 +97,8 @@ export function ComponentList(props: {
   const swap = props.swap
   const setComponent = props.setComponent
   const seenIds: { [id: string]: number} = {} // list can contain duplicates
-  return <ListGroup variant="flush">
+  const style: CSSProperties = props.scroll ? {height: "30em", overflowY: "scroll"} : {}
+  return <ListGroup variant="flush" style={style}>
   {props.components.map((component, index) => {
     seenIds[component?.id || "empty"] = (seenIds[component?.id || "empty"] || 0) + 1
     return <ComponentListItem

@@ -56,6 +56,7 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
         components={Object.values(props.components).filter((c) => c.shared)}
         deleteComponent={props.deleteComponent}
         openTab={props.openTab}
+        scroll={true}
       />
       <Card.Footer className="p-2">
         <ComponentPicker
