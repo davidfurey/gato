@@ -7,39 +7,101 @@ import { TabbedPanel, TabContainer } from './TabbedPanel'
 interface CreateEventButtonProps {
   newEvent: (name: string) => void;
   className?: string;
-  selectEvent: (id: string) => void;
+  copy: (sourceId: string, name: string) => void;
   events: OSDLiveEvent[];
 }
 
+function CopySettingsPanel(props: {
+  back: () => void;
+  close: () => void;
+  selectedEvent: OSDLiveEvent;
+  copy: (sourceId: string, name: string) => void;
+}): JSX.Element {
+  const [name, setName] = useState("");
+  return <Card>
+    <Card.Header className="px-3 py-2 bg-primary d-flex">
+      <Button style={{border: 'none', verticalAlign: "top"}} size="sm" onClick={props.back} className="p-0 my-0 mr-2">
+        <span className="material-icons material-icons-raised m-0">arrow_back</span>
+      </Button>
+      <span style={{padding: "0.25rem"}}>{ props.selectedEvent.name }</span>
+    </Card.Header>
+    <div id="page-content-wrapper" style={{height: "15rem", width: "15rem"}} className="p-0 d-flex flex-column overflow-hidden">
+    <Container className="container-fluid d-flex flex-column overflow-auto flex-fill p-0">
+    <Container className="flex-fill flex-column d-flex bg-dark p-3">
+    <Form.Group>
+      <Form.Row>
+          <Form.Label lg={3} column="sm">Name</Form.Label>
+          <Col>
+          <Form.Control size="sm" type="text" onChange={(event): void => setName(event.target.value)} />
+          </Col>
+      </Form.Row>
+    </Form.Group>
+    </Container>
+    </Container>
+    <Card.Footer className="flex-shrink-1 pt-2 pb-2 text-center">
+        <Button
+          size="sm"
+          variant="success"
+          className="mr-2"
+          disabled={name === ""}
+          onClick={(): void => { props.copy(props.selectedEvent.id, name); props.close() }}
+        >
+          Create
+        </Button>
+        <Button size="sm" variant="secondary" onClick={props.close}>
+          Cancel
+        </Button>
+    </Card.Footer>
+    </div>
+  </Card>
+}
 function CreateOrCopyEventPanel(props: {
   newEvent: (name: string) => void;
-  selectEvent: (id: string) => void;
+  copy: (sourceId: string, name: string) => void;
   events: OSDLiveEvent[];
   close: () => void;
 }): JSX.Element {
-  return <TabbedPanel className="" variant="pills" size="sm">
-    <TabContainer name="New" eventKey="new">
-      <CreateEventTab
-        newEvent={props.newEvent}
-        close={props.close}
-      />
-    </TabContainer>
-    <TabContainer name="Copy" eventKey="copy">
-      <CopyEventTab
-        events={props.events}
-        selectEvent={props.selectEvent}
-        close={props.close}
-      />
-    </TabContainer>
-  </TabbedPanel>
+  const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
+  const [selectedTab, setSelectedTab] = useState('empty');
+
+  const selectedOSDEvent = props.events.find((evt) => evt.id === selectedEvent) // todo: tidy
+  return selectedOSDEvent ?
+    <CopySettingsPanel
+      back={(): void => setSelectedEvent(null)}
+      close={props.close}
+      selectedEvent={selectedOSDEvent}
+      copy={props.copy}
+    />:
+    <TabbedPanel
+      className=""
+      variant="pills"
+      size="sm"
+      onSelect={(key): void => setSelectedTab(key)}
+      activeKey={selectedTab}
+    >
+      <TabContainer name="Empty" eventKey="empty">
+        <CreateEventTab
+          newEvent={props.newEvent}
+          close={props.close}
+        />
+      </TabContainer>
+      <TabContainer name="Template" eventKey="template">
+        <CopyEventTab
+          events={props.events.filter((t) => t.template)}
+          selectEvent={setSelectedEvent}
+          selectedEvent={selectedEvent}
+          close={props.close}
+        />
+      </TabContainer>
+    </TabbedPanel>
 }
 
 function CopyEventTab(props: {
   events: OSDLiveEvent[];
   selectEvent: (id: string) => void;
+  selectedEvent: string | null;
   close: () => void;
 }): JSX.Element {
-  const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
 
   return <div id="page-content-wrapper" style={{height: "15rem", width: "15rem"}} className="p-0 d-flex flex-column overflow-hidden">
     <Container className="container-fluid d-flex flex-column overflow-auto flex-fill p-0">
@@ -51,10 +113,9 @@ function CopyEventTab(props: {
                 <EventList
                   events={props.events}
                   onClick={
-                    (id: string, active: boolean): void =>
-                      active ? setSelectedEvent(null) : setSelectedEvent(id)
+                    (id: string): void =>
+                      props.selectEvent(id)
                   }
-                  activeId={selectedEvent !== null ? selectedEvent : undefined}
                   scroll={false}
                 />
               </div>
@@ -65,18 +126,11 @@ function CopyEventTab(props: {
       <Card.Footer className="flex-shrink-1 pt-2 pb-2 text-center">
         <Button
           size="sm"
-          variant="primary"
+          variant="success"
           className="mr-2"
-          disabled={selectedEvent == null}
-          onClick={(): void => {
-              if (selectedEvent !== null) {
-                props.selectEvent(selectedEvent)
-                props.close()
-              }
-            }
-          }
+          disabled={true}
         >
-          Copy
+          Create
         </Button>
         <Button size="sm" variant="secondary" onClick={props.close}>
           Cancel
@@ -123,14 +177,14 @@ function CreateEventTab(props: {
 function popover(
   close: () => void,
   newEvent: (name: string) => void,
-  selectEvent: (id: string) => void,
+  copy: (sourceId: string, name: string) => void,
   events: OSDLiveEvent[]
 ): JSX.Element {
   return <Popover id="popover-basic" className="bg-secondary p-0">
     <CreateOrCopyEventPanel
       close={close}
       newEvent={newEvent}
-      selectEvent={selectEvent}
+      copy={copy}
       events={events}
     />
   </Popover>
@@ -150,7 +204,7 @@ export function CreateEventButton(props: CreateEventButtonProps): JSX.Element {
     <Overlay placement="right" target={target.current} show={show}>{popover(
       close,
       props.newEvent,
-      props.selectEvent,
+      props.copy,
       props.events
     )}</Overlay>
   </div>
