@@ -52,8 +52,10 @@ function objectZip<T>(a: string[], b: T[]): { [name: string]: T } {
 export function copyEvent(
   name: string,
   sourceId: string,
+  eventId: string,
   events: { [id: string]: OSDLiveEvent},
   components: { [id: string]: OSDComponent},
+  template?: boolean
 ): (EventActions.Create | ComponentActions.Create)[] {
   const sourceEvent = events[sourceId]
   if (!sourceEvent) {
@@ -63,9 +65,10 @@ export function copyEvent(
     copyComponents(sourceEvent.components, components)
   const newEvent: OSDLiveEvent = {
     name: name,
-    id: uuid(),
+    id: eventId,
     components: newComponentIds,
     lists: copyLists(sourceEvent.lists, objectZip(sourceEvent.components, newComponentIds)),
+    template
   }
   const newEventAction: EventActions.Create = {
     type: EventActions.MessageType.Create,
