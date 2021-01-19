@@ -3,7 +3,7 @@ import { QuickCreatePanel, QuickCreatePanelProps } from '../components/QuickCrea
 import * as ComponentMessage from '../api/Components'
 import * as EventMessage from '../api/Events'
 import * as Transistion from '../api/Transitions'
-import { uuid } from 'uuidv4'
+import { v4 as uuid } from 'uuid';
 import { send } from '@giantmachines/redux-websocket';
 import { Display } from '../reducers/shared'
 import { AppDispatch } from '../control'

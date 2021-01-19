@@ -7,7 +7,7 @@ import { TabbedPanel, TabContainer } from './TabbedPanel'
 import { EditPane, EditPaneType } from '../types/editpane';
 import { Card } from 'react-bootstrap';
 import { ComponentPicker } from './ComponentPicker'
-import { uuid } from 'uuidv4';
+import { v4 as uuid } from 'uuid';
 import { CreateEventButton, CreateTemplateButton } from './CreateEventButton';
 import { copyEvent } from '../libs/events';
 import * as EventActions from '../api/Events'

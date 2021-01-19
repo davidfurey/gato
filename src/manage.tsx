@@ -10,7 +10,7 @@ import { ManageAppState, createReducer } from './reducers/manageapp'
 import reduxWebsocket from '@giantmachines/redux-websocket';
 import { connect as websocketConnect, send } from '@giantmachines/redux-websocket';
 import * as ManageAppActions from './actions/manageapp';
-import { uuid } from 'uuidv4';
+import { v4 as uuid } from 'uuid';
 import { ManageSelectorPanelContainer } from './containers/ManageSelectorPanelContainer';
 import * as Connectivity from './actions/connectivity'
 import { EditPanelContainer } from './containers/EditPanelContainer'

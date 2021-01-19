@@ -1,4 +1,4 @@
-import { uuid } from 'uuidv4'
+import { v4 as uuid } from 'uuid';
 import * as ViewActions from '../actions/viewapp'
 import * as Connectivity from '../actions/connectivity'
 import { OSDLiveEvent, SharedState, reducer as sharedStateReducer } from './shared'

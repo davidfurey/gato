@@ -10,7 +10,7 @@ import * as Request from '../api/Requests'
 import * as Response from '../api/Responses'
 import { ClientStatus, ClientInterface } from '../api/Responses'
 import { OSDLiveEvent, SharedState, reducer, Display } from '../reducers/shared'
-import { uuid } from 'uuidv4'
+import { v4 as uuid } from 'uuid';
 import fs from 'fs'
 import { OSDComponent } from '../OSDComponent';
 import url from 'url'

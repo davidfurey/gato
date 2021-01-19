@@ -1,4 +1,4 @@
-import { uuid } from 'uuidv4'
+import { v4 as uuid } from 'uuid';
 import * as ManageActions from '../actions/manageapp'
 import * as Connectivity from '../actions/connectivity'
 import * as EditPanel from '../actions/editpanel'

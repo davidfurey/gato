@@ -5,7 +5,7 @@ import { OSDComponent } from '../../OSDComponent';
 import { Container, Card, Badge, Form, Row, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import { ComponentList } from '../ComponentList';
 import { ComponentPicker } from '../ComponentPicker';
-import { uuid } from 'uuidv4';
+import { v4 as uuid } from 'uuid';
 import { EditableText } from '../EditableText';
 
 export interface EventEditPaneProps {

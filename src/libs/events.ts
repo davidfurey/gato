@@ -1,4 +1,4 @@
-import { uuid } from "uuidv4"
+import { v4 as uuid } from 'uuid';
 import { ComponentList, OSDLiveEvent } from "../reducers/shared"
 import { copy as copyComponent, OSDComponent } from '../OSDComponent'
 import * as EventActions from '../api/Events'

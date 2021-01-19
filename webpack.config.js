@@ -63,6 +63,7 @@ const serverConfig = env => {
     },
     output: {
       filename: 'server.js',
+      path: path.resolve(__dirname, 'dist')
     },
     watch: isWatch,
     watchOptions: {
@@ -121,7 +122,20 @@ const clientConfig = env => {
         },
         {
           test: /\.css$/i,
-          use: [MiniCssExtractPlugin.loader, 'css-loader'],
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                url: (url, _resourcePath) => {
+                  if (url.startsWith("/")) {
+                    return false;
+                  }
+                  return true;
+                }
+              }
+            }
+          ]
         },
         {
           test: /\.(png|gif|jpe|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/,
@@ -139,6 +153,9 @@ const clientConfig = env => {
     },
     resolve: {
       extensions: [ '.tsx', '.ts', '.js' ],
+      fallback: {
+        "path": require.resolve("path-browserify")
+      }
     },
     plugins: [
       new webpack.DefinePlugin({
