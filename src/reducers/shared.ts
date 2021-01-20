@@ -31,6 +31,9 @@ export interface OSDLiveEvent {
   id: uuidv4;
   components: uuidv4[];
   lists: ComponentList[];
+  parameters?: {
+    [name: string]: string;
+  };
   template?: boolean;
 }
 

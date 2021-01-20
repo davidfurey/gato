@@ -3,6 +3,7 @@ import { OSDLiveEvent, SharedState, OnScreenComponent } from '../shared'
 import * as Event from '../../api/Events'
 import { removeComponentFromList } from './component'
 import { OSDComponent } from '../../OSDComponent'
+import { validParameterName } from '../../libs/events'
 
 function updateDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
   if (state.eventId === event.id) {
@@ -172,13 +173,57 @@ function Update(action: Event.Update, state: SharedState): SharedState {
   return state
 }
 
+function UpsertParameter(action: Event.UpsertParameter, state: SharedState): SharedState {
+  const event = state.events[action.id]
+  if (event && validParameterName(action.name)) {
+    const newEvent = {
+      ...event,
+      parameters: {
+        ...(event.parameters || {}),
+        [action.name]: action.value,
+      }
+    }
+
+    return {
+      ...state,
+      events: {
+        ...state.events,
+        [action.id]: newEvent
+      }
+    }
+  }
+  return state
+}
+
+function RemoveParameter(action: Event.RemoveParameter, state: SharedState): SharedState {
+  const event = state.events[action.id]
+  if (event) {
+    const { [action.name]: ignored, ...parameters } = event.parameters || {};
+    const newEvent: OSDLiveEvent = {
+      ...event,
+      parameters,
+    }
+
+    return {
+      ...state,
+      events: {
+        ...state.events,
+        [action.id]: newEvent
+      }
+    }
+  }
+  return state
+}
+
 const reducer: Event.Pattern<(s: SharedState) => SharedState> = {
   [Event.MessageType.AddComponent]: curry(AddComponent),
   [Event.MessageType.Create]: curry(CreateEvent),
   [Event.MessageType.Delete]: curry(DeleteEvent),
   [Event.MessageType.RemoveComponent]: curry(RemoveComponent),
   [Event.MessageType.Update]: curry(Update),
-  [Event.MessageType.Load]: curry(Load)
+  [Event.MessageType.Load]: curry(Load),
+  [Event.MessageType.UpsertParameter]: curry(UpsertParameter),
+  [Event.MessageType.RemoveParameter]: curry(RemoveParameter)
 }
 
 export function reduce(message: Event.Message, state: SharedState): SharedState {

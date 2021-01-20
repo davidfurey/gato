@@ -9,6 +9,8 @@ export enum MessageType {
   Load = 'Event/Load',
   AddComponent = 'Event/AddComponent',
   RemoveComponent = 'Event/RemoveComponent',
+  UpsertParameter = 'Event/UpsertParameter',
+  RemoveParameter = 'Event/RemoveParameter',
 }
 
 export type Message = Create | Delete | Update | AddComponent | RemoveComponent | Load
@@ -38,6 +40,17 @@ export interface AddComponent extends BaseMessage<MessageType.AddComponent> {
 export interface RemoveComponent extends BaseMessage<MessageType.RemoveComponent> {
   id: Uuid;
   componentId: Uuid;
+}
+
+export interface UpsertParameter extends BaseMessage<MessageType.UpsertParameter> {
+  id: Uuid;
+  name: string;
+  value: string;
+}
+
+export interface RemoveParameter extends BaseMessage<MessageType.RemoveParameter> {
+  id: Uuid;
+  name: string;
 }
 
 export interface Load extends BaseMessage<MessageType.Load> {
