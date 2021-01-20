@@ -8,7 +8,7 @@ import { send } from '@giantmachines/redux-websocket';
 const mapStateToProps = (state: ControlAppState):
   Pick<SettingsPanelProps, "events" | "event"> => {
   return {
-    events: Object.values(state.shared.events),
+    events: Object.values(state.shared.events).filter((evt) => !evt.template),
     event: state.shared.events[state.shared.eventId],
   }
 }
