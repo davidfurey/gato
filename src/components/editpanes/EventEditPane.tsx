@@ -2,11 +2,13 @@ import React from 'react';
 import * as EditPane from '../../types/editpane';
 import { OSDLiveEvent } from '../../reducers/shared';
 import { OSDComponent } from '../../OSDComponent';
-import { Container, Card, Badge, Form, Row, Button, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Container, Card, Badge, Form, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import { ComponentList } from '../ComponentList';
 import { ComponentPicker } from '../ComponentPicker';
 import { v4 as uuid } from 'uuid';
 import { EditableText } from '../EditableText';
+import { TextPopup } from '../TextPopup';
+import { validParameterName } from '../../libs/events';
 
 export interface EventEditPaneProps {
   pane: EditPane.EventEditPane;
@@ -36,6 +38,8 @@ export interface EventEditPaneProps {
     index: number,
     componentId: string | null
   ) => void;
+  upsertParameter: (id: string, name: string, value: string) => void;
+  removeParameter: (id: string, name: string) => void;
   components: { [key: string]: OSDComponent };
 }
 
@@ -57,13 +61,14 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
     type: "missing",
     shared: false
   }
+  const parameters = props.event.parameters
   return <Container className="mt-3 mb-3">
     <Card style={{ width: "30rem" }} className="mb-3">
       <Card.Header><PaneIcon type="description" /> Metadata</Card.Header>
       <Container className="mt-3 mb-3">
       <Form.Group>
         <Form.Group as={Row}>
-          <Form.Label column lg={3}>Name</Form.Label>
+          <Form.Label column lg={4}>Name</Form.Label>
           <EditableText value={props.event.name} update={(v): void =>
             props.updateEvent(props.event.id, {
               name: v
@@ -71,7 +76,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
           } />
         </Form.Group>
         <Form.Group as={Row}>
-          <Form.Label column lg={3}>Type</Form.Label>
+          <Form.Label column lg={4}>Type</Form.Label>
           <DropdownButton
             size="sm"
             variant="dark"
@@ -86,8 +91,34 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
             })}>Template</Dropdown.Item>
           </DropdownButton>
         </Form.Group>
+        { parameters !== undefined ? Object.entries(parameters).map(([key, value]) =>
+          <Form.Group as={Row}>
+            <Form.Label column lg={4}>{key}</Form.Label>
+            <EditableText
+              value={value}
+              update={(v): void =>
+                props.upsertParameter(props.event.id, key, v)
+              }
+              delete={(): void =>
+                props.removeParameter(props.event.id, key)
+              }
+            />
+          </Form.Group>
+        ) : null }
       </Form.Group>
       </Container>
+      <Card.Footer className="p-2">
+        <TextPopup
+          buttonText="Add parameter"
+          buttonIcon="add"
+          title="New parameter"
+          label="Name"
+          actionLabel="Add"
+          success={(name: string) => props.upsertParameter(props.event.id, name, "")}
+          validation={validParameterName}
+          tip="May only contain letters, numbers and underscore"
+        />
+      </Card.Footer>
     </Card>
     <Card style={{ width: "30rem" }} className="mb-3">
       <Card.Header><PaneIcon type="widgets" /> Components</Card.Header>
