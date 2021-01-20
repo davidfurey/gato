@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Button, Form, Col, InputGroup, ColProps } from 'react-bootstrap';
+import './EditableText.css'
 
 export function EditableText(props: {
   value: string;
   update: (v: string) => void;
+  delete?: () => void;
   lg?: ColProps["lg"];
 }): JSX.Element {
     const [edit, setEdit] = useState(false);
     const [newValue, setNewValue] = useState(props.value);
 
-    return edit ?
-      <Col lg={props.lg}>
+    const deleteFn = props.delete
+    return <Col lg={edit ? props.lg : undefined} className="editable-text">{ edit ?
         <InputGroup>
         <Form.Control
           type="text"
@@ -18,16 +20,14 @@ export function EditableText(props: {
           onChange={(event): void => setNewValue(event.target.value)}
         />
         <InputGroup.Append>
-          <Button variant="success" onClick={(): void => { props.update(newValue); setEdit(false)}}>
+          <Button key="update" variant="success" onClick={(): void => { props.update(newValue); setEdit(false)}}>
             <span className="material-icons">done</span>
           </Button>
-          <Button variant="primary" onClick={(): void => setEdit(false)}>
+          <Button key="cancel" variant="primary" onClick={(): void => setEdit(false)}>
             <span className="material-icons">clear</span>
           </Button>
           </InputGroup.Append>
-        </InputGroup>
-      </Col> :
-      <Col>
+        </InputGroup> :
         <InputGroup>
           <InputGroup.Prepend>
           <InputGroup.Text>
@@ -35,10 +35,15 @@ export function EditableText(props: {
           </InputGroup.Text>
           </InputGroup.Prepend>
           <InputGroup.Append>
-          <Button style={{border: "1px solid var(--gray-dark)" }} variant="info" onClick={(): void => { setNewValue(props.value); setEdit(true)}}>
+          <Button key="edit" variant="info" onClick={(): void => { setNewValue(props.value); setEdit(true)}}>
             <span className="material-icons">create</span>
           </Button>
+          { deleteFn ?
+            <Button key="remove" variant="danger" onClick={deleteFn}>
+              <span className="material-icons">delete</span>
+            </Button> : null
+          }
           </InputGroup.Append>
-        </InputGroup>
+        </InputGroup> }
       </Col>
   }
