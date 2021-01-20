@@ -65,6 +65,7 @@
   "dependencies": {
     "@giantmachines/redux-websocket": "^1.4.0",
     "@types/array.prototype.flat": "^1.2.1",
+    "@types/mustache": "^4.1.0",
     "@types/uuid": "^8.3.0",
     "array.prototype.flat": "^1.2.4",
     "bootswatch": "^4.5.3",
@@ -72,6 +73,7 @@
     "core-js": "^3.8.3",
     "express": "^4.17.1",
     "material-design-icons": "^3.0.1",
+    "mustache": "^4.1.0",
     "normalizr": "^3.6.1",
     "object-hash": "^2.1.1",
     "path-browserify": "^1.0.1",

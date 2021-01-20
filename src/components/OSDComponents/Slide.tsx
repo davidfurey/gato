@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { OnScreenComponentState } from '../../reducers/shared';
 import './slide.css';
 import { SlideComponent } from './SlideComponent'
+import * as Mustache from 'mustache'
 
 interface SlidesProps {
   components: { state: OnScreenComponentState; component: SlideComponent }[];
+  parameters?: { [name: string]: string };
 }
 
 interface SlideProps {
@@ -42,19 +44,22 @@ export class Slides extends Component<SlidesProps> {
   }
 
   render(): JSX.Element {
+    const text = (template: string): string =>
+      this.props.parameters ? Mustache.render(template, this.props.parameters) : template
+
     return (
       <div className={this.props.components.find((c) => c.state === "entering" || c.state === "visible") ? "slide-components visible" : "slide-components"}>
         { this.props.components.map((c) =>
           <Slide
             key={c.component.id}
-            src={c.component.src}
+            src={text(c.component.src)}
             width={c.component.width}
             height={c.component.height}
             top={c.component.top}
             left={c.component.left}
             state={c.state}
-            title={c.component.title}
-            subtitle={c.component.subtitle}
+            title={text(c.component.title)}
+            subtitle={text(c.component.subtitle)}
             className={c.component.className === undefined ? null : c.component.className}
           />
         )}

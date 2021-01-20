@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { OnScreenComponentState } from '../../reducers/shared';
+import { OnScreenComponentState, OSDLiveEvent } from '../../reducers/shared';
 import './lower-thirds.css';
 import { LowerThirdsComponent } from './LowerThirdsComponent'
+import * as Mustache from 'mustache'
 
 interface LowerThirdsProps {
   components: { state: OnScreenComponentState; component: LowerThirdsComponent }[];
+  parameters?: { [name: string]: string };
 }
 
 interface LowerThirdProps {
@@ -30,13 +32,16 @@ export class LowerThirds extends Component<LowerThirdsProps> {
   }
 
   render(): JSX.Element {
+    const text = (template: string): string =>
+      this.props.parameters ? Mustache.render(template, this.props.parameters) : template
+
     return (
       <div className={this.props.components.find((c) => c.state === "entering" || c.state === "visible") ? "lower-thirds visible" : "lower-thirds"}>
         { this.props.components.map((c) =>
           <LowerThird
             key={c.component.id}
-            title={c.component.title}
-            subtitle={c.component.subtitle}
+            title={text(c.component.title)}
+            subtitle={text(c.component.subtitle)}
             state={c.state}
             className={c.component.className === undefined ? null : c.component.className}
           />

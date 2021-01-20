@@ -13,6 +13,7 @@ interface ViewPanelProps {
   components: { state: OnScreenComponentState; component: OSDComponent }[];
   showCaption: boolean;
   preview: boolean;
+  parameters?: { [name: string]: string };
 }
 
 export class ViewPanel extends Component<ViewPanelProps> {
@@ -61,9 +62,9 @@ export class ViewPanel extends Component<ViewPanelProps> {
     return (
       <div className="view-panel">
         <div className={this.props.preview ? "view-panel-content view-panel-content-preview" : "view-panel-content"}>
-        <LowerThirds components={this.lowerThirdsComponents(this.props.components)} />
-        <Images components={this.imageComponents(this.props.components)} />
-        <Slides components={this.slideComponents(this.props.components)} />
+        <LowerThirds components={this.lowerThirdsComponents(this.props.components)} parameters={this.props.parameters} />
+        <Images components={this.imageComponents(this.props.components)} parameters={this.props.parameters} />
+        <Slides components={this.slideComponents(this.props.components)} parameters={this.props.parameters} />
         </div>
         { this.props.showCaption ?
         <div className="view-panel-caption">

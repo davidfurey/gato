@@ -19,6 +19,7 @@ interface ViewerProps {
   displays: Display[];
   components: { [key: string]: OSDComponent };
   events: { [key: string]: OSDLiveEvent };
+  eventId: string;
 }
 
 let maybeStore: Store<ViewerAppState, ViewAppActions.Action> | undefined = undefined
@@ -81,6 +82,7 @@ export class Viewer extends Component<ViewerProps> {
 
   render(): JSX.Element {
     const display = this.props.displays.find((d) => d.name === displayName)
+    const liveEvent = this.props.events[this.props.eventId]
     return (
       <div>
       {display ?
@@ -90,6 +92,7 @@ export class Viewer extends Component<ViewerProps> {
           showCaption={false}
           preview={false}
           components={display.onScreenComponents.flatMap(this.lookupComponent)}
+          parameters={liveEvent?.parameters}
         /> : null}
       </div>
     )
@@ -105,7 +108,8 @@ const mapStateToProps = (state: ViewerApplicationState): ViewerProps => {
   return {
     components: state.shared.components,
     displays: state.shared.displays,
-    events: state.shared.events
+    events: state.shared.events,
+    eventId: state.shared.eventId
   }
 }
 
