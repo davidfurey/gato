@@ -1,0 +1,4 @@
+.event-edit-pane .form-group .dropdown button {
+  border: 1px solid #222;
+  color: var(--light);
+}

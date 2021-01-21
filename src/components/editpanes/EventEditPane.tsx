@@ -9,6 +9,7 @@ import { v4 as uuid } from 'uuid';
 import { EditableText } from '../EditableText';
 import { TextPopup } from '../TextPopup';
 import { validParameterName } from '../../libs/events';
+import './EventEditPane.css'
 
 export interface EventEditPaneProps {
   pane: EditPane.EventEditPane;
@@ -62,7 +63,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
     shared: false
   }
   const parameters = props.event.parameters
-  return <Container className="mt-3 mb-3">
+  return <Container className="mt-3 mb-3 event-edit-pane">
     <Card style={{ width: "30rem" }} className="mb-3">
       <Card.Header><PaneIcon type="description" /> Metadata</Card.Header>
       <Container className="mt-3 mb-3">
@@ -77,10 +78,9 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
         </Form.Group>
         <Form.Group as={Row}>
           <Form.Label column lg={4}>Type</Form.Label>
+          <Col>
           <DropdownButton
-            size="sm"
-            variant="dark"
-            id="dropdown-basic-button"
+            variant="secondary"
             title={props.event.template ? "Template" : "Event"}
           >
             <Dropdown.Item key={0} onClick={(): void => props.updateEvent(props.event.id, {
@@ -90,6 +90,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
               template: true
             })}>Template</Dropdown.Item>
           </DropdownButton>
+          </Col>
         </Form.Group>
         { parameters !== undefined ? Object.entries(parameters).map(([key, value]) =>
           <Form.Group as={Row}>
