@@ -29,7 +29,7 @@ export function LoadComponent(props: {
             <Col className="overflow-auto flex-shrink-1 position-relative p-0">
               <div className="position-absolute w-100">
                 <ComponentList
-                  components={props.components}
+                  components={props.components.sort((a, b) => a.name.localeCompare(b.name))}
                   onClick={
                     (id: string, active: boolean): void =>
                       active ? setSelectedComponent(null) : setSelectedComponent(id)
