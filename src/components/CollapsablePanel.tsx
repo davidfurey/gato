@@ -4,6 +4,7 @@ import { Card, Collapse } from 'react-bootstrap'
 interface CollapsablePanelProps {
   header: React.ReactNode;
   open?: boolean;
+  children: React.ReactElement;
 }
 
 interface CollapsablePanelState {

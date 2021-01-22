@@ -1,3 +1,4 @@
+import { OSDLiveEvent } from '../reducers/shared'
 import { Uuid, BaseMessage, BaseMessageType } from './Messages'
 import { TypeMap, GenericPattern, genericMatcher, isTypeGroup, isType } from "./PatternHelpers"
 
@@ -8,6 +9,8 @@ export enum MessageType {
   Load = 'Event/Load',
   AddComponent = 'Event/AddComponent',
   RemoveComponent = 'Event/RemoveComponent',
+  UpsertParameter = 'Event/UpsertParameter',
+  RemoveParameter = 'Event/RemoveParameter',
 }
 
 export type Message = Create | Delete | Update | AddComponent | RemoveComponent | Load
@@ -17,6 +20,7 @@ export type Pattern<T> = GenericPattern<TypeMap<MessageType, Message>, T>
 export interface Create extends BaseMessage<MessageType.Create> {
   id: Uuid;
   name: string;
+  event?: Partial<OSDLiveEvent>;
 }
 
 export interface Delete extends BaseMessage<MessageType.Delete> {
@@ -25,7 +29,7 @@ export interface Delete extends BaseMessage<MessageType.Delete> {
 
 export interface Update extends BaseMessage<MessageType.Update> {
   id: Uuid;
-  name: string;
+  event: Partial<OSDLiveEvent>;
 }
 
 export interface AddComponent extends BaseMessage<MessageType.AddComponent> {
@@ -36,6 +40,17 @@ export interface AddComponent extends BaseMessage<MessageType.AddComponent> {
 export interface RemoveComponent extends BaseMessage<MessageType.RemoveComponent> {
   id: Uuid;
   componentId: Uuid;
+}
+
+export interface UpsertParameter extends BaseMessage<MessageType.UpsertParameter> {
+  id: Uuid;
+  name: string;
+  value: string;
+}
+
+export interface RemoveParameter extends BaseMessage<MessageType.RemoveParameter> {
+  id: Uuid;
+  name: string;
 }
 
 export interface Load extends BaseMessage<MessageType.Load> {

@@ -15,7 +15,9 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<EventEditPaneProps,
   "swapComponent" |
   "setComponent" |
   "removeListComponent" |
-  "addListComponent"> => {
+  "addListComponent" |
+  "upsertParameter" |
+  "removeParameter"> => {
     return {
       removeComponent: (eventId: string, componentId: string): void => {
         const action: EventMessage.RemoveComponent = {
@@ -46,11 +48,11 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<EventEditPaneProps,
         }
         dispatch(send(create))
       },
-      updateEvent: (event: OSDLiveEvent): void => {
+      updateEvent: (id: string, event: Partial<OSDLiveEvent>): void => {
         const action: EventMessage.Update = {
           type: EventMessage.MessageType.Update,
-          name: event.name,
-          id: event.id
+          event,
+          id,
         }
         dispatch(send(action))
       },
@@ -111,6 +113,23 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<EventEditPaneProps,
         }
         dispatch(send(action))
       },
+      upsertParameter: (id: string, name: string, value: string) => {
+        const action: EventMessage.UpsertParameter = {
+          type: EventMessage.MessageType.UpsertParameter,
+          id,
+          name,
+          value,
+        }
+        dispatch(send(action))
+      },
+      removeParameter: (id: string, name: string) => {
+        const action: EventMessage.RemoveParameter = {
+          type: EventMessage.MessageType.RemoveParameter,
+          id,
+          name,
+        }
+        dispatch(send(action))
+      }
     }
 }
 

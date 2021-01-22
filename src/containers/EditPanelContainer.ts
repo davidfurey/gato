@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { EditPanel, EditPanelProps } from "../components/EditPanel";
 import { AppDispatch } from "../manage";
 import * as EditPanelActions from '../actions/editpanel'
-import { EditPane } from "../reducers/editpanel";
+import { EditPane } from '../types/editpane';
 
 const mapDispatchToProps = (dispatch: AppDispatch): Pick<EditPanelProps,
   "closeTab" | "selectTab" | "openTab"> => {

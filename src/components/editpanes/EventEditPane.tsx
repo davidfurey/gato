@@ -1,21 +1,24 @@
 import React from 'react';
-import * as EditPanelReducer from '../../reducers/editpanel';
+import * as EditPane from '../../types/editpane';
 import { OSDLiveEvent } from '../../reducers/shared';
 import { OSDComponent } from '../../OSDComponent';
-import { Container, Card, Badge, Form, Row, Button } from 'react-bootstrap';
+import { Container, Card, Badge, Form, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import { ComponentList } from '../ComponentList';
 import { ComponentPicker } from '../ComponentPicker';
-import { uuid } from 'uuidv4';
+import { v4 as uuid } from 'uuid';
 import { EditableText } from '../EditableText';
+import { TextPopup } from '../TextPopup';
+import { validParameterName } from '../../libs/events';
+import './EventEditPane.css'
 
 export interface EventEditPaneProps {
-  pane: EditPanelReducer.EventEditPane;
+  pane: EditPane.EventEditPane;
   event: OSDLiveEvent;
-  openTab: (pane: EditPanelReducer.EditPane) => void;
+  openTab: (pane: EditPane.EditPane) => void;
   removeComponent: (eventId: string, componentId: string) => void;
   addComponent: (eventId: string, componentId: string) => void;
   newComponent: (componentId: string, name: string, type: string) => void;
-  updateEvent: (event: OSDLiveEvent) => void;
+  updateEvent: (id: string, event: Partial<OSDLiveEvent>) => void;
   setComponent: (eventId: string, listName: string, index: number, id: string) => void;
   swapComponent: (
     eventId: string,
@@ -36,6 +39,8 @@ export interface EventEditPaneProps {
     index: number,
     componentId: string | null
   ) => void;
+  upsertParameter: (id: string, name: string, value: string) => void;
+  removeParameter: (id: string, name: string) => void;
   components: { [key: string]: OSDComponent };
 }
 
@@ -51,27 +56,75 @@ function capitalise(s: string): string {
 
 export function EventEditPane(props: EventEditPaneProps): JSX.Element {
   const eventComponents = props.event.components.flatMap((id) => props.components[id] || [])
-  return <Container className="mt-3 mb-3">
+  const missingComponent: OSDComponent = {
+    id: "",
+    name: "Missing component",
+    type: "missing",
+    shared: false
+  }
+  const parameters = props.event.parameters
+  return <Container className="mt-3 mb-3 event-edit-pane">
     <Card style={{ width: "30rem" }} className="mb-3">
       <Card.Header><PaneIcon type="description" /> Metadata</Card.Header>
       <Container className="mt-3 mb-3">
       <Form.Group>
         <Form.Group as={Row}>
-          <Form.Label column lg={2}>Name</Form.Label>
+          <Form.Label column lg={4}>Name</Form.Label>
           <EditableText value={props.event.name} update={(v): void =>
-            props.updateEvent({
-              ...props.event,
+            props.updateEvent(props.event.id, {
               name: v
             })
           } />
         </Form.Group>
+        <Form.Group as={Row}>
+          <Form.Label column lg={4}>Type</Form.Label>
+          <Col>
+          <DropdownButton
+            variant="secondary"
+            title={props.event.template ? "Template" : "Event"}
+          >
+            <Dropdown.Item key={0} onClick={(): void => props.updateEvent(props.event.id, {
+              template: false
+            })}>Event</Dropdown.Item>
+            <Dropdown.Item key={1} onClick={(): void => props.updateEvent(props.event.id, {
+              template: true
+            })}>Template</Dropdown.Item>
+          </DropdownButton>
+          </Col>
+        </Form.Group>
+        { parameters !== undefined ? Object.entries(parameters).map(([key, value]) =>
+          <Form.Group as={Row}>
+            <Form.Label column lg={4}>{key}</Form.Label>
+            <EditableText
+              value={value}
+              update={(v): void =>
+                props.upsertParameter(props.event.id, key, v)
+              }
+              delete={(): void =>
+                props.removeParameter(props.event.id, key)
+              }
+            />
+          </Form.Group>
+        ) : null }
       </Form.Group>
       </Container>
+      <Card.Footer className="p-2">
+        <TextPopup
+          buttonText="Add parameter"
+          buttonIcon="add"
+          title="New parameter"
+          label="Name"
+          actionLabel="Add"
+          success={(name: string) => props.upsertParameter(props.event.id, name, "")}
+          validation={validParameterName}
+          tip="May only contain letters, numbers and underscore"
+        />
+      </Card.Footer>
     </Card>
     <Card style={{ width: "30rem" }} className="mb-3">
       <Card.Header><PaneIcon type="widgets" /> Components</Card.Header>
       <ComponentList
-        components={props.event.components.map((cId) => props.components[cId])}
+        components={props.event.components.map((cId) => props.components[cId] || { ...missingComponent, id: cId })}
         removeComponent={(componentId: string): void =>
           props.removeComponent(props.event.id, componentId)
         }
@@ -94,11 +147,10 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
             const componentId = uuid()
             props.newComponent(componentId, name, type)
             props.addComponent(props.event.id, componentId)
-// todo: opening tab doesn't work because it is fairly sync whereas create goes via server
-// props.openTab({
-//   type: EditPanelReducer.EditPaneType.Component,
-//   id: componentId,
-// })
+            props.openTab({
+              type: EditPane.EditPaneType.Component,
+              id: componentId,
+            })
           }
           }
         />

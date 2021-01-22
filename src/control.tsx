@@ -131,6 +131,7 @@ export class Control extends Component<ControlProps> {
                 showCaption={true}
                 preview={true}
                 components={display.onScreenComponents.flatMap(this.lookupComponent)}
+                parameters={liveEvent?.parameters}
               />
             ))}
 {/* <ViewPanel name="Preview" components={this.props.components} showCaption={true} /> */}

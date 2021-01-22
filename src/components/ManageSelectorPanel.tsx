@@ -4,11 +4,14 @@ import { EventList } from './EventList'
 import { OSDLiveEvent } from '../reducers/shared';
 import { OSDComponent } from '../OSDComponent';
 import { TabbedPanel, TabContainer } from './TabbedPanel'
-import { EditPane } from '../reducers/editpanel';
+import { EditPane, EditPaneType } from '../types/editpane';
 import { Card } from 'react-bootstrap';
 import { ComponentPicker } from './ComponentPicker'
-import { uuid } from 'uuidv4';
-import { CreateEventButton } from './CreateEventButton';
+import { v4 as uuid } from 'uuid';
+import { CreateEventButton, CreateTemplateButton } from './CreateEventButton';
+import { copyEvent } from '../libs/events';
+import * as EventActions from '../api/Events'
+import * as ComponentActions from '../api/Components'
 
 export interface ManageSelectorPanelProps {
   events: { [key: string]: OSDLiveEvent };
@@ -19,33 +22,107 @@ export interface ManageSelectorPanelProps {
   openTab: (pane: EditPane) => void;
   newComponent: (componentId: string, name: string, type: string) => void;
   newEvent: (eventId: string, name: string) => void;
+  newTemplate: (eventId: string, name: string) => void;
+  copyEvent: (actions: (EventActions.Create | ComponentActions.Create)[]) => void;
+}
+
+function untitledName(prefix: string, existing: string[]): string {
+  const untitled = (i: number): string => `${prefix} ${i}`
+  for (let i = 1; i < 100; i++) {
+    if (!existing.includes(untitled(i))) {
+      return untitled(i)
+    }
+  }
+  return `${prefix} ${uuid()}`
 }
 
 export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Element {
   return <TabbedPanel variant="pills">
     <TabContainer name="Event" eventKey="events">
       <EventList
-        events={Object.values(props.events)}
+        events={Object.values(props.events).filter((evt) => !evt.template)}
         liveEventId={props.liveEventId}
         openTab={props.openTab}
         deleteEvent={props.deleteEvent}
+        scroll={true}
       />
       <Card.Footer className="p-2">
-        <CreateEventButton newEvent={(name): void =>
-          props.newEvent(uuid(), name)
-        }/>
+        <CreateEventButton newEvent={(sourceId): void => {
+              const eventId = uuid()
+              const untitledPrefix = "Untitled event"
+              const existing = Object.values(props.events)
+                .filter((evt) => evt.name.startsWith(untitledPrefix))
+                .map((evt) => evt.name)
+              if (sourceId === "empty") {
+                props.newEvent(eventId, untitledName(untitledPrefix, existing))
+              } else {
+                props.copyEvent(copyEvent(untitledName(untitledPrefix, existing), sourceId, eventId, props.events, props.components))
+              }
+              props.openTab({
+                type: EditPaneType.Event,
+                id: eventId,
+              })
+            }
+          }
+          events={Object.values(props.events)}
+        />
+      </Card.Footer>
+    </TabContainer>
+    <TabContainer name="Templates" eventKey="templates">
+      <EventList
+        events={Object.values(props.events).filter((evt) => evt.template)}
+        liveEventId={props.liveEventId}
+        openTab={props.openTab}
+        deleteEvent={props.deleteEvent}
+        scroll={true}
+      />
+      <Card.Footer className="p-2">
+        <CreateTemplateButton newEvent={(sourceId): void => {
+              const eventId = uuid()
+              const untitledPrefix = "Untitled template"
+              const existing = Object.values(props.events)
+                .filter((evt) => evt.name.startsWith(untitledPrefix))
+                .map((evt) => evt.name)
+              if (sourceId === "empty") {
+                props.newTemplate(eventId, untitledName(untitledPrefix, existing))
+              } else {
+                props.copyEvent(
+                  copyEvent(
+                    untitledName(untitledPrefix, existing),
+                    sourceId,
+                    eventId,
+                    props.events,
+                    props.components,
+                    true
+                  )
+                )
+              }
+              props.openTab({
+                type: EditPaneType.Event,
+                id: eventId,
+              })
+            }
+          }
+          events={Object.values(props.events)}
+        />
       </Card.Footer>
     </TabContainer>
     <TabContainer name="Components" eventKey="components">
       <ComponentList
-        components={Object.values(props.components)}
+        components={Object.values(props.components).filter((c) => c.shared)}
         deleteComponent={props.deleteComponent}
         openTab={props.openTab}
+        scroll={true}
       />
       <Card.Footer className="p-2">
         <ComponentPicker
           newComponent={(name: string, type: string): void => {
-            props.newComponent(uuid(), name, type)
+            const componentId = uuid()
+            props.newComponent(componentId, name, type)
+            props.openTab({
+              type: EditPaneType.Component,
+              id: componentId,
+            })
           }
           }
         />

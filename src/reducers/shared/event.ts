@@ -3,6 +3,7 @@ import { OSDLiveEvent, SharedState, OnScreenComponent } from '../shared'
 import * as Event from '../../api/Events'
 import { removeComponentFromList } from './component'
 import { OSDComponent } from '../../OSDComponent'
+import { validParameterName } from '../../libs/events'
 
 function updateDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
   if (state.eventId === event.id) {
@@ -65,6 +66,7 @@ function CreateEvent(action: Event.Create, state: SharedState): SharedState {
       listType: "picked",
       components: [null, null, null, null, null]
     }],
+    ...action.event
   }
   return {
     ...state,
@@ -157,7 +159,49 @@ function Update(action: Event.Update, state: SharedState): SharedState {
   if (event) {
     const newEvent = {
       ...event,
-      name: action.name,
+      ...action.event,
+    }
+
+    return {
+      ...state,
+      events: {
+        ...state.events,
+        [action.id]: newEvent
+      }
+    }
+  }
+  return state
+}
+
+function UpsertParameter(action: Event.UpsertParameter, state: SharedState): SharedState {
+  const event = state.events[action.id]
+  if (event && validParameterName(action.name)) {
+    const newEvent = {
+      ...event,
+      parameters: {
+        ...(event.parameters || {}),
+        [action.name]: action.value,
+      }
+    }
+
+    return {
+      ...state,
+      events: {
+        ...state.events,
+        [action.id]: newEvent
+      }
+    }
+  }
+  return state
+}
+
+function RemoveParameter(action: Event.RemoveParameter, state: SharedState): SharedState {
+  const event = state.events[action.id]
+  if (event) {
+    const { [action.name]: ignored, ...parameters } = event.parameters || {};
+    const newEvent: OSDLiveEvent = {
+      ...event,
+      parameters,
     }
 
     return {
@@ -177,7 +221,9 @@ const reducer: Event.Pattern<(s: SharedState) => SharedState> = {
   [Event.MessageType.Delete]: curry(DeleteEvent),
   [Event.MessageType.RemoveComponent]: curry(RemoveComponent),
   [Event.MessageType.Update]: curry(Update),
-  [Event.MessageType.Load]: curry(Load)
+  [Event.MessageType.Load]: curry(Load),
+  [Event.MessageType.UpsertParameter]: curry(UpsertParameter),
+  [Event.MessageType.RemoveParameter]: curry(RemoveParameter)
 }
 
 export function reduce(message: Event.Message, state: SharedState): SharedState {

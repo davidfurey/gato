@@ -5,6 +5,7 @@ import { ComponentList } from './ComponentList';
 import { LowerThirdsType } from './OSDComponents/LowerThirdsComponent';
 import { TabbedPanel, TabContainer } from './TabbedPanel'
 import { ImageType } from './OSDComponents/ImageComponent';
+import { SlideType } from './OSDComponents/SlideComponent';
 
 interface ComponentPickerProps {
   components?: OSDComponent[];
@@ -28,7 +29,7 @@ export function LoadComponent(props: {
             <Col className="overflow-auto flex-shrink-1 position-relative p-0">
               <div className="position-absolute w-100">
                 <ComponentList
-                  components={props.components}
+                  components={props.components.sort((a, b) => a.name.localeCompare(b.name))}
                   onClick={
                     (id: string, active: boolean): void =>
                       active ? setSelectedComponent(null) : setSelectedComponent(id)
@@ -86,6 +87,7 @@ function CreateComponent(props: {
           <Form.Control as="select" onChange={(event): void => setType(event.target.value)}>
             <option value={LowerThirdsType}>Banner</option>
             <option value={ImageType}>Image</option>
+            <option value={SlideType}>Slide</option>
           </Form.Control>
           </Col>
       </Form.Row>

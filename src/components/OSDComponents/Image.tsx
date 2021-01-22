@@ -5,6 +5,7 @@ import { ImageComponent } from './ImageComponent'
 
 interface ImagesProps {
   components: { state: OnScreenComponentState; component: ImageComponent }[];
+  parameters?: { [name: string]: string };
 }
 
 interface ImageProps {
