@@ -7,8 +7,7 @@ export enum MessageType {
   AddComponent = 'Lists/AddComponent',
   MoveComponent = 'Lists/MoveComponent',
   RemoveComponent = 'Lists/RemoveComponent',
-  ReplaceItem = 'Lists/ReplaceItem',
-  SwapItems = 'Lists/SwapItems'
+  ReplaceItem = 'Lists/ReplaceItem'
 }
 
 export type Message =
@@ -16,8 +15,7 @@ export type Message =
   AddComponent |
   MoveComponent |
   RemoveComponent |
-  ReplaceItem |
-  SwapItems
+  ReplaceItem
 
 export type Pattern<T> = GenericPattern<TypeMap<MessageType, Message>, T>
 
@@ -37,8 +35,9 @@ export interface AddComponent extends BaseMessage<MessageType.AddComponent> {
 export interface MoveComponent extends BaseMessage<MessageType.MoveComponent> {
   eventId: Uuid;
   name: string;
-  componentId: Uuid;
-  position: number;
+  componentId: Uuid | null;
+  sourcePosition: number;
+  destinationPosition: number;
 }
 
 export interface RemoveComponent extends BaseMessage<MessageType.RemoveComponent> {
@@ -53,14 +52,6 @@ export interface ReplaceItem extends BaseMessage<MessageType.ReplaceItem> {
   name: string;
   componentId: Uuid;
   position: number;
-}
-
-export interface SwapItems extends BaseMessage<MessageType.SwapItems> {
-  eventId: Uuid;
-  name: string;
-  sourceComponent: Uuid;
-  sourcePosition: number;
-  destinationPosition: number;
 }
 
 export const isListMessage = isTypeGroup<BaseMessageType, Message>("Lists/")

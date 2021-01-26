@@ -8,6 +8,7 @@ const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const gitRevisionPlugin = new GitRevisionPlugin();
 const PermissionsOutputPlugin = require('webpack-permissions-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 
 //how does this work?
 class LaunchServerPlugin {
@@ -58,6 +59,7 @@ const serverConfig = env => {
     mode,
     entry: './src/server/server.ts',
     target: 'node',
+    externals: [nodeExternals()],
     node: {
       __dirname: false,
     },

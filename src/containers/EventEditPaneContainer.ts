@@ -12,7 +12,8 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<EventEditPaneProps,
   "addComponent" |
   "newComponent" |
   "updateEvent" |
-  "swapComponent" |
+  "moveComponent" |
+  "moveListComponent" |
   "setComponent" |
   "removeListComponent" |
   "addListComponent" |
@@ -56,20 +57,35 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<EventEditPaneProps,
         }
         dispatch(send(action))
       },
-      swapComponent: (
+      moveListComponent: (
         eventId: string,
         listName: string,
+        componentId: string | null,
+        sourcePosition: number,
+        destinationPosition: number
+      ): void => {
+        const action: ListMessage.MoveComponent = {
+          type: ListMessage.MessageType.MoveComponent,
+          eventId,
+          name: listName,
+          componentId,
+          sourcePosition,
+          destinationPosition,
+        }
+        dispatch(send(action))
+      },
+      moveComponent: (
+        eventId: string,
         componentId: string,
         sourcePosition: number,
         destinationPosition: number
       ): void => {
-        const action: ListMessage.SwapItems = {
-          type: ListMessage.MessageType.SwapItems,
-          eventId,
-          name: listName,
+        const action: EventMessage.MoveComponent = {
+          type: EventMessage.MessageType.MoveComponent,
+          id: eventId,
+          componentId,
           sourcePosition,
           destinationPosition,
-          sourceComponent: componentId,
         }
         dispatch(send(action))
       },

@@ -8,12 +8,19 @@ export enum MessageType {
   Update = 'Event/Update',
   Load = 'Event/Load',
   AddComponent = 'Event/AddComponent',
+  MoveComponent = 'Event/MoveComponent',
   RemoveComponent = 'Event/RemoveComponent',
   UpsertParameter = 'Event/UpsertParameter',
   RemoveParameter = 'Event/RemoveParameter',
 }
 
-export type Message = Create | Delete | Update | AddComponent | RemoveComponent | Load
+export type Message = Create |
+  Delete |
+  Update |
+  AddComponent |
+  MoveComponent |
+  RemoveComponent |
+  Load
 
 export type Pattern<T> = GenericPattern<TypeMap<MessageType, Message>, T>
 
@@ -35,6 +42,13 @@ export interface Update extends BaseMessage<MessageType.Update> {
 export interface AddComponent extends BaseMessage<MessageType.AddComponent> {
   id: Uuid;
   componentId: Uuid;
+}
+
+export interface MoveComponent extends BaseMessage<MessageType.MoveComponent> {
+  id: Uuid;
+  componentId: Uuid;
+  sourcePosition: number;
+  destinationPosition: number;
 }
 
 export interface RemoveComponent extends BaseMessage<MessageType.RemoveComponent> {

@@ -4,6 +4,7 @@ import * as Event from '../../api/Events'
 import { removeComponentFromList } from './component'
 import { OSDComponent } from '../../OSDComponent'
 import { validParameterName } from '../../libs/events'
+import { reorder } from '../../libs/lists'
 
 function updateDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
   if (state.eventId === event.id) {
@@ -55,6 +56,25 @@ function AddComponent(action: Event.AddComponent, state: SharedState): SharedSta
   }
   return state
 }
+
+function MoveComponent(action: Event.MoveComponent, state: SharedState): SharedState {
+  const event = state.events[action.id]
+  if (event) {
+    const newEvent: OSDLiveEvent = {
+      ...event,
+      components: reorder(event.components, action.sourcePosition, action.destinationPosition)
+    }
+    return updateDisplays({
+      ...state,
+      events: {
+        ...state.events,
+        [newEvent.id]: newEvent
+      }
+    }, newEvent)
+  }
+  return state
+}
+
 
 function CreateEvent(action: Event.Create, state: SharedState): SharedState {
   const newEvent: OSDLiveEvent = {
@@ -217,6 +237,7 @@ function RemoveParameter(action: Event.RemoveParameter, state: SharedState): Sha
 
 const reducer: Event.Pattern<(s: SharedState) => SharedState> = {
   [Event.MessageType.AddComponent]: curry(AddComponent),
+  [Event.MessageType.MoveComponent]: curry(MoveComponent),
   [Event.MessageType.Create]: curry(CreateEvent),
   [Event.MessageType.Delete]: curry(DeleteEvent),
   [Event.MessageType.RemoveComponent]: curry(RemoveComponent),

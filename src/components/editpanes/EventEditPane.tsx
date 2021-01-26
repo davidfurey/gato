@@ -3,7 +3,7 @@ import * as EditPane from '../../types/editpane';
 import { OSDLiveEvent } from '../../reducers/shared';
 import { OSDComponent } from '../../OSDComponent';
 import { Container, Card, Badge, Form, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
-import { ComponentList } from '../ComponentList';
+import { ComponentList, DraggableComponentList, SlotList } from '../ComponentList';
 import { ComponentPicker } from '../ComponentPicker';
 import { v4 as uuid } from 'uuid';
 import { EditableText } from '../EditableText';
@@ -20,13 +20,19 @@ export interface EventEditPaneProps {
   newComponent: (componentId: string, name: string, type: string) => void;
   updateEvent: (id: string, event: Partial<OSDLiveEvent>) => void;
   setComponent: (eventId: string, listName: string, index: number, id: string) => void;
-  swapComponent: (
+  moveComponent: (
     eventId: string,
-    listName: string,
     componentId: string,
     sourcePosition: number,
     destinationPosition: number
-    ) => void;
+  ) => void;
+  moveListComponent: (
+    eventId: string,
+    listName: string,
+    componentId: string | null,
+    sourcePosition: number,
+    destinationPosition: number
+  ) => void;
   removeListComponent: (
     eventId: string,
     listName: string,
@@ -93,7 +99,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
           </Col>
         </Form.Group>
         { parameters !== undefined ? Object.entries(parameters).map(([key, value]) =>
-          <Form.Group as={Row}>
+          <Form.Group as={Row} key={key}>
             <Form.Label column lg={4}>{key}</Form.Label>
             <EditableText
               value={value}
@@ -123,8 +129,10 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
     </Card>
     <Card style={{ width: "30rem" }} className="mb-3">
       <Card.Header><PaneIcon type="widgets" /> Components</Card.Header>
-      <ComponentList
-        components={props.event.components.map((cId) => props.components[cId] || { ...missingComponent, id: cId })}
+      <DraggableComponentList
+        components={props.event.components.map((cId) => 
+          props.components[cId] || { ...missingComponent, id: cId })
+        }
         removeComponent={(componentId: string): void =>
           props.removeComponent(props.event.id, componentId)
         }
@@ -133,7 +141,9 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
           props.removeComponent(props.event.id, componentId)
         }
         openTab={props.openTab}
-        removeOrDelete={(component): boolean => component ? component.shared : true}
+        moveComponent={(componentId, sourcePosition, destinationPosition) => {
+          props.moveComponent(props.event.id, componentId, sourcePosition, destinationPosition)
+        }}
       />
       <Card.Footer className="p-2">
         <ComponentPicker
@@ -142,7 +152,9 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
               c.shared && !props.event.components.includes(c.id)
             )
           }
-          existingComponent={(componentId): void => props.addComponent(props.event.id, componentId)}
+          existingComponents={(componentIds): void =>
+            componentIds.forEach((componentId => props.addComponent(props.event.id, componentId)))
+          }
           newComponent={(name: string, type: string): void => {
             const componentId = uuid()
             props.newComponent(componentId, name, type)
@@ -160,7 +172,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
     {props.event.lists.map((eList) =>
       <Card style={{ width: "30rem" }} className="bg-secondary" key={eList.name}>
         <Card.Header><PaneIcon type="list" /> {capitalise(eList.name)} List</Card.Header>
-        <ComponentList
+        <SlotList
           components={
             eList.components.map(
               (cId) => cId !== null && props.components[cId] ? props.components[cId] : null
@@ -170,8 +182,8 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
             props.setComponent(props.event.id, eList.name, index, id)
           }
           availableComponents={eventComponents}
-          swap={(componentId: string, position: number, newPosition: number): void =>
-            props.swapComponent(props.event.id, eList.name, componentId, position, newPosition)
+          moveComponent={(componentId: string, position: number, newPosition: number): void =>
+            props.moveListComponent(props.event.id, eList.name, componentId, position, newPosition)
           }
           removeComponent={(id: string, index: number): void => {
             props.removeListComponent(props.event.id, eList.name, index, id)
