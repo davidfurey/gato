@@ -56,7 +56,15 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
               if (sourceId === "empty") {
                 props.newEvent(eventId, untitledName(untitledPrefix, existing))
               } else {
-                props.copyEvent(copyEvent(untitledName(untitledPrefix, existing), sourceId, eventId, props.events, props.components))
+                props.copyEvent(
+                  copyEvent(
+                    untitledName(untitledPrefix, existing),
+                    sourceId,
+                    eventId,
+                    props.events,
+                    props.components
+                  )
+                )
               }
               props.openTab({
                 type: EditPaneType.Event,

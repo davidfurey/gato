@@ -6,13 +6,13 @@ interface ParentState {
   link: string;
 }
 
-export class Parent extends Component<{}, ParentState> {
+export class Parent extends Component<unknown, ParentState> {
   state: ParentState = {
     visible: true,
     link: "",
   }
 
-  constructor(props: {}) {
+  constructor(props: unknown) {
     super(props)
     setInterval(() => {
       console.log("Flipping state")

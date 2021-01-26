@@ -80,6 +80,6 @@ export function copyEvent(
 }
 
 export function validParameterName(name: string): boolean {
-  let re = /^[a-zA-Z0-9_]*$/
+  const re = /^[a-zA-Z0-9_]*$/
   return re.test(name)
 }

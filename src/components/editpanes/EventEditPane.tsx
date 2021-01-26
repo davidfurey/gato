@@ -3,7 +3,7 @@ import * as EditPane from '../../types/editpane';
 import { OSDLiveEvent } from '../../reducers/shared';
 import { OSDComponent } from '../../OSDComponent';
 import { Container, Card, Badge, Form, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
-import { ComponentList, DraggableComponentList, SlotList } from '../ComponentList';
+import { DraggableComponentList, SlotList } from '../ComponentList';
 import { ComponentPicker } from '../ComponentPicker';
 import { v4 as uuid } from 'uuid';
 import { EditableText } from '../EditableText';
@@ -130,7 +130,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
     <Card style={{ width: "30rem" }} className="mb-3">
       <Card.Header><PaneIcon type="widgets" /> Components</Card.Header>
       <DraggableComponentList
-        components={props.event.components.map((cId) => 
+        components={props.event.components.map((cId) =>
           props.components[cId] || { ...missingComponent, id: cId })
         }
         removeComponent={(componentId: string): void =>

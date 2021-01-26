@@ -6,6 +6,7 @@ import { createReducer as createResponseReducer } from './response'
 import { reducer as connectivityReducer, ConnectivityState } from './connectivity'
 import * as Response from '../api/Responses'
 import { BaseAppState } from './base'
+import { Message } from '../api/Messages';
 
 const initialEvent: OSDLiveEvent = {
   name: "Some event",
@@ -41,7 +42,7 @@ export function createReducer(): ViewerAppReducer {
 
   return (state = initialState, action): ViewerAppState => {
     if (ViewActions.isWebsocketAction(action)) {
-      const message = JSON.parse(action.payload.message)
+      const message = JSON.parse(action.payload.message) as Message
       if (Response.isResponseMessage(message)) {
         return responseReducer(message, state)
       } else {

@@ -4,10 +4,6 @@ import * as Transistion from '../api/Transitions'
 import { send } from '@giantmachines/redux-websocket';
 import { AppDispatch } from '../control';
 
-interface LiveComponentsPanelContainerProps {
-  eventId: string;
-}
-
 // todo: Live should be a cross for this panel
 const mapDispatchToProps = (dispatch: AppDispatch):
   Pick<PickedComponentsPanelProps, "show" | "hide"> => {

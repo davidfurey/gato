@@ -73,14 +73,14 @@ function popover(
   const [folder, setFolder] = useState(initialDriveResponse);
 
   if (!initialised) {
-    getFolder(path.dirname(initialPath)).then((r) => {
+    void getFolder(path.dirname(initialPath)).then((r) => {
       setInitalised(true)
       setFolder(r)
     })
   }
   return <Popover id="popover-basic" className="bg-secondary p-0">
     <PickerDialog
-      open={(path): void => { getFolder(path).then((r) => { setFolder(r) }) } }
+      open={(path): void => { void getFolder(path).then((r) => { setFolder(r) }) } }
       close={close}
       image={image}
       items={folder.items}

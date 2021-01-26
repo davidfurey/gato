@@ -12,6 +12,7 @@ import { createReducer as createResponseReducer } from './response'
 import { BaseAppState } from './base'
 import { reducer as editPanelReducer, EditPanelState } from './editpanel'
 import * as Navigation from '../libs/navigation'
+import { Message } from '../api/Messages';
 
 
 export interface ManageAppState extends BaseAppState {
@@ -55,7 +56,7 @@ export function createReducer(): ManageAppReducer {
 
   return (state = initialManageState, action): ManageAppState => {
     if (ManageActions.isWebsocketAction(action)) {
-      const message = JSON.parse(action.payload.message)
+      const message = JSON.parse(action.payload.message) as Message
       if (Response.isResponseMessage(message)) {
         return responseReducer(message, state)
       } else {

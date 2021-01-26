@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { OnScreenComponentState, OSDLiveEvent } from '../../reducers/shared';
+import { OnScreenComponentState } from '../../reducers/shared';
 import './lower-thirds.css';
 import { LowerThirdsComponent } from './LowerThirdsComponent'
 import * as Mustache from 'mustache'

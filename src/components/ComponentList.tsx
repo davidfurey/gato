@@ -121,16 +121,16 @@ export function ComponentListItem(
   </ListGroup.Item>
 }
 
-interface Slot {
-  component?: OSDComponent,
-  id: string,
-}
 export function SlotList(props: {
   components: (OSDComponent | null)[];
   availableComponents?: OSDComponent[];
   setComponent: (index: number, id: string) => void;
   removeComponent: (id: string | null, index: number) => void;
-  moveComponent: (componentId: string | null, sourcePosition: number, destinationPosition: number) => void;
+  moveComponent: (
+    componentId: string | null,
+    sourcePosition: number,
+    destinationPosition: number
+  ) => void;
 }): JSX.Element {
   return <DraggableList
     items={props.components.map((item, index) => ({ component: item, id: index.toString() }))}
@@ -237,7 +237,9 @@ export function DraggableComponentList(props: {
   const deleteComponent = props.deleteComponent
   const removeComponent = props.removeComponent
   return <DraggableList
-    items={props.components.map((item, index) => ({ component: item, id: item.id + index.toString() }))}
+    items={props.components.map((item, index) =>
+      ({ component: item, id: item.id + index.toString() }))
+    }
     move={(s, i, j) => props.moveComponent(s.component.id, i, j)}
   >{(item, index, dragHandleProps) => {
     return <DraggableComponentListItem
@@ -270,7 +272,7 @@ export function ComponentSelectorList(props: {
   activeIds: string[];
 }): JSX.Element {
   return <ListGroup variant="flush">
-  {props.components.map((component, index) => {
+  {props.components.map((component) => {
     return <ComponentSelectorListItem
       key={component.id}
       name={component.name}

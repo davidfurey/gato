@@ -17,7 +17,7 @@ const apiUrl = process.env.NODE_ENV === 'production' ? '/gato/drive' : 'http://l
 export function getFolder(path: string): Promise<DriveResponse> {
   return fetch(`${apiUrl}${path}`).then((response) => {
     if (response.status >= 200 && response.status < 300) {
-      return response.json()
+      return response.json() as Promise<DriveResponse>
     } else {
       throw new Error(`Fetch returned ${response.status} when loading ${path}`)
     }

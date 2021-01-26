@@ -31,8 +31,9 @@ export function LoadComponent(props: {
                 <ComponentSelectorList
                   components={props.components.sort((a, b) => a.name.localeCompare(b.name))}
                   onClick={
-                    (id: string): void =>
-                      setSelectedComponents((ls) => ls.includes(id) ? ls.filter((item) => item !== id) : ls.concat([id]))
+                    (id: string): void => setSelectedComponents((ls) =>
+                      ls.includes(id) ? ls.filter((item) => item !== id) : ls.concat([id])
+                    )
                   }
                   activeIds={selectedComponents}
                 />

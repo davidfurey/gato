@@ -201,13 +201,13 @@ function updateState(message: Message): void {
 }
 
 function loadStateFromDisk(): void {
-  loadComponents().then((components) => {
+  void loadComponents().then((components) => {
     state['components'] = components
   })
-  loadDisplays().then((displays) => {
+  void loadDisplays().then((displays) => {
     state['displays'] = displays
   })
-  loadEvents().then((events) => {
+  void loadEvents().then((events) => {
     state['events'] = events
     state['eventId'] = Object.values(events)[0].id  // todo: should persist this to disk!
   })
@@ -244,7 +244,7 @@ wss.on('connection', (ws, req) => {
 
   console.log("new connection")
     ws.on('message', (rawMessage: string) => {
-      const message: Message = JSON.parse(rawMessage);
+      const message: Message = JSON.parse(rawMessage) as Message;
       if (!Request.isRequestMessage(message)) {
         broadcastMessage(rawMessage)
         updateState(message);
@@ -277,7 +277,7 @@ viewerServer.on('connection', (ws, req) => {
     })
 
     ws.on('message', (rawMessage: string) => {
-      const message: Message = JSON.parse(rawMessage);
+      const message: Message = JSON.parse(rawMessage) as Message;
       if (Request.isPing(message) || Request.isState(message)) {
         handleRequest(ws, message, id)
       } else {
@@ -310,7 +310,7 @@ app.get('/healthcheck', (_req, res) => res.send("Ok"));
 
 let config: Config | undefined = undefined
 
-loadConfig().then((c) => {
+void loadConfig().then((c) => {
   config = c
 })
 
@@ -350,7 +350,7 @@ app.get('/drive/:path(*)', (req, res) => {
               filename: file,
               path: "/" + filePath.substring(basePath.length),
               type: stat.isDirectory() ? "folder" : "image",
-              url: config?.drive.baseUrl + filePath.substring(basePath.length)
+              url: (config?.drive.baseUrl || "") + filePath.substring(basePath.length)
             }]
           }
           return []

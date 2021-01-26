@@ -3,20 +3,19 @@ import { DragDropContext, Droppable, Draggable, DropResult, DraggableProvidedDra
 import { ListGroup } from 'react-bootstrap'
 import { reorder } from '../libs/lists'
 
-interface ItemType {
-  id: string;
-  content: string;
-}
-
 interface WithID {
   id: string;
 }
 
 export function DraggableList<T extends WithID>(props: {
-  children: (item: T, index: number, dragHandleProps?: DraggableProvidedDragHandleProps) => React.ReactElement<HTMLElement>;
+  children: (
+    item: T,
+    index: number,
+    dragHandleProps?: DraggableProvidedDragHandleProps
+  ) => React.ReactElement<HTMLElement>;
   items: T[];
   move: (item: T, position: number, newPosition: number) => void;
-}) {
+}): JSX.Element {
 
   const [privateItems, setPrivateItems] = useState<T[] | null>(null);
   const [timeout, setTimeoutValue] = useState<number | null>(null);
@@ -57,12 +56,14 @@ export function DraggableList<T extends WithID>(props: {
         {(provided) => (
           <div
             {...provided.droppableProps}
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             ref={provided.innerRef}
           ><ListGroup>
             {(privateItems || props.items).map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
                 {(provided) => (
                   <div
+                    // eslint-disable-next-line @typescript-eslint/unbound-method
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     style={provided.draggableProps.style}
