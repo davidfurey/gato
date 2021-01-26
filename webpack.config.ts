@@ -1,18 +1,21 @@
-const path = require('path');
-const { fork } = require('child_process');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const webpack = require('webpack')
-const GitRevisionPlugin = require('git-revision-webpack-plugin');
-const gitRevisionPlugin = new GitRevisionPlugin();
-const PermissionsOutputPlugin = require('webpack-permissions-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const nodeExternals = require('webpack-node-externals');
+import path from 'path'
+import type { ChildProcess } from 'child_process';
+import { fork } from 'child_process'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import CopyPlugin from 'copy-webpack-plugin'
+import webpack from 'webpack'
+import type { Compiler, Configuration } from 'webpack';
+import GitRevisionPlugin from 'git-revision-webpack-plugin'
+import PermissionsOutputPlugin from 'webpack-permissions-plugin'
+import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import nodeExternals from 'webpack-node-externals'
 
-//how does this work?
+const gitRevisionPlugin = new GitRevisionPlugin()
+
 class LaunchServerPlugin {
-  apply(compiler) {
+	server?: ChildProcess;
+	apply(compiler: Compiler): void {
       compiler.hooks.afterEmit.tap('LaunchServerPlugin', () => {
           console.log('Server starting...');
           this.server = fork('./dist/server.js');
@@ -27,7 +30,9 @@ class LaunchServerPlugin {
   }
 }
 
-const serverConfig = env => {
+const serverConfig = (
+	env: Record<string, boolean | undefined>,
+): Configuration => {
   const isProd = env && env.production;
   const isWatch = env && env.watch;
 
@@ -92,6 +97,9 @@ const serverConfig = env => {
             },
             {
               loader: 'ts-loader',
+              options: {
+								configFile: 'tsconfig.server.json',
+							},
             }
           ],
         },
@@ -100,7 +108,9 @@ const serverConfig = env => {
   }
 }
 
-const clientConfig = env => {
+const clientConfig = (
+	env: Record<string, boolean | undefined>,
+): Configuration => {
   const isProd = env && env.production;
 
   const mode = isProd ? "production" : "development";
@@ -119,7 +129,12 @@ const clientConfig = env => {
       rules: [
         {
           test: /\.tsx?$/,
-          use: 'ts-loader',
+          use: {
+            loader: 'ts-loader',
+            options: {
+              configFile: 'tsconfig.client.json',
+            }
+          },
           exclude: /node_modules/,
         },
         {
@@ -129,7 +144,7 @@ const clientConfig = env => {
             {
               loader: 'css-loader',
               options: {
-                url: (url, _resourcePath) => {
+                url: (url: string, _resourcePath: string) => {
                   if (url.startsWith("/")) {
                     return false;
                   }

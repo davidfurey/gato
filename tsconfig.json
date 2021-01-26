@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
+    "typeRoots" : ["./node_modules/@types", "./typings"],
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "es6",
+    "esModuleInterop": true, // add module: "module": "es6", to tsconfig.client.json and tsconfig.server.json
     "target": "es5",
     "lib": [
       "es2019",
