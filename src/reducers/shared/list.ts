@@ -8,12 +8,13 @@ function updateEvent(
   update: (event: OSDLiveEvent) => OSDLiveEvent,
   state: SharedState
 ): SharedState {
-  if (state.events[eventId]) {
+  const event = state.events[eventId]
+  if (event) {
     return {
       ...state,
       events: {
         ...state.events,
-        [eventId]: update(state.events[eventId])
+        [eventId]: update(event)
       }
     }
   } else {

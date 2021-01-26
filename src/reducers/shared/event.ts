@@ -163,12 +163,12 @@ function Load(action: Event.Load, state: SharedState): SharedState {
           }
         },
         eventId: action.id,
-      }, state.events[action.id])
+      }, event)
     }
     return updateDisplays({
       ...state,
       eventId: action.id,
-    }, state.events[action.id])
+    }, event)
   }
   console.warn(`Attempted to load mising event ${action.id}`)
   return state

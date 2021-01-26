@@ -209,7 +209,7 @@ function loadStateFromDisk(): void {
   })
   void loadEvents().then((events) => {
     state['events'] = events
-    state['eventId'] = Object.values(events)[0].id  // todo: should persist this to disk!
+    state['eventId'] = Object.values(events)[0]?.id || "" // todo: should persist this to disk!
   })
 }
 // needs better error handling to avoid bad requests killing the server
@@ -263,7 +263,7 @@ viewerServer.on('connection', (ws, req) => {
   if (req.url != null) {
     const query = url.parse(req.url, true).query
     const screenName = (Array.isArray(query['display'])) ? query['display'][0] : query['display']
-    const client = (Array.isArray(query['client'])) ? query['client'][0] : query['client']
+    const client = ((Array.isArray(query['client'])) ? query['client'][0] : query['client']) || "Unknown client"
 
     // bail if client and screen name not set
     clients.push({
@@ -333,7 +333,7 @@ app.get('/drive/:path(*)', (req, res) => {
     return true
   }
 
-  const reqPath: string = req.params['path']
+  const reqPath: string = req.params['path'] || ""
   const basePath = config.drive.basePath
   const absPath = path.normalize(basePath + reqPath)
 

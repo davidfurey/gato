@@ -25,19 +25,23 @@ export function createPane(
 ): JSX.Element {
   const pattern: EditPane.Pattern<JSX.Element | null> = {
 // eslint-disable-next-line react/display-name
-    [EditPane.EditPaneType.Component]: (pane) =>
-      components[pane.id] ? <ComponentEditPaneContainer
+    [EditPane.EditPaneType.Component]: (pane) => {
+      const component = components[pane.id]
+      return component ? <ComponentEditPaneContainer
         pane={pane}
-        component={components[pane.id]}
-      /> : null,
+        component={component}
+      /> : null
+    },
 // eslint-disable-next-line react/display-name
-    [EditPane.EditPaneType.Event]: (pane) =>
-      events[pane.id] ? <EventEditPaneContainer
+    [EditPane.EditPaneType.Event]: (pane) => {
+      const event = events[pane.id]
+      return event ? <EventEditPaneContainer
         pane={pane}
-        event={events[pane.id]}
+        event={event}
         components={components}
         openTab={openTab}
       /> : null
+    }
   }
 
   return EditPane.matcher(pattern)(pane) || <MissingEditPane pane={pane} />

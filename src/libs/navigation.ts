@@ -25,7 +25,10 @@ function paneType(letter: string): EditPane.EditPaneType | null {
 export function panelsFromWindowHash(hash: string): EditPanelState {
   const panes = hash.split(",").flatMap((s) => {
     const [key, value] = s.split("=")
-    const type = paneType(key[0])
+    if (!(key && value)) {
+      return []
+    }
+    const type = paneType(key[0] || "")
     if (type) {
       return [{
         id: value,
@@ -35,7 +38,7 @@ export function panelsFromWindowHash(hash: string): EditPanelState {
     return []
   })
 
-  const selected: string | null = hash.split(",").filter((k) => k[1] === '*').map((s) => s.split("=")[1])[0]
+  const selected: string | null = hash.split(",").filter((k) => k[1] === '*').map((s) => s.split("=")[1])[0] || null
 
   return {
     panes: panes.slice(0, 4),

@@ -27,12 +27,13 @@ export class ViewPanel extends Component<ViewPanelProps> {
     const visibleComponents = this.props.components.filter((c) => c.state === "entering" || c.state === "visible").sort(
       (a, b) => a.component.name < b.component.name ? -1 : 1
     )
-    if (visibleComponents.length === 1) {
-      return visibleComponents[0].component.name
-    } else if (visibleComponents.length === 2) {
-      return `${visibleComponents[0].component.name} and ${visibleComponents[1].component.name}`
-    } else if (visibleComponents.length >= 3) {
-      return `${visibleComponents[0].component.name}, ${visibleComponents[1].component.name}, etc`
+    const [first, second, third] = visibleComponents
+    if (first && second && third) {
+      return `${first.component.name}, ${second.component.name}, etc`
+    } else if (first && second) {
+      return `${first.component.name} and ${second.component.name}`
+    } else if (first) {
+      return first.component.name
     }
     return "(blank)"
   }

@@ -174,9 +174,10 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
         <Card.Header><PaneIcon type="list" /> {capitalise(eList.name)} List</Card.Header>
         <SlotList
           components={
-            eList.components.map(
-              (cId) => cId !== null && props.components[cId] ? props.components[cId] : null
-            )
+            eList.components.map((cId) => {
+              const component = cId !== null ? props.components[cId] : null
+              return component || null
+            })
           }  // todo: should be storing empty list items as null not as "0"
           setComponent={(index: number, id: string): void =>
             props.setComponent(props.event.id, eList.name, index, id)

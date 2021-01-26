@@ -46,7 +46,10 @@ export function DraggableList<T extends WithID>(props: {
       result.source.index,
       result.destination.index
     );
-    props.move(props.items[result.source.index], result.source.index, result.destination.index)
+    const item = props.items[result.source.index]
+    if (item) {
+      props.move(item, result.source.index, result.destination.index)
+    }
     setPrivateItems(newItems)
   }
 

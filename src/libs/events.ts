@@ -4,7 +4,7 @@ import { copy as copyComponent, OSDComponent } from '../OSDComponent'
 import * as EventActions from '../api/Events'
 import * as ComponentActions from '../api/Components'
 
-function copyList(componentMapping: { [id: string]: string }) {
+function copyList(componentMapping: { [id: string]: string | null }) {
   return (ls: ComponentList): ComponentList => {
     return {
       ...ls,
@@ -16,13 +16,13 @@ function copyList(componentMapping: { [id: string]: string }) {
 function copyComponents(
   componentIds: string[],
   allComponents: { [key: string]: OSDComponent }
-): [ComponentActions.Create[], string[]] {
+): [ComponentActions.Create[], (string | null)[]] {
   return componentIds.reduce(
-    ([components, ids]: [ComponentActions.Create[], string[]] , cId) => {
+    ([components, ids]: [ComponentActions.Create[], (string | null)[]] , cId) => {
       const component = allComponents[cId] // todo: gracefully handle null
       if (component === undefined) {
-        console.log(cId)
-        console.log(allComponents)
+        console.log(`Componet ${cId} missing when attempting to copy`)
+        return [components, ids.concat(null)]
       }
       if (component.shared) {
         return [components, ids.concat([cId])]
@@ -37,16 +37,23 @@ function copyComponents(
 
 function copyLists(
   lists: ComponentList[],
-  componentMapping: { [id: string]: string }
+  componentMapping: { [id: string]: string | null }
 ): ComponentList[] {
   return lists.map(copyList(componentMapping))
 }
 
 function objectZip<T>(a: string[], b: T[]): { [name: string]: T } {
   return b.reduce((result: { [name: string]: T }, field, index) => {
-    result[a[index]] = field
+    const key = a[index]
+    if (key) {
+      result[key] = field
+    }
     return result;
   }, {})
+}
+
+function notEmpty<T>(value: T | null | undefined): value is T {
+  return value !== null && value !== undefined;
 }
 
 export function copyEvent(
@@ -66,7 +73,7 @@ export function copyEvent(
   const newEvent: OSDLiveEvent = {
     name: name,
     id: eventId,
-    components: newComponentIds,
+    components: newComponentIds.filter(notEmpty),
     lists: copyLists(sourceEvent.lists, objectZip(sourceEvent.components, newComponentIds)),
     template
   }

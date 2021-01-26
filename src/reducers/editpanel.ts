@@ -17,7 +17,7 @@ function findNewSelectedTab(
   }
   const index = oldPanes.findIndex((pane) => pane.id === removedId)
   const newIndex = index < 0 || index >= newPanes.length ? newPanes.length - 1 : index
-  return newPanes[newIndex].id
+  return newPanes[newIndex]?.id
 }
 
 function handleClose(action: EditPanel.Close, state: EditPanelState): EditPanelState {
