@@ -1,7 +1,7 @@
 import React from 'react';
-import { Badge, ListGroup, ListGroupItem } from 'react-bootstrap'
+import { ListGroup, ListGroupItem } from 'react-bootstrap'
 import { ClientStatus, ClientInterface } from '../api/Responses';
-import { CollapsablePanel } from './ui'
+import { CollapsablePanel, IconBadge } from './ui'
 
 export interface ConnectivityPanelProps {
   connected: boolean;
@@ -17,14 +17,14 @@ export function ConnectivityPanel(props: ConnectivityPanelProps): JSX.Element {
     if (props.usConnected) {
       switch (props.clientConnected) {
         case "yes":
-          return <Badge variant="success" className="ml-1"><span className="material-icons material-icons-raised">wifi</span> Online</Badge>
+          return <IconBadge variant="success" className="ml-1" icon="wifi" raised>Online</IconBadge>
         case "no":
-          return <Badge variant="danger" className="ml-1"><span className="material-icons material-icons-raised">wifi</span> Offline</Badge>
+          return <IconBadge variant="danger" className="ml-1" icon="wifi" raised>Offline</IconBadge>
         case "missed-ping":
-          return <Badge variant="warning" className="ml-1"><span className="material-icons material-icons-raised">wifi</span> Unknown</Badge>
+          return <IconBadge variant="warning" className="ml-1" icon="wifi" raised>Unknown</IconBadge>
       }
     } else {
-      return <Badge variant="secondary" className="ml-1"><span className="material-icons material-icons-raised">wifi</span> Unknown</Badge>
+      return <IconBadge variant="secondary" className="ml-1" icon="wifi" raised>Unknown</IconBadge>
     }
   }
 
@@ -33,22 +33,20 @@ export function ConnectivityPanel(props: ConnectivityPanelProps): JSX.Element {
   ): JSX.Element {
     switch (props.interface) {
       case "control":
-        return <Badge variant="info" className="ml-1"><span className="material-icons material-icons-raised">headset</span> Control</Badge>
+        return <IconBadge variant="info" className="ml-1" icon="headset" raised>Control</IconBadge>
       case "view":
-        return <Badge variant="primary" className="ml-1"><span className="material-icons material-icons-raised">tv</span> {props.screenName}</Badge>
+        return <IconBadge variant="primary" className="ml-1" icon="tv" raised>{props.screenName}</IconBadge>
       case "manage":
-        return <Badge variant="light" className="ml-1"><span className="material-icons material-icons-raised">videogame_asset</span> Manage</Badge>
+        return <IconBadge variant="light" className="ml-1" icon="videogame_asset" raised>Manage</IconBadge>
     }
   }
   const header = <div>
     streamer-1
     { props.connected ?
-        <Badge variant="success" className="ml-1">
-        <span className='material-icons material-icons-raised'>wifi</span> Online
-        </Badge>
-    : <Badge variant="danger" className="ml-1"><span className='material-icons material-icons-raised'>wifi</span> Offline</Badge> }
-    { props.connected ? props.clients.filter((client) => client.interface === "view" && client.connected === "yes").sort((a, b) => a.name > b.name ? 1 : -1).map((client) => <Badge key={client.id} variant="primary" className="ml-1">
-      <span className="material-icons material-icons-raised">tv</span> {client.screenName}</Badge>) : null}
+        <IconBadge variant="success" className="ml-1" icon="wifi" raised>Online</IconBadge>
+    : <IconBadge variant="danger" className="ml-1" icon="wifi" raised>Offline</IconBadge> }
+    { props.connected ? props.clients.filter((client) => client.interface === "view" && client.connected === "yes").sort((a, b) => a.name > b.name ? 1 : -1).map((client) =>
+      <IconBadge key={client.id} variant="primary" className="ml-1" icon="tv" raised>{client.screenName}</IconBadge>) : null}
   </div>
 
   return (

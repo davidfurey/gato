@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Button, Popover, Overlay, Form, Col, Container, Card } from 'react-bootstrap';
+import { Icon } from './Icon'
 
 interface TextPopupProps {
   buttonText: string;
@@ -74,7 +75,7 @@ export function TextPopup(props: TextPopupProps): JSX.Element {
   }
   return <div>
     <Button ref={target} onClick={(): void => setShow(!show)} className={props.className}>
-      { props.buttonIcon ? <span className="material-icons material-icons-raised">{props.buttonIcon}</span> : null }
+      { props.buttonIcon ? <Icon name={props.buttonIcon} raised /> : null }
       {props.buttonText}
     </Button>
     <Overlay placement="right" target={target.current} show={show}>{popover({

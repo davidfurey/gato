@@ -3,6 +3,7 @@ import { Badge, Col, Row } from "react-bootstrap";
 import React from "react";
 import { OSDComponent } from "../OSDComponent";
 import { ShareComponentButton } from "./ShareComponentButton";
+import { Icon, IconBadge } from './ui'
 
 export interface SharedStatusProps {
   events: OSDLiveEvent[];
@@ -14,7 +15,7 @@ export interface SharedStatusProps {
 
 function renderList(ls: OSDLiveEvent[], maxLength: number): JSX.Element | null {
   return <span>{ls.slice(0, maxLength).map((event) =>
-    <span key={event.id}><Badge variant="warning"><span className="material-icons material-icons-raised mr-0">event</span> {event.name}</Badge> </span>
+    <span key={event.id}><IconBadge variant="warning" icon="event" raised>{event.name}</IconBadge> </span>
   )}
     {maxLength < ls.length ? <><Badge variant="light">More</Badge> </> : null }
   </span>
@@ -24,7 +25,7 @@ export function SharedStatus(props: SharedStatusProps): JSX.Element {
   return !props.shared && props.events[0] ?
     <Row className="mb-3">
       <Col>
-        <span className="material-icons material-icons-raised">lock</span> Private to {props.events[0].name} event
+        <Icon name="lock" raised /> Private to {props.events[0].name} event
         <ShareComponentButton
           enabled={props.events.length === 1}
           shared={props.shared}

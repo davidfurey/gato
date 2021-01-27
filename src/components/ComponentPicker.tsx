@@ -3,7 +3,7 @@ import { OSDComponent } from "../OSDComponent";
 import { Button, Popover, Overlay, Form, Col, Container, Row, Card } from 'react-bootstrap';
 import { ComponentSelectorList } from './ComponentList';
 import { LowerThirdsType } from './OSDComponents/LowerThirdsComponent';
-import { TabbedPanel, TabContainer } from './ui'
+import { TabbedPanel, TabContainer, Icon } from './ui'
 import { ImageType } from './OSDComponents/ImageComponent';
 import { SlideType } from './OSDComponents/SlideComponent';
 
@@ -174,7 +174,7 @@ export function ComponentPicker(props: ComponentPickerProps): JSX.Element {
   const newOnly = props.existingComponents === undefined || props.components === undefined
   return <div>
     <Button ref={target} onClick={(): void => setShow(!show)} className={props.className}>
-        <span className="material-icons material-icons-raised">add</span>
+        <Icon name="add" raised />
         { newOnly ? "New component" : "Add component" }
     </Button>
     <Overlay placement="right" target={target.current} show={show}>{popover(

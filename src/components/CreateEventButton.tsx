@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button, Popover, Overlay, Col, Container, Card, Row, ListGroup } from 'react-bootstrap';
 import { OSDLiveEvent } from '../reducers/shared';
+import { Icon } from './ui'
 
 interface CreateEventButtonProps {
   newEvent: (sourceId: string) => void;
@@ -88,7 +89,7 @@ export function CreateEventButton(props: CreateEventButtonProps): JSX.Element {
   }
   return <div>
     <Button ref={target} onClick={(): void => setShow(!show)} className={props.className}>
-      <span className="material-icons material-icons-raised">add</span> {/* todo: alignment is not consistent */}
+      <Icon name="add" raised /> {/* todo: alignment is not consistent */}
       New event
     </Button>
     <Overlay placement="right" target={target.current} show={show}>{popover(
@@ -108,7 +109,7 @@ export function CreateTemplateButton(props: CreateEventButtonProps): JSX.Element
   }
   return <div>
     <Button ref={target} onClick={(): void => setShow(!show)} className={props.className}>
-      <span className="material-icons material-icons-raised">add</span> {/* todo: alignment is not consistent */}
+      <Icon name="add" raised /> {/* todo: alignment is not consistent */}
       New template
     </Button>
     <Overlay placement="right" target={target.current} show={show}>{popover(

@@ -2,12 +2,11 @@ import React from 'react';
 import * as EditPane from '../../types/editpane';
 import { OSDLiveEvent } from '../../reducers/shared';
 import { OSDComponent } from '../../OSDComponent';
-import { Container, Card, Badge, Form, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
+import { Container, Card, Form, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import { DraggableComponentList, SlotList } from '../ComponentList';
 import { ComponentPicker } from '../ComponentPicker';
 import { v4 as uuid } from 'uuid';
-import { EditableText } from '../ui';
-import { TextPopup } from '../ui';
+import { EditableText, TextPopup, Icon, IconBadge } from '../ui';
 import { validParameterName } from '../../libs/events';
 import './EventEditPane.css'
 
@@ -51,9 +50,13 @@ export interface EventEditPaneProps {
 }
 
 function PaneIcon(props: { type: string }): JSX.Element {
-  return <Badge variant="dark" className="py-2 mr-2 ml-n2" style={{ width: "1.7rem", height: "1.7rem" }}>
-    <span className="material-icons material-icons-raised">{props.type}</span>
-  </Badge>
+  return <IconBadge
+    variant="dark"
+    className="py-2 mr-2 ml-n2"
+    style={{ width: "1.7rem", height: "1.7rem" }}
+    icon={props.type}
+    raised
+  />
 }
 
 function capitalise(s: string): string {
@@ -195,7 +198,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
         <Button onClick={(): void =>
           props.addListComponent(props.event.id, eList.name, eList.components.length, null)}
         >
-          <span className="material-icons material-icons-raised">add</span> Add slot
+          <Icon name="add" raised /> Add slot
         </Button>
       </Card.Footer>
       </Card>

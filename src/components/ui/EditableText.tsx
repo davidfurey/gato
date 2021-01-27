@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, Col, InputGroup, ColProps } from 'react-bootstrap';
 import './EditableText.css'
+import { Icon } from './Icon'
 
 export function EditableText(props: {
   value: string;
@@ -21,10 +22,10 @@ export function EditableText(props: {
         />
         <InputGroup.Append>
           <Button key="update" variant="success" onClick={(): void => { props.update(newValue); setEdit(false)}}>
-            <span className="material-icons">done</span>
+            <Icon name="done" />
           </Button>
           <Button key="cancel" variant="primary" onClick={(): void => setEdit(false)}>
-            <span className="material-icons">clear</span>
+          <Icon name="clear" />
           </Button>
           </InputGroup.Append>
         </InputGroup> :
@@ -36,11 +37,11 @@ export function EditableText(props: {
           </InputGroup.Prepend>
           <InputGroup.Append>
           <Button key="edit" variant="info" onClick={(): void => { setNewValue(props.value); setEdit(true)}}>
-            <span className="material-icons">create</span>
+            <Icon name="create" />
           </Button>
           { deleteFn ?
             <Button key="remove" variant="danger" onClick={deleteFn}>
-              <span className="material-icons">delete</span>
+              <Icon name="delete" />
             </Button> : null
           }
           </InputGroup.Append>

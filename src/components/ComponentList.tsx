@@ -1,10 +1,10 @@
 import React, { CSSProperties, useState } from 'react';
 import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
-import { Modal, Button, ListGroup, ButtonGroup, Badge } from 'react-bootstrap'
+import { Modal, Button, ListGroup, ButtonGroup } from 'react-bootstrap'
 import { OSDComponent } from '../OSDComponent';
 import { EditPane, EditPaneType } from '../types/editpane';
 import { ComponentDropdown } from './ComponentDropdown'
-import { DraggableList } from './ui';
+import { DraggableList, IconButton, IconBadge } from './ui';
 
 function DeleteDialog(props: {
   show: boolean;
@@ -30,13 +30,8 @@ function DeleteDialog(props: {
   </Modal>
 }
 
-function Icon(props: { name: string, raised?: boolean }) {
-  const className = "material-icons" + (props.raised ? " material-icons-raised" : "")
-  return <span className={className}>{ props.name}</span>
-}
-
 function InfoButton(props: { onClick: () => void }) {
-  return <Button variant="info" onClick={props.onClick}><Icon name="settings" /></Button>
+  return <IconButton variant="info" onClick={props.onClick} icon="settings" />
 }
 
 function DiscardButton(props: {
@@ -45,9 +40,9 @@ function DiscardButton(props: {
   shared: boolean;
 }) {
   if (props.shared && props.removeComponent) {
-    return <Button variant="secondary" onClick={props.removeComponent}><Icon name="clear" /></Button>
+    return <IconButton variant="secondary" onClick={props.removeComponent} icon="clear" />
   }
-  return <Button variant="danger" onClick={props.deleteComponent}><Icon name="delete" /></Button>
+  return <IconButton variant="danger" onClick={props.deleteComponent} icon="delete" />
 }
 
 export function ComponentSlot(
@@ -63,9 +58,14 @@ export function ComponentSlot(
 ): JSX.Element {
   return <ListGroup.Item className="d-flex justify-content-between align-items-center">
     <div className="d-flex w-100">
-      <Badge {...props.dragHandleProps} variant="dark" className="py-2 ml-n2 mr-1" style={{ width: "1.7rem", height: "1.7rem" }}>
-        <Icon name="drag_handle" raised />
-      </Badge>
+      <IconBadge
+        {...props.dragHandleProps}
+        variant="dark"
+        className="py-2 ml-n2 mr-1"
+        style={{ width: "1.7rem", height: "1.7rem" }}
+        icon="drag_handle"
+        raised
+      />
       <ComponentDropdown
         selected={props.component || undefined}
         components={props.components || []}
@@ -74,7 +74,7 @@ export function ComponentSlot(
       />
     </div>
     <ButtonGroup size="sm">
-      <Button variant="secondary" onClick={props.removeComponent}><Icon name="clear" /></Button>
+      <IconButton variant="secondary" onClick={props.removeComponent} icon="clear" />
     </ButtonGroup>
   </ListGroup.Item>
 }
@@ -199,9 +199,13 @@ export function DraggableComponentListItem(
 
   return <ListGroup.Item className="d-flex justify-content-between align-items-center">
     <div className="d-flex w-100">
-      <Badge {...props.dragHandleProps} variant="dark" className="ml-n2 mr-1">
-        <Icon name="drag_handle" raised />
-      </Badge>
+      <IconBadge
+        {...props.dragHandleProps}
+        variant="dark"
+        className="ml-n2 mr-1"
+        icon="drag_handle"
+        raised
+      />
       { props.component.name }
     </div>
     <ButtonGroup size="sm">

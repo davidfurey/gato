@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Card, Collapse } from 'react-bootstrap'
+import { Icon } from './Icon'
 
 interface CollapsablePanelProps {
   header: React.ReactNode;
@@ -29,7 +30,7 @@ export class CollapsablePanel extends Component<CollapsablePanelProps, Collapsab
       <Card className="mb-3">
         <Card.Header onClick={this.toggleOpen} className="d-flex justify-content-between align-items-center">
         { this.props.header }
-        <span className="material-icons material-icons-large">{this.state.open ? "expand_less" : "expand_more" }</span>
+          <Icon name={this.state.open ? "expand_less" : "expand_more" } large />
         </Card.Header>
         <Collapse in={this.state.open}>{this.props.children}</Collapse>
       </Card>

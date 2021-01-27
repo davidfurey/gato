@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, Col, InputGroup, ColProps } from 'react-bootstrap';
+import { IconButton } from './IconButton';
+import { Icon } from './Icon';
 
 export function EditableTextArea(props: {
   value: string;
@@ -19,12 +21,14 @@ export function EditableTextArea(props: {
           onChange={(event): void => setNewValue(event.target.value)}
         />
         <InputGroup.Append>
-          <Button variant="success" onClick={(): void => { props.update(newValue); setEdit(false)}}>
-            <span className="material-icons">done</span>
-          </Button>
-          <Button variant="primary" onClick={(): void => setEdit(false)}>
-            <span className="material-icons">clear</span>
-          </Button>
+          <IconButton
+            variant="success"
+            onClick={(): void => { props.update(newValue); setEdit(false)}}
+            icon="done" />
+          <IconButton
+            variant="primary"
+            onClick={(): void => setEdit(false)}
+            icon="clear" />
           </InputGroup.Append>
         </InputGroup>
       </Col> :
@@ -39,7 +43,7 @@ export function EditableTextArea(props: {
         />
           <InputGroup.Append>
           <Button style={{border: "1px solid var(--gray-dark)" }} variant="info" onClick={(): void => { setNewValue(props.value); setEdit(true)}}>
-            <span className="material-icons">create</span>
+            <Icon name="create" />
           </Button>
           </InputGroup.Append>
         </InputGroup>

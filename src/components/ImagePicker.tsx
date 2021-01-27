@@ -2,6 +2,7 @@ import React, { useState, useRef, CSSProperties } from 'react';
 import { Button, Popover, Overlay, Card, ListGroup } from 'react-bootstrap';
 import { DriveResponse, Item, getFolder } from '../api/Drive';
 import path from 'path'
+import { Icon } from './ui'
 
 interface ImagePickerProps {
   image: (url: string) => void;
@@ -23,13 +24,13 @@ function PickerDialog(props: {
     <Card.Header className="px-2 py-2 bg-primary d-flex">
       { parent ?
         <Button style={{border: 'none', verticalAlign: "top"}} size="sm" onClick={(): void => props.open(parent)} className="p-0 my-0 mr-2">
-          <span className="material-icons material-icons-raised m-0">arrow_back</span>
+          <Icon name="arrow_back" className="m-0" raised />
         </Button>
          : null }
       { props.name }
       <Button style={{border: 'none', verticalAlign: "top"}} size="sm" onClick={props.close} className="p-0 my-0 ml-2 ml-auto">
-          <span className="material-icons material-icons-raised m-0">close</span>
-        </Button>
+        <Icon name="close" className="m-0" raised />
+      </Button>
     </Card.Header>
     <ListGroup variant="flush" style={{overflowY: "auto"}}>
       { props.items.map((item) =>
@@ -40,7 +41,7 @@ function PickerDialog(props: {
             props.image(item.url)
           }
         }}>
-          <span className="material-icons material-icons-raised pr-1">{ item.type === "image" ? "photo" : "folder"}</span>
+          <Icon name={ item.type === "image" ? "photo" : "folder"} className="pr-1" raised />
           { item.filename }
         </ListGroup.Item>
       )}
@@ -103,7 +104,7 @@ export function ImagePicker(props: ImagePickerProps): JSX.Element {
       onClick={(): void => setShow(!show)}
       className={props.className}
     >
-        <span className="material-icons">create</span>
+        <Icon name="create" />
     </Button>
     <Overlay target={target.current} show={show}>{popover(
       props.initialPath,

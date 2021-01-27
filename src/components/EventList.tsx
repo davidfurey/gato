@@ -2,6 +2,7 @@ import React, { CSSProperties, useState } from 'react';
 import { Button, ListGroup, ButtonGroup, Modal } from 'react-bootstrap'
 import { OSDLiveEvent } from '../reducers/shared';
 import { EditPane, EditPaneType } from '../types/editpane';
+import { IconButton } from './ui'
 
 function EventListItem(props: {
   event: OSDLiveEvent;
@@ -33,9 +34,9 @@ function EventListItem(props: {
 
   return <ListGroup.Item active={props.active} action={props.onClick !== undefined} className="d-flex justify-content-between align-items-center" onClick={props.onClick}>
     {props.event.name}
-    <ButtonGroup>
-      {settings ? <Button variant="info" size="sm" onClick={settings}><span className="material-icons">settings</span></Button> : null }
-      {props.deleteEvent ? <Button variant="danger" disabled={props.liveEventId === props.event.id} size="sm" onClick={handleShow}><span className="material-icons">delete</span></Button> : null }
+    <ButtonGroup size="sm">
+      {settings ? <IconButton variant="info" onClick={settings} icon="settings" /> : null }
+      {props.deleteEvent ? <IconButton variant="danger" disabled={props.liveEventId === props.event.id} onClick={handleShow} icon="delete" /> : null }
     </ButtonGroup>
     { props.deleteEvent ?
     <Modal show={show} onHide={handleClose} animation={false}>
