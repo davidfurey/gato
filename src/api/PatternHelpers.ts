@@ -9,10 +9,14 @@ export interface AnnotatedType<T extends string> {
 }
 
 // not sure if any -> V was valid? but it compiles
-export function genericMatcher<V extends string, U extends TypeMap<V, AnnotatedType<V>>, T>
-(pattern: GenericPattern<U, T>): (message: AnnotatedType<V>) => T {
+export function genericMatcher<
+  V extends string,
+  W extends AnnotatedType<V>,
+  U extends TypeMap<V, W>,
+  T
+>(pattern: GenericPattern<U, T>): (message: W) => T {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (message: AnnotatedType<V>): T => pattern[message.type](message as any)
+  return (message: W): T => pattern[message.type](message as any)
 }
 
 // export function genericMatcher<V extends string, U extends TypeMap<any, AnnotatedType<V>>, T>

@@ -49,7 +49,10 @@ const initialManageState: ManageAppState = {
   windowHash: null
 }
 
-type ManageAppReducer = (state: ManageAppState, action: ManageActions.Action) => ManageAppState
+type ManageAppReducer = (
+  state: ManageAppState | undefined,
+  action: ManageActions.Action
+) => ManageAppState
 
 export function createReducer(): ManageAppReducer {
   const responseReducer = createResponseReducer<ManageAppState>()

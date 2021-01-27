@@ -37,7 +37,7 @@ export interface EventEditPaneProps {
     eventId: string,
     listName: string,
     index: number,
-    componentId: string
+    componentId: string | null,
   ) => void;
   addListComponent: (
     eventId: string,
@@ -183,10 +183,11 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
             props.setComponent(props.event.id, eList.name, index, id)
           }
           availableComponents={eventComponents}
-          moveComponent={(componentId: string, position: number, newPosition: number): void =>
+          moveComponent={
+            (componentId: string | null, position: number, newPosition: number): void =>
             props.moveListComponent(props.event.id, eList.name, componentId, position, newPosition)
           }
-          removeComponent={(id: string, index: number): void => {
+          removeComponent={(id: string | null, index: number): void => {
             props.removeListComponent(props.event.id, eList.name, index, id)
           }}
         />

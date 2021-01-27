@@ -231,7 +231,7 @@ export function DraggableComponentList(props: {
   components: OSDComponent[];
   deleteComponent: (id: string) => void;
   openTab: (pane: EditPane) => void;
-  removeComponent?: (id: string | null, index: number) => void;
+  removeComponent?: (id: string, index: number) => void;
   moveComponent: (componentId: string, sourcePosition: number, destinationPosition: number) => void;
 }): JSX.Element {
   const deleteComponent = props.deleteComponent

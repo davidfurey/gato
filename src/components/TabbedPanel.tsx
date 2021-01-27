@@ -35,7 +35,17 @@ export function TabbedPanel(props: TabbedPanelProps): JSX.Element {
   const firstTab = React.Children.toArray(props.children).filter(isTabContainer)[0]
   const defaultActiveKey = props.defaultActiveKey || ( firstTab ? firstTab.props.eventKey : "")
 
-  return <Tab.Container id="left-tabs-example" activeKey={props.activeKey} defaultActiveKey={defaultActiveKey} transition={false} onSelect={props.onSelect}>
+  const onSelect = props.onSelect
+  const safeOnSelect = onSelect ?
+    ((eventKey: string | null) => eventKey ? onSelect(eventKey) : null) : undefined
+
+  return <Tab.Container
+    id="left-tabs-example"
+    activeKey={props.activeKey}
+    defaultActiveKey={defaultActiveKey}
+    transition={false}
+    onSelect={safeOnSelect}
+  >
     <Card className={props.className === undefined ? "mb-3" : props.className}>
       <Card.Header className={props.size === "sm" ? "px-3 py-2 bg-primary" : ""}>
         { props.variant === "pills" ?

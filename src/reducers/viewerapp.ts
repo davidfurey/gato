@@ -35,7 +35,10 @@ export interface ViewerAppState extends BaseAppState {
   connectivity: ConnectivityState;
 }
 
-type ViewerAppReducer = (state: ViewerAppState, action: ViewActions.Action) => ViewerAppState
+type ViewerAppReducer = (
+  state: ViewerAppState | undefined,
+  action: ViewActions.Action
+) => ViewerAppState
 
 export function createReducer(): ViewerAppReducer {
   const responseReducer = createResponseReducer<ViewerAppState>()

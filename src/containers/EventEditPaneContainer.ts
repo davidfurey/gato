@@ -103,7 +103,7 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<EventEditPaneProps,
         eventId: string,
         listName: string,
         index: number,
-        componentId: string
+        componentId: string | null
       ): void => {
         const action: ListMessage.RemoveComponent = {
           type: ListMessage.MessageType.RemoveComponent,

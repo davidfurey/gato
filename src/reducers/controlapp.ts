@@ -35,7 +35,10 @@ export interface ControlAppState extends BaseAppState {
   connectivity: ConnectivityState;
 }
 
-type ControlAppReducer = (state: ControlAppState, action: ControlActions.Action) => ControlAppState
+type ControlAppReducer = (
+  state: ControlAppState | undefined,
+  action: ControlActions.Action
+) => ControlAppState
 
 export function createReducer(): ControlAppReducer {
   const responseReducer = createResponseReducer<ControlAppState>()
