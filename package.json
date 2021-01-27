@@ -15,7 +15,7 @@
     "watch": "npm run watch:server & npm run watch:client",
     "lint": "node_modules/eslint/bin/eslint.js -c .eslintrc.js ./ --ext '.ts,.tsx'",
     "lint:fix": "node_modules/eslint/bin/eslint.js -c .eslintrc.js ./ --ext '.ts,.tsx' --fix",
-    "package": "npm run build:prod; cd dist; node-deb --install-strategy copy -- server.js public"
+    "package": "npm run build:prod; cd dist/;  node-deb --install-strategy copy -- server.js public"
   },
   "node_deb": {
     "dependencies": "npm",
@@ -34,7 +34,6 @@
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@types/compression": "^1.7.0",
-    "@types/copy-webpack-plugin": "^6.4.0",
     "@types/dom-mediacapture-record": "^1.0.7",
     "@types/express": "^4.17.11",
     "@types/git-revision-webpack-plugin": "^3.0.1",
@@ -52,7 +51,6 @@
     "@typescript-eslint/parser": "^4.14.0",
     "babel-loader": "^8.2.2",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^7.0.0",
     "css-loader": "^5.0.1",
     "eslint": "^7.18.0",
     "eslint-plugin-jsx-a11y": "^6.4.1",

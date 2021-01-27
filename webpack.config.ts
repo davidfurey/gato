@@ -3,7 +3,6 @@ import type { ChildProcess } from 'child_process';
 import { fork } from 'child_process'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import CopyPlugin from 'copy-webpack-plugin'
 import webpack from 'webpack'
 import type { Compiler, Configuration } from 'webpack';
 import GitRevisionPlugin from 'git-revision-webpack-plugin'
@@ -37,13 +36,8 @@ const serverConfig = (
   const isWatch = env && env.watch;
 
   const plugins = [
-    new CleanWebpackPlugin(),
-    new CopyPlugin({
-      patterns: [
-        { from: 'package.json', to: 'package.json' },
-        { from: 'package-lock.json', to: 'package-lock.json' },
-        { from: 'node_modules', to: 'node_modules' }
-      ],
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['**/*', '!package.json', '!package-lock.json', '!node_modules/**'],
     }),
     new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
     new PermissionsOutputPlugin({
