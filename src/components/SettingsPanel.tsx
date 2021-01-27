@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Row, Modal, Button, Form, ListGroup, ListGroupItem, Col } from 'react-bootstrap'
 import { OSDLiveEvent } from '../reducers/shared'
-import { CollapsablePanel } from './CollapsablePanel';
+import { CollapsablePanel } from './ui'
 
 export interface SettingsPanelProps {
   event: OSDLiveEvent | undefined;

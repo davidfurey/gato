@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult, DraggableProvidedDragHandleProps } from "react-beautiful-dnd";
 import { ListGroup } from 'react-bootstrap'
-import { reorder } from '../libs/lists'
+import { reorder } from '../../libs/lists'
 
 interface WithID {
   id: string;

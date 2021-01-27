@@ -1,8 +1,8 @@
 import React from 'react';
 import { Form, Row, Container, Col, InputGroup } from 'react-bootstrap';
 import { SlideComponent } from '../OSDComponents/SlideComponent';
-import { EditableText } from '../EditableText';
-import { EditableTextArea } from '../EditableTextArea';
+import { EditableText } from '../ui';
+import { EditableTextArea } from '../ui';
 import { ViewPanel } from '../ViewPanel';
 import { SharedStatusContainer } from '../../containers/SharedStatusContainer';
 import { ImagePicker } from '../ImagePicker';

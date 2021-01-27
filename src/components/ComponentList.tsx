@@ -4,7 +4,7 @@ import { Modal, Button, ListGroup, ButtonGroup, Badge } from 'react-bootstrap'
 import { OSDComponent } from '../OSDComponent';
 import { EditPane, EditPaneType } from '../types/editpane';
 import { ComponentDropdown } from './ComponentDropdown'
-import { DraggableList } from './DraggableList';
+import { DraggableList } from './ui';
 
 function DeleteDialog(props: {
   show: boolean;

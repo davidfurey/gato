@@ -2,7 +2,7 @@ import { OSDComponent } from '../OSDComponent'
 import React from 'react';
 import { Display, OnScreenComponentState, ScreenType } from '../reducers/shared'
 import { ButtonToolbar, ButtonGroup, ListGroup, Button } from 'react-bootstrap'
-import { CollapsablePanel } from './CollapsablePanel';
+import { CollapsablePanel } from './ui'
 import { ComponentDropdown } from './ComponentDropdown';
 
 export interface PickedComponentsPanelProps {

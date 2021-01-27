@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, ListGroup, ListGroupItem } from 'react-bootstrap'
 import { ClientStatus, ClientInterface } from '../api/Responses';
-import { CollapsablePanel } from './CollapsablePanel'
+import { CollapsablePanel } from './ui'
 
 export interface ConnectivityPanelProps {
   connected: boolean;

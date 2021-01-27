@@ -1,5 +1,5 @@
 import React from 'react';
-import { TabbedPanel, TabContainer } from '../components/TabbedPanel';
+import { TabbedPanel, TabContainer } from '../components/ui';
 import * as EditPane from '../types/editpane';
 import { EditPanelState } from '../reducers/editpanel';
 import { OSDComponent } from '../OSDComponent';

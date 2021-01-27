@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Display } from '../reducers/shared';
 import { Card, Form, Button, Col } from 'react-bootstrap'
-import { CollapsablePanel } from './CollapsablePanel';
+import { CollapsablePanel } from './ui'
 
 export interface QuickCreatePanelProps {
   show: (title: string, subtitle: string, display: Display, eventId: string) => void;

@@ -6,8 +6,8 @@ import { Container, Card, Badge, Form, Row, Col, Button, DropdownButton, Dropdow
 import { DraggableComponentList, SlotList } from '../ComponentList';
 import { ComponentPicker } from '../ComponentPicker';
 import { v4 as uuid } from 'uuid';
-import { EditableText } from '../EditableText';
-import { TextPopup } from '../TextPopup';
+import { EditableText } from '../ui';
+import { TextPopup } from '../ui';
 import { validParameterName } from '../../libs/events';
 import './EventEditPane.css'
 

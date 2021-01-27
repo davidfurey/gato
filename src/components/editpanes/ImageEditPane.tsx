@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Row, Container, Col, InputGroup } from 'react-bootstrap';
 import { ImageComponent } from '../OSDComponents/ImageComponent';
-import { EditableText } from '../EditableText';
+import { EditableText } from '../ui';
 import { ViewPanel } from '../ViewPanel';
 import { SharedStatusContainer } from '../../containers/SharedStatusContainer';
 import { ImagePicker } from '../ImagePicker';

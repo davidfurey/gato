@@ -1,8 +1,8 @@
 import React from "react";
 import { LowerThirdsComponent } from "../OSDComponents/LowerThirdsComponent";
 import { Container, Form, Row } from "react-bootstrap";
-import { EditableText } from "../EditableText";
-import { EditableTextArea } from "../EditableTextArea";
+import { EditableText } from '../ui';
+import { EditableTextArea } from "../ui";
 import { SharedStatusContainer } from "../../containers/SharedStatusContainer";
 import { ViewPanel } from "../ViewPanel";
 

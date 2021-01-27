@@ -3,7 +3,7 @@ import { OSDComponent } from "../OSDComponent";
 import { Button, Popover, Overlay, Form, Col, Container, Row, Card } from 'react-bootstrap';
 import { ComponentSelectorList } from './ComponentList';
 import { LowerThirdsType } from './OSDComponents/LowerThirdsComponent';
-import { TabbedPanel, TabContainer } from './TabbedPanel'
+import { TabbedPanel, TabContainer } from './ui'
 import { ImageType } from './OSDComponents/ImageComponent';
 import { SlideType } from './OSDComponents/SlideComponent';
 
