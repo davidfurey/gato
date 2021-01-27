@@ -4,7 +4,7 @@
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
-    "esModuleInterop": true, // add module: "module": "es6", to tsconfig.client.json and tsconfig.server.json
+    "esModuleInterop": true,
     "target": "es5",
     "lib": [
       "es2019",
