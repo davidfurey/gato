@@ -36,3 +36,7 @@ export function isType<V extends string, T extends AnnotatedType<V>>(label: V) {
     return message.type === label
   }
 }
+
+export function assertNever(_: never): never {
+  throw new Error("Unexpected object");
+}

@@ -1,7 +1,8 @@
-import { curry } from '../../api/FunctionalHelpers'
 import { SharedState, OSDLiveEvent } from '../shared'
 import * as List from '../../api/Lists'
+import { MessageType as M } from '../../api/Lists'
 import { reorder } from '../../libs/lists'
+import { assertNever } from '../../api/PatternHelpers'
 
 function updateEvent(
   eventId: string,
@@ -120,14 +121,13 @@ function replaceItem(action: List.ReplaceItem, state: SharedState): SharedState 
   }, state)
 }
 
-const reducer: List.Pattern<(s: SharedState) => SharedState> = {
-  [List.MessageType.AddComponent]: curry(addComponent),
-  [List.MessageType.RemoveComponent]: curry(removeComponent),
-  [List.MessageType.Create]: curry(create),
-  [List.MessageType.MoveComponent]: curry(moveComponent),
-  [List.MessageType.ReplaceItem]: curry(replaceItem),
-}
-
 export function reduce(message: List.Message, state: SharedState): SharedState {
-  return List.matcher(reducer)(message)(state)
+  switch (message.type) {
+    case M.AddComponent: return addComponent(message, state)
+    case M.RemoveComponent: return removeComponent(message, state)
+    case M.Create: return create(message, state)
+    case M.MoveComponent: return moveComponent(message, state)
+    case M.ReplaceItem: return replaceItem(message, state)
+    default: return assertNever(message)
+  }
 }

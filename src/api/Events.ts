@@ -20,6 +20,8 @@ export type Message = Create |
   AddComponent |
   MoveComponent |
   RemoveComponent |
+  UpsertParameter |
+  RemoveParameter |
   Load
 
 export type Pattern<T> = GenericPattern<TypeMap<MessageType, Message>, T>

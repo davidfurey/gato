@@ -17,7 +17,7 @@ export enum MessageType {
   Pong = 'Response/Pong',
 }
 
-export type Message = State
+export type Message = State | Pong
 export type Pattern<T> = GenericPattern<TypeMap<MessageType, Message>, T>
 
 export interface State extends BaseMessage<MessageType.SharedState> {

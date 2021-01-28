@@ -1,9 +1,10 @@
-import { curry } from '../../api/FunctionalHelpers'
 import { SharedState, ComponentList, Display } from '../shared'
 import * as Component from '../../api/Components'
+import { MessageType as M } from '../../api/Components'
 import * as LowerThirds from '../../components/OSDComponents/LowerThirdsComponent'
 import * as Image from '../../components/OSDComponents/ImageComponent'
 import * as Slide from '../../components/OSDComponents/SlideComponent'
+import { assertNever } from '../../api/PatternHelpers'
 
 function createLowerThird(action: Component.CreateLowerThird, state: SharedState): SharedState {
   return {
@@ -173,16 +174,14 @@ function deleteComponent(action: Component.Delete, state: SharedState): SharedSt
   }
 }
 
-
-const reducer: Component.Pattern<(s: SharedState) => SharedState> = {
-  [Component.MessageType.CreateLowerThird]: curry(createLowerThird),
-  [Component.MessageType.Create]: curry(create),
-  [Component.MessageType.Delete]: curry(deleteComponent),
-  [Component.MessageType.Update]: curry(updateComponent),
-  [Component.MessageType.Share]: curry(share),
-  [Component.MessageType.Unshare]: curry(unshare),
-}
-
 export function reduce(message: Component.Message, state: SharedState): SharedState {
-  return Component.matcher(reducer)(message)(state)
+  switch (message.type) {
+    case M.CreateLowerThird: return createLowerThird(message, state)
+    case M.Create: return create(message, state)
+    case M.Delete: return deleteComponent(message, state)
+    case M.Update: return updateComponent(message, state)
+    case M.Share: return share(message, state)
+    case M.Unshare: return unshare(message, state)
+    default: return assertNever(message)
+  }
 }

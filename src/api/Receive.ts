@@ -1,6 +1,7 @@
 import * as Display from './Displays'
+import { MessageType as M } from './Displays'
 import { Display as OSDDisplay } from '../reducers/shared'
-import { curry } from './FunctionalHelpers'
+import { assertNever } from './PatternHelpers'
 
 interface State {
   displays: OSDDisplay[];
@@ -46,12 +47,11 @@ function update(msg: Display.Update, state: State): State {
   }
 }
 
-export const reducer: Display.Pattern<(s: State) => State> = {
-  [Display.MessageType.Create]: curry(create),
-  [Display.MessageType.Delete]: curry(deleteDisplay),
-  [Display.MessageType.Update]: curry(update)
-}
-
 export function reduce(message: Display.Message, state: State): State {
-  return Display.matcher(reducer)(message)(state)
+  switch (message.type) {
+    case M.Create: return create(message, state)
+    case M.Delete: return deleteDisplay(message, state)
+    case M.Update: return update(message, state)
+    default: return assertNever(message)
+  }
 }

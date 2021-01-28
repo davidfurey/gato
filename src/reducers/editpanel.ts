@@ -1,5 +1,6 @@
 import * as EditPanel from "../actions/editpanel"
-import { curry } from '../api/FunctionalHelpers'
+import { ActionType as A } from "../actions/editpanel"
+import { assertNever } from "../api/PatternHelpers"
 import { EditPane } from "../types/editpane"
 
 export interface EditPanelState {
@@ -51,12 +52,11 @@ function handleOpen(action: EditPanel.Open, state: EditPanelState): EditPanelSta
   }
 }
 
-const reducerPattern: EditPanel.Pattern<(state: EditPanelState) => EditPanelState> = {
-  [EditPanel.ActionType.Close]: curry(handleClose),
-  [EditPanel.ActionType.Open]: curry(handleOpen),
-  [EditPanel.ActionType.Select]: curry(handleSelect)
-}
-
 export function reducer(state: EditPanelState, action: EditPanel.Action): EditPanelState {
-  return EditPanel.matcher(reducerPattern)(action)(state)
+  switch (action.type) {
+    case A.Close: return handleClose(action, state)
+    case A.Open: return handleOpen(action, state)
+    case A.Select: return handleSelect(action, state)
+    default: return assertNever(action)
+  }
 }

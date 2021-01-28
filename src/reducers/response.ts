@@ -1,5 +1,6 @@
-import { curry } from '../api/FunctionalHelpers'
+import { assertNever } from '../api/PatternHelpers'
 import * as Response from '../api/Responses'
+import { MessageType as M } from '../api/Responses'
 import { BaseAppState } from '../reducers/base'
 
 function handleNewState<T extends BaseAppState>(
@@ -24,17 +25,13 @@ function pong<T extends BaseAppState>(
   }
 }
 
-function reducer<T extends BaseAppState>(): Response.Pattern<(s: T) => T> {
-  return {
-    [Response.MessageType.SharedState]: curry(handleNewState),
-    [Response.MessageType.Pong]: curry(pong)
+export function createReducer<T extends BaseAppState>
+  (): (message: Response.Message, state: T) => T {
+  return (message: Response.Message, state: T) => {
+    switch (message.type) {
+      case M.SharedState: return handleNewState(message, state)
+      case M.Pong: return pong(message, state)
+      default: return assertNever(message)
+    }
   }
-}
-
-export function createReducer<T extends BaseAppState>(): (
-  message: Response.Message,
-  state: T
-) => T {
-  const matcher = Response.matcher(reducer<T>())
-  return (message, state): T => matcher(message)(state)
 }

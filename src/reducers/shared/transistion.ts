@@ -1,6 +1,7 @@
 import * as Transistion from '../../api/Transitions'
-import { curry } from '../../api/FunctionalHelpers'
+import { MessageType as M } from '../../api/Transitions'
 import { SharedState, OnScreenComponent, Display } from '../shared'
+import { assertNever } from '../../api/PatternHelpers'
 
 function goTransistion(action: Transistion.GoTransistion, state: SharedState): SharedState {
   const selectedDisplay = state.displays.find((display) => display.id === action.displayId)
@@ -47,10 +48,9 @@ function goTransistion(action: Transistion.GoTransistion, state: SharedState): S
   return state;
 }
 
-const reducer: Transistion.Pattern<(s: SharedState) => SharedState> = {
-  [Transistion.MessageType.Go]: curry(goTransistion),
-}
-
 export function reduce(message: Transistion.Message, state: SharedState): SharedState {
-  return Transistion.matcher(reducer)(message)(state)
+  switch (message.type) {
+    case M.Go: return goTransistion(message, state)
+    default: return assertNever(message.type)
+  }
 }

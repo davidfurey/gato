@@ -1,5 +1,5 @@
 import { Uuid, BaseMessage, BaseMessageType } from './Messages'
-import { TypeMap, GenericPattern, genericMatcher, isTypeGroup, isType } from "./PatternHelpers"
+import { isTypeGroup, isType } from "./PatternHelpers"
 import { ListType } from '../reducers/shared'
 
 export enum MessageType {
@@ -16,8 +16,6 @@ export type Message =
   MoveComponent |
   RemoveComponent |
   ReplaceItem
-
-export type Pattern<T> = GenericPattern<TypeMap<MessageType, Message>, T>
 
 export interface Create extends BaseMessage<MessageType.Create> {
   eventId: Uuid;
@@ -59,5 +57,3 @@ export const isCreate = isType<BaseMessageType, Create>(MessageType.Create)
 export const isAddComponent = isType<BaseMessageType, Create>(MessageType.AddComponent)
 export const isMoveComponent = isType<BaseMessageType, Create>(MessageType.MoveComponent)
 export const isRemoveComponent = isType<BaseMessageType, Create>(MessageType.RemoveComponent)
-
-export const matcher: <T>(pattern: Pattern<T>) => (message: Message) => T = genericMatcher

@@ -1,10 +1,11 @@
-import { curry } from '../../api/FunctionalHelpers'
 import { OSDLiveEvent, SharedState, OnScreenComponent } from '../shared'
 import * as Event from '../../api/Events'
+import { MessageType as M } from '../../api/Events'
 import { removeComponentFromList } from './component'
 import { OSDComponent } from '../../OSDComponent'
 import { validParameterName } from '../../libs/events'
 import { reorder } from '../../libs/lists'
+import { assertNever } from '../../api/PatternHelpers'
 
 function updateDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
   if (state.eventId === event.id) {
@@ -235,18 +236,17 @@ function RemoveParameter(action: Event.RemoveParameter, state: SharedState): Sha
   return state
 }
 
-const reducer: Event.Pattern<(s: SharedState) => SharedState> = {
-  [Event.MessageType.AddComponent]: curry(AddComponent),
-  [Event.MessageType.MoveComponent]: curry(MoveComponent),
-  [Event.MessageType.Create]: curry(CreateEvent),
-  [Event.MessageType.Delete]: curry(DeleteEvent),
-  [Event.MessageType.RemoveComponent]: curry(RemoveComponent),
-  [Event.MessageType.Update]: curry(Update),
-  [Event.MessageType.Load]: curry(Load),
-  [Event.MessageType.UpsertParameter]: curry(UpsertParameter),
-  [Event.MessageType.RemoveParameter]: curry(RemoveParameter)
-}
-
 export function reduce(message: Event.Message, state: SharedState): SharedState {
-  return Event.matcher(reducer)(message)(state)
+  switch (message.type) {
+    case M.AddComponent: return AddComponent(message, state)
+    case M.MoveComponent: return MoveComponent(message, state)
+    case M.Create: return CreateEvent(message, state)
+    case M.Delete: return DeleteEvent(message, state)
+    case M.RemoveComponent: return RemoveComponent(message, state)
+    case M.Update: return Update(message, state)
+    case M.Load: return Load(message, state)
+    case M.UpsertParameter: return UpsertParameter(message, state)
+    case M.RemoveParameter: return RemoveParameter(message, state)
+    default: return assertNever(message)
+  }
 }

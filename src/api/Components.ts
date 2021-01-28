@@ -12,7 +12,7 @@ export enum MessageType {
   Unshare = 'Component/Unshare',
 }
 
-export type Message = Create | Delete | CreateLowerThird | Update
+export type Message = Create | Delete | CreateLowerThird | Update | Share | Unshare
 
 export type Pattern<T> = GenericPattern<TypeMap<MessageType, Message>, T>
 
