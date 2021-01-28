@@ -1,8 +1,9 @@
-import React, { CSSProperties, useState } from 'react';
+import React, { useState } from 'react';
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 import { Modal, Button, ListGroup, ButtonGroup } from 'react-bootstrap'
 import { OSDComponent } from '../OSDComponent';
 import { EditPane, EditPaneType } from '../types/editpane';
-import { IconButton } from './ui';
+import { DraggableList, IconButton, IconBadge } from './ui';
 
 function DeleteDialog(props: {
   show: boolean;
@@ -43,12 +44,13 @@ function DiscardButton(props: {
   return <IconButton variant="danger" onClick={props.deleteComponent} icon="delete" />
 }
 
-function ComponentListItem(
+function DraggableComponentListItem(
   props: {
     component: OSDComponent;
     deleteComponent: () => void;
     removeComponent?: () => void;
     openTab: (pane: EditPane) => void;
+    dragHandleProps?: DraggableProvidedDragHandleProps;
   }
 ): JSX.Element {
   const [show, setShow] = useState(false);
@@ -61,7 +63,16 @@ function ComponentListItem(
   }
 
   return <ListGroup.Item className="d-flex justify-content-between align-items-center">
-    { props.component.name }
+    <div className="d-flex w-100">
+      <IconBadge
+        {...props.dragHandleProps}
+        variant="dark"
+        className="ml-n2 mr-1"
+        icon="drag_handle"
+        raised
+      />
+      { props.component.name }
+    </div>
     <ButtonGroup size="sm">
       <InfoButton onClick={() => props.openTab({
         type: EditPaneType.Component,
@@ -85,30 +96,32 @@ function ComponentListItem(
   </ListGroup.Item>
 }
 
-
-export function ComponentList(props: {
+export function DraggableComponentList(props: {
   components: OSDComponent[];
   deleteComponent: (id: string) => void;
   openTab: (pane: EditPane) => void;
-  removeComponent?: (id: string | null, index: number) => void;
-  scroll?: boolean;
+  removeComponent?: (id: string, index: number) => void;
+  moveComponent: (componentId: string, sourcePosition: number, destinationPosition: number) => void;
 }): JSX.Element {
   const deleteComponent = props.deleteComponent
   const removeComponent = props.removeComponent
-  const style: CSSProperties = props.scroll ? {height: "30em", overflowY: "scroll"} : {}
-  return <ListGroup variant="flush" style={style}>
-  {props.components.map((component, index) => {
-    return <ComponentListItem
-      key={component.id}
-      component={component}
+  return <DraggableList
+    items={props.components.map((item, index) =>
+      ({ component: item, id: item.id + index.toString() }))
+    }
+    move={(s, i, j) => props.moveComponent(s.component.id, i, j)}
+  >{(item, index, dragHandleProps) => {
+    return <DraggableComponentListItem
+      key={item.id}
+      component={item.component}
       deleteComponent={
-        (): void => deleteComponent(component.id)
+        (): void => deleteComponent(item.component.id)
       }
       removeComponent={
-        removeComponent ? (): void => removeComponent(component?.id || null, index) : undefined
+        removeComponent ? (): void => removeComponent(item.component.id, index) : undefined
       }
       openTab={props.openTab}
+      dragHandleProps={dragHandleProps}
     />
-  })}
-  </ListGroup>
+  }}</DraggableList>
 }

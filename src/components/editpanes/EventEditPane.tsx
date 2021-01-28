@@ -3,7 +3,8 @@ import * as EditPane from '../../types/editpane';
 import { OSDLiveEvent } from '../../reducers/shared';
 import { OSDComponent } from '../../OSDComponent';
 import { Container, Card, Form, Row, Col, Button, DropdownButton, Dropdown } from 'react-bootstrap';
-import { DraggableComponentList, SlotList } from '../ComponentList';
+import { DraggableComponentList } from '../DraggableComponentList'
+import { SlotList } from '../SlotList';
 import { ComponentPicker } from '../ComponentPicker';
 import { v4 as uuid } from 'uuid';
 import { EditableText, TextPopup, Icon, IconBadge } from '../ui';
