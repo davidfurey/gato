@@ -12,7 +12,7 @@ import { ClientStatus, ClientInterface } from '../api/Responses'
 import { OSDLiveEvent, SharedState, reducer, Display } from '../reducers/shared'
 import { v4 as uuid } from 'uuid';
 import fs from 'fs'
-import { OSDComponent, OSDComponents } from '../OSDComponent';
+import { OSDComponents } from '../OSDComponent';
 import url from 'url'
 import flat from 'array.prototype.flat'
 import { Config, loadConfig } from '../config';
