@@ -14,12 +14,9 @@ function capitalise(s: string): string {
 export function ListPanel(props: {
   list: ComponentList;
   eventComponents: OSDComponent[];
-} & Pick<EventEditPaneProps, "setComponent" |
-  "components" |
+} & Pick<EventEditPaneProps, "components" |
   "event" |
-  "moveListComponent" |
-  "removeListComponent" |
-  "addListComponent"
+  "listActions"
 >): JSX.Element {
   return <SubPanel title={`${capitalise(props.list.name)} List`} icon="list">
       <SlotList
@@ -30,12 +27,12 @@ export function ListPanel(props: {
           })
         }  // todo: should be storing empty list items as null not as "0"
         setComponent={(index: number, id: string): void =>
-          props.setComponent(props.list.name, index, id)
+          props.listActions.set(props.list.name, index, id)
         }
         availableComponents={props.eventComponents}
         moveComponent={
           (componentId: string | null, position: number, newPosition: number): void =>
-          props.moveListComponent(
+          props.listActions.move(
             props.list.name,
             componentId,
             position,
@@ -43,12 +40,12 @@ export function ListPanel(props: {
           )
         }
         removeComponent={(id: string | null, index: number): void => {
-          props.removeListComponent(props.list.name, index, id)
+          props.listActions.remove(props.list.name, index, id)
         }}
       />
       <Card.Footer className="p-2">
       <Button onClick={(): void =>
-        props.addListComponent(props.list.name, props.list.components.length, null)}
+        props.listActions.add(props.list.name, props.list.components.length, null)}
       >
         <Icon name="add" raised /> Add slot
       </Button>
