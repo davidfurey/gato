@@ -1,4 +1,4 @@
-import { OSDComponent } from '../OSDComponent'
+import { OSDComponents } from '../OSDComponent'
 import * as Transistion from '../api/Transitions'
 import { Message } from '../api/Messages'
 import * as Component from '../api/Components'
@@ -12,7 +12,7 @@ import * as List from '../api/Lists'
 type uuidv4 = string
 
 export interface SharedState {
-  components: { [key: string]: OSDComponent };
+  components: OSDComponents;
   events: { [key: string]: OSDLiveEvent };
   displays: Display[];
   eventId: uuidv4;

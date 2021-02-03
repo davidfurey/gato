@@ -2,7 +2,7 @@ import { OSDLiveEvent, SharedState, OnScreenComponent } from '../shared'
 import * as Event from '../../api/Events'
 import { MessageType as M } from '../../api/Events'
 import { removeComponentFromList } from './component'
-import { OSDComponent } from '../../OSDComponent'
+import { OSDComponent, OSDComponents } from '../../OSDComponent'
 import { validParameterName } from '../../libs/events'
 import { reorder } from '../../libs/lists'
 import { assertNever } from '../../api/PatternHelpers'
@@ -112,9 +112,9 @@ function DeleteEvent(action: Event.Delete, state: SharedState): SharedState {
 }
 
 function removeComponent(
-  components: { [key: string]: OSDComponent },
+  components: OSDComponents,
   id: string
-): { [key: string]: OSDComponent } {
+): OSDComponents {
   const { [id]: ignored, ...rest } = components;
   return rest
 }

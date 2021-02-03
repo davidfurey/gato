@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { ViewPanel } from './components/ViewPanel';
-import { OSDComponent } from './OSDComponent';
+import { OSDComponent, OSDComponents } from './OSDComponent';
 import QuickCreatePanelContainer from './containers/QuickCreatePanelContainer'
 import PickedComponentsPanelContainer from './containers/PickedComponentsPanelContainer'
 import { Display, OnScreenComponent, OnScreenComponentState, OSDLiveEvent } from './reducers/shared'
@@ -24,7 +24,7 @@ import { PageFooter } from './components/PageFooter';
 
 interface ControlProps {
   displays: Display[];
-  components: { [key: string]: OSDComponent };
+  components: OSDComponents;
   events: { [key: string]: OSDLiveEvent };
   connectivity: {
     serverName: string | undefined;

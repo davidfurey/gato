@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { ViewPanel } from './components/ViewPanel';
-import { OSDComponent } from './OSDComponent';
+import { OSDComponent, OSDComponents } from './OSDComponent';
 import { SharedState, Display, OnScreenComponent, OnScreenComponentState, OSDLiveEvent } from './reducers/shared'
 import { connect } from 'react-redux'
 import './viewer.css';
@@ -17,7 +17,7 @@ import * as RequestMessage from './api/Requests'
 
 interface ViewerProps {
   displays: Display[];
-  components: { [key: string]: OSDComponent };
+  components: OSDComponents;
   events: { [key: string]: OSDLiveEvent };
   eventId: string;
 }

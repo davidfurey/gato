@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentList } from './ComponentList'
 import { EventList } from './EventList'
 import { OSDLiveEvent } from '../reducers/shared';
-import { OSDComponent } from '../OSDComponent';
+import { OSDComponents } from '../OSDComponent';
 import { TabbedPanel, TabContainer } from './ui'
 import { EditPane, EditPaneType } from '../types/editpane';
 import { Card } from 'react-bootstrap';
@@ -15,7 +15,7 @@ import * as ComponentActions from '../api/Components'
 
 export interface ManageSelectorPanelProps {
   events: { [key: string]: OSDLiveEvent };
-  components: { [key: string]: OSDComponent };
+  components: OSDComponents;
   liveEventId?: string;
   deleteComponent: (id: string) => void;
   deleteEvent: (id: string) => void;

@@ -12,7 +12,7 @@ import { ClientStatus, ClientInterface } from '../api/Responses'
 import { OSDLiveEvent, SharedState, reducer, Display } from '../reducers/shared'
 import { v4 as uuid } from 'uuid';
 import fs from 'fs'
-import { OSDComponent } from '../OSDComponent';
+import { OSDComponent, OSDComponents } from '../OSDComponent';
 import url from 'url'
 import flat from 'array.prototype.flat'
 import { Config, loadConfig } from '../config';
@@ -157,7 +157,7 @@ const emptyCallback = (): void => {
   // do nothing.
 }
 
-function storeComponents(components: { [key: string]: OSDComponent } ): void {
+function storeComponents(components: OSDComponents ): void {
   fs.mkdirSync('config', { recursive: true })
   fs.writeFile('config/components.json', JSON.stringify(components), {}, emptyCallback)
 }
@@ -170,8 +170,8 @@ function storeEvents(events: { [key: string]: OSDLiveEvent }): void {
   fs.writeFile('config/events.json', JSON.stringify(events), {}, emptyCallback)
 }
 
-function loadComponents(): Promise<{ [key: string]: OSDComponent }> {
-  const p = fs.promises.readFile('config/components.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: OSDComponent })
+function loadComponents(): Promise<OSDComponents> {
+  const p = fs.promises.readFile('config/components.json', 'utf8').then((data) => JSON.parse(data) as OSDComponents)
   p.catch((error) => { console.log("Error parsing components"); console.log(error) })
   return p
 }

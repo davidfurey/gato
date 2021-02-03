@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
-import { OSDComponent } from './OSDComponent';
+import { OSDComponents } from './OSDComponent';
 import { Display, OSDLiveEvent } from './reducers/shared'
 import { connect } from 'react-redux'
 import './style.css';
@@ -24,7 +24,7 @@ import * as Navigation from './libs/navigation';
 
 interface ManageProps {
   displays: Display[];
-  components: { [key: string]: OSDComponent };
+  components: OSDComponents;
   events: { [key: string]: OSDLiveEvent };
   editPanel: EditPanelState;
   liveEventId: string;

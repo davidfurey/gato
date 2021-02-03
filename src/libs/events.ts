@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { ComponentList, OSDLiveEvent } from "../reducers/shared"
-import { copy as copyComponent, OSDComponent } from '../OSDComponent'
+import { copy as copyComponent, OSDComponent, OSDComponents } from '../OSDComponent'
 import * as EventActions from '../api/Events'
 import * as ComponentActions from '../api/Components'
 
@@ -15,7 +15,7 @@ function copyList(componentMapping: { [id: string]: string | null }) {
 
 function copyComponents(
   componentIds: string[],
-  allComponents: { [key: string]: OSDComponent }
+  allComponents: OSDComponents
 ): [ComponentActions.Create[], (string | null)[]] {
   return componentIds.reduce(
     ([components, ids]: [ComponentActions.Create[], (string | null)[]] , cId) => {

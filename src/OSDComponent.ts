@@ -1,5 +1,7 @@
 import * as ComponentActions from './api/Components'
 
+export type OSDComponents = { [key: string]: OSDComponent }
+
 export interface OSDComponent {
   id: string;
   name: string;

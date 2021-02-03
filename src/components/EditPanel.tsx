@@ -2,7 +2,7 @@ import React from 'react';
 import { TabbedPanel, TabContainer } from '../components/ui';
 import * as EditPane from '../types/editpane';
 import { EditPanelState } from '../reducers/editpanel';
-import { OSDComponent } from '../OSDComponent';
+import { OSDComponents } from '../OSDComponent';
 import { OSDLiveEvent } from '../reducers/shared';
 import { ComponentEditPaneContainer } from '../containers/ComponentEditPaneContainer';
 import { EventEditPaneContainer } from '../containers/EventEditPaneContainer';
@@ -14,13 +14,13 @@ export interface EditPanelProps {
   closeTab: (id: string) => void;
   selectTab: (id: string) => void;
   openTab: (pane: EditPane.EditPane) => void;
-  components: { [key: string]: OSDComponent };
+  components: OSDComponents;
   events: { [key: string]: OSDLiveEvent };
 }
 
 export function Pane(props: {
   pane: EditPane.EditPane;
-  components: { [key: string]: OSDComponent };
+  components: OSDComponents;
   events: { [key: string]: OSDLiveEvent };
   openTab: (pane: EditPane.EditPane) => void;
 }): JSX.Element {
