@@ -126,9 +126,9 @@ function PickerDialog(props: {
           existingComponent={props.existingComponents}
         />
       </TabContainer>
-        <TabContainer name="New" eventKey="new">
-          <CreateComponent newComponent={props.newComponent} close={props.close} />
-        </TabContainer> : null
+      <TabContainer name="New" eventKey="new">
+        <CreateComponent newComponent={props.newComponent} close={props.close} />
+      </TabContainer>
     </TabbedPanel>
   } else if (props.newComponent) {
     return <Card>
