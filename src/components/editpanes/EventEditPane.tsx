@@ -1,7 +1,7 @@
 import React from 'react';
 import * as EditPane from '../../types/editpane';
 import { OSDLiveEvent } from '../../reducers/shared';
-import { OSDComponent } from '../../OSDComponent';
+import { OSDComponents } from '../../OSDComponent';
 import { Container } from 'react-bootstrap';
 import './EventEditPane.css'
 import { MetadataPanel } from './event/MetadataPanel';
@@ -15,7 +15,7 @@ export interface ComponentActions {
   move: (componentId: string, from: number, to: number) => void;
 }
 
-interface ListActions {
+export interface ListActions {
   move: (
     listName: string,
     componentId: string | null,
@@ -26,6 +26,7 @@ interface ListActions {
   add: (listName: string, index: number, componentId: string | null) => void;
   set: (listName: string, index: number, id: string) => void;
 }
+
 export interface EventEditPaneProps {
   pane: EditPane.EventEditPane;
   event: OSDLiveEvent;
@@ -35,11 +36,10 @@ export interface EventEditPaneProps {
   listActions: ListActions;
   upsertParameter: (id: string, name: string, value: string) => void;
   removeParameter: (id: string, name: string) => void;
-  components: { [key: string]: OSDComponent };
+  components: OSDComponents;
 }
 
 export function EventEditPane(props: EventEditPaneProps): JSX.Element {
-  const eventComponents = props.event.components.flatMap((id) => props.components[id] || [])
   return <Container className="mt-3 mb-3 event-edit-pane">
     <MetadataPanel
       event={props.event}
@@ -49,7 +49,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
     />
     <ComponentsPanel
       event={props.event}
-      componentActions={props.componentActions}
+      {...props.componentActions}
       components={props.components}
       openTab={props.openTab}
     />
@@ -57,10 +57,10 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
       <ListPanel
         key={index}
         list={eList}
-        eventComponents={eventComponents}
+        eventComponents={props.event.components.flatMap((id) => props.components[id] || [])}
         components={props.components}
         event={props.event}
-        listActions={props.listActions}
+        {...props.listActions}
       />
     )}
   </Container>

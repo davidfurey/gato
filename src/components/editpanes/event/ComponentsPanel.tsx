@@ -1,18 +1,19 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
-import { OSDComponent } from '../../../OSDComponent';
+import { OSDComponent, OSDComponents } from '../../../OSDComponent';
 import { ComponentPicker } from '../../ComponentPicker';
 import { DraggableComponentList } from '../../DraggableComponentList';
-import { EventEditPaneProps } from '../EventEditPane';
+import { ComponentActions } from '../EventEditPane';
 import { SubPanel } from './SubPanel';
 import { v4 as uuid } from 'uuid';
-import { EditPaneType } from '../../../types/editpane';
+import { EditPane, EditPaneType } from '../../../types/editpane';
+import { OSDLiveEvent } from '../../../reducers/shared';
 
-export function ComponentsPanel(props: Pick<EventEditPaneProps, "event" |
-  "componentActions" |
-  "components" |
-  "openTab"
->): JSX.Element {
+export function ComponentsPanel(props: ComponentActions & {
+  event: OSDLiveEvent;
+  components: OSDComponents;
+  openTab: (pane: EditPane) => void;
+}): JSX.Element {
   const missingComponent: OSDComponent = {
     id: "",
     name: "Missing component",
@@ -24,11 +25,11 @@ export function ComponentsPanel(props: Pick<EventEditPaneProps, "event" |
       components={props.event.components.map((cId) =>
         props.components[cId] || { ...missingComponent, id: cId })
       }
-      removeComponent={props.componentActions.remove}
-      // if the component is not shared, this will delete it
-      deleteComponent={props.componentActions.remove}
+      removeComponent={props.remove}
+      // if the component is not shared, this will delete it (todo: check this)
+      deleteComponent={props.remove}
       openTab={props.openTab}
-      moveComponent={props.componentActions.move}
+      moveComponent={props.move}
     />
     <Card.Footer className="p-2">
       <ComponentPicker
@@ -38,12 +39,12 @@ export function ComponentsPanel(props: Pick<EventEditPaneProps, "event" |
           )
         }
         existingComponents={(componentIds): void =>
-          componentIds.forEach((componentId => props.componentActions.add(componentId)))
+          componentIds.forEach((componentId => props.add(componentId)))
         }
         newComponent={(name: string, type: string): void => {
           const componentId = uuid()
-          props.componentActions.new(componentId, name, type)
-          props.componentActions.add(componentId)
+          props.new(componentId, name, type)
+          props.add(componentId)
           props.openTab({
             type: EditPaneType.Component,
             id: componentId,
