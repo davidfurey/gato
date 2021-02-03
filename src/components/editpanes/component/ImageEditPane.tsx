@@ -1,19 +1,19 @@
 import React from 'react';
 import { Form, Container } from 'react-bootstrap';
-import { SlideComponent } from '../OSDComponents/SlideComponent';
-import { EditableText } from '../ui';
-import { ViewPanel } from '../ViewPanel';
-import { SharedStatusContainer } from '../../containers/SharedStatusContainer';
-import { Group, Label, TypePropertyNames } from './Pane';
-import { EditableImageUrl } from '../ui/EditableImageUrl';
+import { ImageComponent } from '../../OSDComponents/ImageComponent';
+import { EditableText } from '../../ui';
+import { ViewPanel } from '../../ViewPanel';
+import { SharedStatusContainer } from '../../../containers/SharedStatusContainer';
+import { EditableImageUrl } from '../../ui/EditableImageUrl';
+import { Group, Label, TypePropertyNames } from '../Pane';
 
-export function SlideEditPane(props: {
-  component: SlideComponent;
-  updateComponent: (component: SlideComponent) => void;
+export function ImageEditPane(props: {
+  component: ImageComponent;
+  updateComponent: (component: ImageComponent) => void;
 }): JSX.Element {
 
-  function update<T extends keyof SlideComponent>
-    (field: T, convert: (v: string) => SlideComponent[T]): (v: string) => void {
+  function update<T extends keyof ImageComponent>
+    (field: T, convert: (v: string) => ImageComponent[T]): (v: string) => void {
     return (v: string): void =>
       props.updateComponent({
         ...props.component,
@@ -21,12 +21,12 @@ export function SlideEditPane(props: {
       })
   }
 
-  function updateNumber<T extends TypePropertyNames<SlideComponent, number>>
+  function updateNumber<T extends TypePropertyNames<ImageComponent, number>>
     (field: T): (v: string) => void {
     return update(field, parseInt)
   }
 
-  function updateString(field: "name" | "src" | "title" | "subtitle"): (v: string) => void {
+  function updateString(field: "name" | "src"): (v: string) => void {
     return update(field, (s) => s)
   }
 
@@ -44,14 +44,6 @@ export function SlideEditPane(props: {
       <Group>
         <Label>Name</Label>
         <EditableText lg={7} value={props.component.name} update={updateString("name")} />
-      </Group>
-      <Group>
-        <Label>Title</Label>
-        <EditableText lg={7} value={props.component.title} update={updateString("title")} />
-      </Group>
-      <Group>
-        <Label>Subtitle</Label>
-        <EditableText lg={7} value={props.component.subtitle} update={updateString("subtitle")} />
       </Group>
       <Group>
         <Label>Source</Label>
@@ -72,10 +64,6 @@ export function SlideEditPane(props: {
       <Group>
         <Label>Left</Label>
         <EditableText lg={3}  value={props.component.left.toString()} update={updateNumber("left")} />
-      </Group>
-      <Group>
-        <Label>Class name</Label>
-        <EditableText lg={7} value={props.component.className || ""} update={update("className", (v) => v === "" ? null : v)} />
       </Group>
     </Form.Group>
     <SharedStatusContainer component={props.component} />

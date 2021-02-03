@@ -2,12 +2,12 @@ import React from 'react';
 import * as EditPane from '../../types/editpane';
 import { OSDComponent } from '../../OSDComponent';
 import { isLowerThirdsComponent } from '../OSDComponents/LowerThirdsComponent';
-import { LowerThirdsEditPane } from './LowerThirdsEditPane';
+import { LowerThirdsEditPane } from './component/LowerThirdsEditPane';
 import { isImageComponent } from '../OSDComponents/ImageComponent';
-import { ImageEditPane } from './ImageEditPane';
+import { ImageEditPane } from './component/ImageEditPane';
 import { ListGroup, ListGroupItem } from 'react-bootstrap';
 import { isSlideComponent } from '../OSDComponents/SlideComponent';
-import { SlideEditPane } from './SlideEditPane';
+import { SlideEditPane } from './component/SlideEditPane';
 
 export interface ComponentEditPaneProps {
   pane: EditPane.ComponentEditPane;

@@ -1,10 +1,10 @@
 import React from "react";
-import { LowerThirdsComponent } from "../OSDComponents/LowerThirdsComponent";
+import { LowerThirdsComponent } from "../../OSDComponents/LowerThirdsComponent";
 import { Container, Form } from "react-bootstrap";
-import { EditableText } from '../ui';
-import { SharedStatusContainer } from "../../containers/SharedStatusContainer";
-import { ViewPanel } from "../ViewPanel";
-import { Group, Label } from "./Pane";
+import { EditableText } from '../../ui';
+import { SharedStatusContainer } from "../../../containers/SharedStatusContainer";
+import { ViewPanel } from "../../ViewPanel";
+import { Group, Label } from "../Pane";
 
 export function LowerThirdsEditPane(props: {
     component: LowerThirdsComponent;
