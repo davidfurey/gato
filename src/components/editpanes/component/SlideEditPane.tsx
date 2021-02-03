@@ -16,7 +16,7 @@ export function SlideEditPane(props: {
     (field: T, convert: (v: string) => SlideComponent[T]): (v: string) => void {
     return (v: string): void =>
       props.updateComponent({
-        ...props.component,
+        ...c,
         [field]: convert(v)
       })
   }
@@ -29,6 +29,8 @@ export function SlideEditPane(props: {
   function updateString(field: "name" | "src" | "title" | "subtitle"): (v: string) => void {
     return update(field, (s) => s)
   }
+
+  const c = props.component
 
   return <Container className="mt-3 mb-3">
     <ViewPanel
@@ -43,39 +45,39 @@ export function SlideEditPane(props: {
     <Form.Group>
       <Group>
         <Label>Name</Label>
-        <EditableText lg={7} value={props.component.name} update={updateString("name")} />
+        <EditableText lg={7} value={c.name} update={updateString("name")} />
       </Group>
       <Group>
         <Label>Title</Label>
-        <EditableText lg={7} value={props.component.title} update={updateString("title")} />
+        <EditableText lg={7} value={c.title} update={updateString("title")} />
       </Group>
       <Group>
         <Label>Subtitle</Label>
-        <EditableText lg={7} value={props.component.subtitle} update={updateString("subtitle")} />
+        <EditableText lg={7} value={c.subtitle} update={updateString("subtitle")} />
       </Group>
       <Group>
         <Label>Source</Label>
-        <EditableImageUrl value={props.component.src} update={updateString("src")} />
+        <EditableImageUrl value={c.src} update={updateString("src")} />
       </Group>
       <Group>
         <Label>Width</Label>
-        <EditableText lg={3}  value={props.component.width.toString()} update={updateNumber("width")} />
+        <EditableText lg={3}  value={c.width.toString()} update={updateNumber("width")} />
       </Group>
       <Group>
         <Label>Height</Label>
-        <EditableText lg={3}  value={props.component.height.toString()} update={updateNumber("height")} />
+        <EditableText lg={3}  value={c.height.toString()} update={updateNumber("height")} />
       </Group>
       <Group>
         <Label>Top</Label>
-        <EditableText lg={3}  value={props.component.top.toString()} update={updateNumber("top")} />
+        <EditableText lg={3}  value={c.top.toString()} update={updateNumber("top")} />
       </Group>
       <Group>
         <Label>Left</Label>
-        <EditableText lg={3}  value={props.component.left.toString()} update={updateNumber("left")} />
+        <EditableText lg={3}  value={c.left.toString()} update={updateNumber("left")} />
       </Group>
       <Group>
         <Label>Class name</Label>
-        <EditableText lg={7} value={props.component.className || ""} update={update("className", (v) => v === "" ? null : v)} />
+        <EditableText lg={7} value={c.className || ""} update={update("className", (v) => v === "" ? null : v)} />
       </Group>
     </Form.Group>
     <SharedStatusContainer component={props.component} />
