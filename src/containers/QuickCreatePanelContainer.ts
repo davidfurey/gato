@@ -23,6 +23,7 @@ const mapDispatchToProps = (dispatch: AppDispatch):
           subtitle,
           type: "lower-thirds",
           shared: false,
+          className: undefined,
         }
       }
       dispatch(send(action))

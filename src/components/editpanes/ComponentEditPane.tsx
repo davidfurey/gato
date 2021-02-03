@@ -16,7 +16,6 @@ export interface ComponentEditPaneProps {
 }
 
 export function ComponentEditPane(props: ComponentEditPaneProps): JSX.Element {
-  // todo: this should pattern match style
   if (isLowerThirdsComponent(props.component)) {
     return <LowerThirdsEditPane
       component={props.component}

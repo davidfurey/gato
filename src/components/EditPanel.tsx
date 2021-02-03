@@ -7,6 +7,7 @@ import { OSDLiveEvent } from '../reducers/shared';
 import { ComponentEditPaneContainer } from '../containers/ComponentEditPaneContainer';
 import { EventEditPaneContainer } from '../containers/EventEditPaneContainer';
 import { MissingEditPane } from './editpanes/MissingEditPane';
+import { assertNever } from '../api/PatternHelpers';
 
 export interface EditPanelProps {
   editPanel: EditPanelState;
@@ -17,34 +18,31 @@ export interface EditPanelProps {
   events: { [key: string]: OSDLiveEvent };
 }
 
-export function createPane(
-  pane: EditPane.EditPane,
-  components: { [key: string]: OSDComponent },
-  events: { [key: string]: OSDLiveEvent },
-  openTab: (pane: EditPane.EditPane) => void
-): JSX.Element {
-  const pattern: EditPane.Pattern<JSX.Element | null> = {
-// eslint-disable-next-line react/display-name
-    [EditPane.EditPaneType.Component]: (pane) => {
-      const component = components[pane.id]
+export function Pane(props: {
+  pane: EditPane.EditPane;
+  components: { [key: string]: OSDComponent };
+  events: { [key: string]: OSDLiveEvent };
+  openTab: (pane: EditPane.EditPane) => void;
+}): JSX.Element {
+  switch (props.pane.type) {
+    case EditPane.EditPaneType.Component: {
+      const component = props.components[props.pane.id]
       return component ? <ComponentEditPaneContainer
-        pane={pane}
+        pane={props.pane}
         component={component}
-      /> : null
-    },
-// eslint-disable-next-line react/display-name
-    [EditPane.EditPaneType.Event]: (pane) => {
-      const event = events[pane.id]
-      return event ? <EventEditPaneContainer
-        pane={pane}
-        event={event}
-        components={components}
-        openTab={openTab}
-      /> : null
+      /> : <MissingEditPane pane={props.pane} />
     }
+    case EditPane.EditPaneType.Event: {
+      const event = props.events[props.pane.id]
+      return event ? <EventEditPaneContainer
+        pane={props.pane}
+        event={event}
+        components={props.components}
+        openTab={props.openTab}
+      /> : <MissingEditPane pane={props.pane} />
+    }
+    default: return assertNever(props.pane)
   }
-
-  return EditPane.matcher(pattern)(pane) || <MissingEditPane pane={pane} />
 }
 
 export function EditPanel(props: EditPanelProps): JSX.Element {
@@ -60,12 +58,12 @@ export function EditPanel(props: EditPanelProps): JSX.Element {
           eventKey={pane.id}
           closeTab={(): void => props.closeTab(pane.id)}
         >
-          { createPane(
-              pane,
-              props.components,
-              props.events,
-              props.openTab
-          ) }
+          <Pane
+            pane={pane}
+            components={props.components}
+            events={props.events}
+            openTab={props.openTab}
+          />
         </TabContainer>
         )
       }

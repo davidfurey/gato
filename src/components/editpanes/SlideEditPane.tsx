@@ -1,20 +1,35 @@
 import React from 'react';
-import { Form, Row, Container, Col, InputGroup } from 'react-bootstrap';
+import { Form, Container } from 'react-bootstrap';
 import { SlideComponent } from '../OSDComponents/SlideComponent';
 import { EditableText } from '../ui';
-import { EditableTextArea } from '../ui';
 import { ViewPanel } from '../ViewPanel';
 import { SharedStatusContainer } from '../../containers/SharedStatusContainer';
-import { ImagePicker } from '../ImagePicker';
-
-function pathFromUrl(s: string): string {
-  return new URL(s, "https://streamer-1").pathname
-}
+import { Group, Label, TypePropertyNames } from './Pane';
+import { EditableImageUrl } from '../ui/EditableImageUrl';
 
 export function SlideEditPane(props: {
   component: SlideComponent;
   updateComponent: (component: SlideComponent) => void;
 }): JSX.Element {
+
+  function update<T extends keyof SlideComponent>
+    (field: T, convert: (v: string) => SlideComponent[T]): (v: string) => void {
+    return (v: string): void =>
+      props.updateComponent({
+        ...props.component,
+        [field]: convert(v)
+      })
+  }
+
+  function updateNumber<T extends TypePropertyNames<SlideComponent, number>>
+    (field: T): (v: string) => void {
+    return update(field, parseInt)
+  }
+
+  function updateString(field: "name" | "src" | "title" | "subtitle"): (v: string) => void {
+    return update(field, (s) => s)
+  }
+
   return <Container className="mt-3 mb-3">
     <ViewPanel
       name={"manage"}
@@ -26,100 +41,42 @@ export function SlideEditPane(props: {
       }]}
     />
     <Form.Group>
-      <Form.Group as={Row}>
-        <Form.Label column lg={2}>Name</Form.Label>
-        <EditableText lg={7} value={props.component.name} update={(v): void =>
-          props.updateComponent({
-            ...props.component,
-            name: v
-          })
-        } />
-      </Form.Group>
-      <Form.Group as={Row}>
-          <Form.Label column lg={2}>Title</Form.Label>
-          <EditableText value={props.component.title} update={(v): void =>
-            props.updateComponent({
-              ...props.component,
-              title: v
-            })
-          } />
-        </Form.Group>
-      <Form.Group as={Row}>
-        <Form.Label column lg={2}>Subtitle</Form.Label>
-        <EditableTextArea value={props.component.subtitle} update={(v): void =>
-          props.updateComponent({
-            ...props.component,
-            subtitle: v
-          })
-        } />
-      </Form.Group>
-      <Form.Group as={Row}>
-        <Form.Label column lg={2}>Source</Form.Label>
-        <Col>
-          <InputGroup>
-            <InputGroup.Prepend>
-            <InputGroup.Text>
-              {pathFromUrl(props.component.src)}
-            </InputGroup.Text>
-            </InputGroup.Prepend>
-            <InputGroup.Append>
-            <ImagePicker
-              initialPath={new URL(props.component.src).pathname.replace(/^\/[^/]*/, '')}
-              style={{border: "1px solid var(--gray-dark)" }}
-              image={(img: string): void => props.updateComponent({
-                ...props.component,
-                src: img
-              })
-            } />
-            </InputGroup.Append>
-          </InputGroup>
-        </Col>
-      </Form.Group>
-      <Form.Group as={Row}>
-        <Form.Label column lg={2}>Width</Form.Label>
-        <EditableText lg={3}  value={props.component.width.toString()} update={(v): void =>
-          props.updateComponent({
-            ...props.component,
-            width: parseInt(v)
-          })
-        } />
-      </Form.Group>
-      <Form.Group as={Row}>
-        <Form.Label column lg={2}>Height</Form.Label>
-        <EditableText lg={3}  value={props.component.height.toString()} update={(v): void =>
-          props.updateComponent({
-            ...props.component,
-            height: parseInt(v)
-          })
-        } />
-      </Form.Group>
-      <Form.Group as={Row}>
-        <Form.Label column lg={2}>Top</Form.Label>
-        <EditableText lg={3}  value={props.component.top.toString()} update={(v): void =>
-          props.updateComponent({
-            ...props.component,
-            top: parseInt(v)
-          })
-        } />
-      </Form.Group>
-      <Form.Group as={Row}>
-        <Form.Label column lg={2}>Left</Form.Label>
-        <EditableText lg={3}  value={props.component.left.toString()} update={(v): void =>
-          props.updateComponent({
-            ...props.component,
-            left: parseInt(v)
-          })
-        } />
-      </Form.Group>
-      <Form.Group as={Row}>
-          <Form.Label column lg={2}>Class name</Form.Label>
-          <EditableText value={props.component.className || ""} update={(v): void =>
-            props.updateComponent({
-              ...props.component,
-              className: v === "" ? null : v
-            })
-          } />
-        </Form.Group>
+      <Group>
+        <Label>Name</Label>
+        <EditableText lg={7} value={props.component.name} update={updateString("name")} />
+      </Group>
+      <Group>
+        <Label>Title</Label>
+        <EditableText lg={7} value={props.component.title} update={updateString("title")} />
+      </Group>
+      <Group>
+        <Label>Subtitle</Label>
+        <EditableText lg={7} value={props.component.subtitle} update={updateString("subtitle")} />
+      </Group>
+      <Group>
+        <Label>Source</Label>
+        <EditableImageUrl value={props.component.src} update={updateString("src")} />
+      </Group>
+      <Group>
+        <Label>Width</Label>
+        <EditableText lg={3}  value={props.component.width.toString()} update={updateNumber("width")} />
+      </Group>
+      <Group>
+        <Label>Height</Label>
+        <EditableText lg={3}  value={props.component.height.toString()} update={updateNumber("height")} />
+      </Group>
+      <Group>
+        <Label>Top</Label>
+        <EditableText lg={3}  value={props.component.top.toString()} update={updateNumber("top")} />
+      </Group>
+      <Group>
+        <Label>Left</Label>
+        <EditableText lg={3}  value={props.component.left.toString()} update={updateNumber("left")} />
+      </Group>
+      <Group>
+        <Label>Class name</Label>
+        <EditableText lg={7} value={props.component.className || ""} update={update("className", (v) => v === "" ? null : v)} />
+      </Group>
     </Form.Group>
     <SharedStatusContainer component={props.component} />
   </Container>

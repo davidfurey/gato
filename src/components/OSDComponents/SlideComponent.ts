@@ -14,6 +14,7 @@ export const template: SlideComponent = {
   shared: true,
   title: "(title)",
   subtitle: "(subtitle)",
+  className: undefined,
 }
 
 export interface SlideComponent extends OSDComponent {
@@ -26,7 +27,7 @@ export interface SlideComponent extends OSDComponent {
   type: typeof SlideType;
   title: string;
   subtitle: string;
-  className?: string | null;
+  className: string | null | undefined;
 }
 
 export function isSlideComponent(component: OSDComponent): component is SlideComponent {

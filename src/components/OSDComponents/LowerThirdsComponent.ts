@@ -9,13 +9,14 @@ export const template: LowerThirdsComponent = {
   name: "default",
   id: "default",
   shared: true,
+  className: undefined,
 }
 
 export interface LowerThirdsComponent extends OSDComponent {
   title: string;
   subtitle: string;
   type: typeof LowerThirdsType;
-  className?: string | null;
+  className: string | null | undefined;
 }
 
 export function isLowerThirdsComponent(component: OSDComponent): component is LowerThirdsComponent {

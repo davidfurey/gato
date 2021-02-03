@@ -2,13 +2,12 @@ import React from 'react';
 import { Button } from 'react-bootstrap'
 import { Icon } from './Icon'
 
-type FirstArgType<T> = T extends (props: infer U) => unknown ? U : never;
-
-export function IconButton(props: FirstArgType<Button> & {
+export function IconButton(props: React.ComponentProps<typeof Button> & {
   icon: string;
   raised?: boolean;
 }): JSX.Element {
-  return <Button {...props}>
+  const { raised: ignored, ...buttonProps } = props;
+  return <Button {...buttonProps}>
     <Icon name={props.icon} raised={props.raised} />
     {props.children}
   </Button>

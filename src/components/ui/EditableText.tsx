@@ -3,12 +3,14 @@ import { Button, Form, Col, InputGroup, ColProps } from 'react-bootstrap';
 import './EditableText.css'
 import { Icon } from './Icon'
 
-export function EditableText(props: {
+interface EditableTextProps {
   value: string;
   update: (v: string) => void;
   delete?: () => void;
   lg?: ColProps["lg"];
-}): JSX.Element {
+}
+
+export function EditableText(props: EditableTextProps): JSX.Element {
     const [edit, setEdit] = useState(false);
     const [newValue, setNewValue] = useState(props.value);
 
