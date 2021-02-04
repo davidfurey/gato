@@ -37,6 +37,66 @@ function untitledName(prefix: string, existing: string[]): string {
 }
 
 export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Element {
+  const newEvent = (sourceId: string): void => {
+    const eventId = uuid()
+    const untitledPrefix = "Untitled event"
+    const existing = Object.values(props.events)
+      .filter((evt) => evt.name.startsWith(untitledPrefix))
+      .map((evt) => evt.name)
+    if (sourceId === "empty") {
+      props.newEvent(eventId, untitledName(untitledPrefix, existing))
+    } else {
+      props.copyEvent(
+        copyEvent(
+          untitledName(untitledPrefix, existing),
+          sourceId,
+          eventId,
+          props.events,
+          props.components
+        )
+      )
+    }
+    props.openTab({
+      type: EditPaneType.Event,
+      id: eventId,
+    })
+  }
+
+  const newTemplate = (sourceId: string): void => {
+    const eventId = uuid()
+    const untitledPrefix = "Untitled template"
+    const existing = Object.values(props.events)
+      .filter((evt) => evt.name.startsWith(untitledPrefix))
+      .map((evt) => evt.name)
+    if (sourceId === "empty") {
+      props.newTemplate(eventId, untitledName(untitledPrefix, existing))
+    } else {
+      props.copyEvent(
+        copyEvent(
+          untitledName(untitledPrefix, existing),
+          sourceId,
+          eventId,
+          props.events,
+          props.components,
+          true
+        )
+      )
+    }
+    props.openTab({
+      type: EditPaneType.Event,
+      id: eventId,
+    })
+  }
+
+  const newComponent = (name: string, type: string): void => {
+    const componentId = uuid()
+    props.newComponent(componentId, name, type)
+    props.openTab({
+      type: EditPaneType.Component,
+      id: componentId,
+    })
+  }
+
   return <TabbedPanel variant="pills">
     <TabContainer name="Event" eventKey="events">
       <EventList
@@ -47,33 +107,7 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
         scroll={true}
       />
       <Card.Footer className="p-2">
-        <CreateEventButton newEvent={(sourceId): void => {
-              const eventId = uuid()
-              const untitledPrefix = "Untitled event"
-              const existing = Object.values(props.events)
-                .filter((evt) => evt.name.startsWith(untitledPrefix))
-                .map((evt) => evt.name)
-              if (sourceId === "empty") {
-                props.newEvent(eventId, untitledName(untitledPrefix, existing))
-              } else {
-                props.copyEvent(
-                  copyEvent(
-                    untitledName(untitledPrefix, existing),
-                    sourceId,
-                    eventId,
-                    props.events,
-                    props.components
-                  )
-                )
-              }
-              props.openTab({
-                type: EditPaneType.Event,
-                id: eventId,
-              })
-            }
-          }
-          events={Object.values(props.events)}
-        />
+        <CreateEventButton newEvent={newEvent} events={Object.values(props.events)} />
       </Card.Footer>
     </TabContainer>
     <TabContainer name="Templates" eventKey="templates">
@@ -85,34 +119,7 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
         scroll={true}
       />
       <Card.Footer className="p-2">
-        <CreateTemplateButton newEvent={(sourceId): void => {
-              const eventId = uuid()
-              const untitledPrefix = "Untitled template"
-              const existing = Object.values(props.events)
-                .filter((evt) => evt.name.startsWith(untitledPrefix))
-                .map((evt) => evt.name)
-              if (sourceId === "empty") {
-                props.newTemplate(eventId, untitledName(untitledPrefix, existing))
-              } else {
-                props.copyEvent(
-                  copyEvent(
-                    untitledName(untitledPrefix, existing),
-                    sourceId,
-                    eventId,
-                    props.events,
-                    props.components,
-                    true
-                  )
-                )
-              }
-              props.openTab({
-                type: EditPaneType.Event,
-                id: eventId,
-              })
-            }
-          }
-          events={Object.values(props.events)}
-        />
+        <CreateTemplateButton newEvent={newTemplate} events={Object.values(props.events)} />
       </Card.Footer>
     </TabContainer>
     <TabContainer name="Components" eventKey="components">
@@ -123,17 +130,7 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
         scroll={true}
       />
       <Card.Footer className="p-2">
-        <ComponentPicker
-          newComponent={(name: string, type: string): void => {
-            const componentId = uuid()
-            props.newComponent(componentId, name, type)
-            props.openTab({
-              type: EditPaneType.Component,
-              id: componentId,
-            })
-          }
-          }
-        />
+        <ComponentPicker newComponent={newComponent} />
       </Card.Footer>
     </TabContainer>
   </TabbedPanel>
