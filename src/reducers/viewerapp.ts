@@ -60,10 +60,10 @@ export function createReducer(): ViewerAppReducer {
       }
     }
 
-    //if (!action.type.startsWith("REDUX_WEBSOCKET") && !action.type.startsWith("@@redux")) {
+    if (!action.type.startsWith("REDUX_WEBSOCKET") && !action.type.startsWith("@@redux")) {
       console.warn("Unhandled action:")
       console.warn(action)
-    //}
+    }
     return state
   }
 }
