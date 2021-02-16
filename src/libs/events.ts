@@ -3,6 +3,7 @@ import { ComponentList, OSDLiveEvent } from "../reducers/shared"
 import { copy as copyComponent, OSDComponent, OSDComponents } from '../OSDComponent'
 import * as EventActions from '../api/Events'
 import * as ComponentActions from '../api/Components'
+import { notEmpty } from '../api/FunctionalHelpers'
 
 function copyList(componentMapping: { [id: string]: string | null }) {
   return (ls: ComponentList): ComponentList => {
@@ -51,11 +52,6 @@ function objectZip<T>(a: string[], b: T[]): { [name: string]: T } {
     return result;
   }, {})
 }
-
-function notEmpty<T>(value: T | null | undefined): value is T {
-  return value !== null && value !== undefined;
-}
-
 export function copyEvent(
   name: string,
   sourceId: string,
