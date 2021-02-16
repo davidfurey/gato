@@ -75,6 +75,29 @@ div.lower-third-visible {
   background-size: 100% 238px;
 }
 
+.lent-acclamation {
+  font-style: normal;
+  height: 240px;
+  background: linear-gradient(0deg, rgba(255,255,255,0.95), rgba(255,255,255,0.95)) no-repeat;
+  background-size: 100% 78px;
+}
+.lent-acclamation p {
+  margin-top: -30px;
+}
+.lent-acclamation>.subtitle {
+  font-weight: normal;
+}
+
+.lent-acclamation.three-line {
+  height: 320px;
+  background-size: 100% 158px;
+}
+
+.lent-acclamation.four-line {
+  height: 400px;
+  background-size: 100% 238px;
+}
+
 
 .lower-third .title {
   font-family: Arial;
