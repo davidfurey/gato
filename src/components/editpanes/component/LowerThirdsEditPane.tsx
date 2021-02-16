@@ -1,7 +1,7 @@
 import React from "react";
 import { LowerThirdsComponent } from "../../OSDComponents/LowerThirdsComponent";
 import { Container, Form } from "react-bootstrap";
-import { EditableText } from '../../ui';
+import { EditableText, EditableTextArea } from '../../ui';
 import { SharedStatusContainer } from "../../../containers/SharedStatusContainer";
 import { ViewPanel } from "../../ViewPanel";
 import { Group, Label } from "../Pane";
@@ -45,7 +45,7 @@ export function LowerThirdsEditPane(props: {
         </Group>
         <Group>
           <Label>Subtitle</Label>
-          <EditableText lg={7} value={props.component.subtitle} update={updateString("subtitle")} />
+          <EditableTextArea lg={7} value={props.component.subtitle} update={updateString("subtitle")} />
         </Group>
         <Group>
           <Label>Class name</Label>
