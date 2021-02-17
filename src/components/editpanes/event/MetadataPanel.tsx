@@ -60,10 +60,10 @@ export function MetadataPanel(props: Pick<EventEditPaneProps, "event" |
           <EditableText
             value={value}
             update={(v): void =>
-              props.upsertParameter(props.event.id, key, v)
+              props.upsertParameter(key, v)
             }
             delete={(): void =>
-              props.removeParameter(props.event.id, key)
+              props.removeParameter(key)
             }
           />
         </Group>
@@ -76,7 +76,7 @@ export function MetadataPanel(props: Pick<EventEditPaneProps, "event" |
         title="New parameter"
         label="Name"
         actionLabel="Add"
-        success={(name: string) => props.upsertParameter(props.event.id, name, "")}
+        success={(name: string) => props.upsertParameter(name, "")}
         validation={validParameterName}
         tip="May only contain letters, numbers and underscore"
       />

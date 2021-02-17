@@ -34,8 +34,8 @@ export interface EventEditPaneProps {
   componentActions: ComponentActions;
   updateEvent: (event: Partial<OSDLiveEvent>) => void;
   listActions: ListActions;
-  upsertParameter: (id: string, name: string, value: string) => void;
-  removeParameter: (id: string, name: string) => void;
+  upsertParameter: (name: string, value: string) => void;
+  removeParameter: (name: string) => void;
   components: OSDComponents;
 }
 
