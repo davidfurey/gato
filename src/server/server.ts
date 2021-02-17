@@ -233,8 +233,8 @@ wss.on('connection', (ws, req) => {
   const iface = req.url != null && url.parse(req.url).path === "/manage-connection" ? "manage" : "control"
   const id = uuid()
   clients.push({
-    ip: user || ip || "unknown",
-    name: ip || "unknown",
+    ip: ip || "unknown",
+    name: user || ip || "unknown",
     interface: iface,
     screenName: undefined,
     lastSeen: Date.now(),
