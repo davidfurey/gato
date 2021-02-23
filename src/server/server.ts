@@ -16,6 +16,7 @@ import { OSDComponents } from '../OSDComponent';
 import url from 'url'
 import flat from 'array.prototype.flat'
 import { Config, loadConfig } from '../config';
+import { createApiRoutes } from './api';
 
 flat.shim()
 
@@ -81,6 +82,15 @@ let state: SharedState = {
     onScreenComponents: [],
   }],
 }
+
+createApiRoutes(
+  app,
+  () => state,
+  (message) => {
+    broadcastMessage(JSON.stringify(message))
+    updateState(message);
+  }
+)
 
 function handlePing(ws: WebSocket, message: Request.Ping, id: string): void {
   clients = clients.map((client) => client.id === id ? { ...client, lastSeen: Date.now() } : client)

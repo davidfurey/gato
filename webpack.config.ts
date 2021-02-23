@@ -9,6 +9,8 @@ import GitRevisionPlugin from 'git-revision-webpack-plugin'
 import PermissionsOutputPlugin from 'webpack-permissions-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import nodeExternals from 'webpack-node-externals'
+import { default as typescriptIsTransformer } from 'typescript-is/lib/transform-inline/transformer'
+import ts from 'typescript';
 
 const gitRevisionPlugin = new GitRevisionPlugin()
 
@@ -92,6 +94,9 @@ const serverConfig = (
             {
               loader: 'ts-loader',
               options: {
+                getCustomTransformers: (program: ts.Program) => ({
+                  before: [typescriptIsTransformer(program)]
+                }),
 								configFile: 'tsconfig.server.json',
 							},
             }
@@ -126,6 +131,9 @@ const clientConfig = (
           use: {
             loader: 'ts-loader',
             options: {
+              getCustomTransformers: (program: ts.Program) => ({
+                before: [typescriptIsTransformer(program)]
+              }),
               configFile: 'tsconfig.client.json',
             }
           },
