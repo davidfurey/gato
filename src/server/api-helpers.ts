@@ -56,18 +56,20 @@ export class ApiRouteHelpers {
   }
 
   message = <
-    T extends Message
+    T extends Message,
+    P extends string
   >(
-    path: string,
+    path: P,
     validator: (object: unknown) => object is T,
-    type: T['type']
+    type: T['type'],
+    modifier: (args: PathArgs<P>) => PathArgs<P> = (x) => x
   ): void => {
-    this.app.post(`${this.prefix}${path}`, (req, res) => {
+    this.app.post<PathArgs<P>>(`${this.prefix}${path}`, (req, res) => {
       const body: unknown = req.body
       if (typeof body === 'object') {
         const combined = {
           ...body,
-          ...req.params,
+          ...modifier(req.params),
           type,
         }
         console.log(combined)

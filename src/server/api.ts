@@ -21,7 +21,7 @@ export function createApiRoutes(
   const displays = (): Display[] => state().displays
 
   function eventComponents(eventId: string): OSDComponent[] {
-    const event = state().events[eventId]
+    const event = state().events[eventId === "current" ? state().eventId : eventId]
     return event ?
       event.components.map((cId) => state().components[cId]).filter(notEmpty) :
       []
@@ -36,6 +36,13 @@ export function createApiRoutes(
     ), {} as Partial<T>)
   }
 
+  function currentEventFilter<T extends { id: string }>(pathArgs: T): T {
+    return pathArgs.id === "current" ? {
+      ...pathArgs,
+      id: state().eventId
+    } : pathArgs
+  }
+
   app.use(express.json())
 
   const routes = new ApiRouteHelpers(app, processMessage)
@@ -44,9 +51,9 @@ export function createApiRoutes(
   routes.message('/events', createIs<Event.Create>(), Event.MessageType.Create)
 
   routes.item('/events/:id', (id) => state().events[id])
-  routes.message('/events/:id', createIs<Event.Update>(), Event.MessageType.Update)
-  routes.message('/events/:id/load', createIs<Event.Load>(), Event.MessageType.Load)
-  routes.message('/events/:id/parameters/:name', createIs<Event.UpsertParameter>(), Event.MessageType.UpsertParameter)
+  routes.message('/events/:id', createIs<Event.Update>(), Event.MessageType.Update, currentEventFilter)
+  routes.message('/events/:id/load', createIs<Event.Load>(), Event.MessageType.Load, currentEventFilter)
+  routes.message('/events/:id/parameters/:name', createIs<Event.UpsertParameter>(), Event.MessageType.UpsertParameter, currentEventFilter)
   routes.collection('/events/:id/components', (p) => eventComponents(p.id), fields(["name", "id"]))
 
   routes.item('/components/:id', (id) => state().components[id])
