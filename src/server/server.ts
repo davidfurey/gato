@@ -83,15 +83,6 @@ let state: SharedState = {
   }],
 }
 
-createApiRoutes(
-  app,
-  () => state,
-  (message) => {
-    broadcastMessage(JSON.stringify(message))
-    updateState(message);
-  }
-)
-
 function handlePing(ws: WebSocket, message: Request.Ping, id: string): void {
   clients = clients.map((client) => client.id === id ? { ...client, lastSeen: Date.now() } : client)
 
@@ -317,6 +308,15 @@ app.all('*', (request, response, next) => {
 app.use(express.static(path.resolve(__dirname, 'public')));
 
 app.get('/healthcheck', (_req, res) => res.send("Ok"));
+
+createApiRoutes(
+  app,
+  () => state,
+  (message) => {
+    broadcastMessage(JSON.stringify(message))
+    updateState(message);
+  }
+)
 
 let config: Config | undefined = undefined
 
