@@ -72,13 +72,14 @@ export class ApiRouteHelpers {
           ...modifier(req.params),
           type,
         }
-        console.log(combined)
         if (validator(combined)) {
           this.processMessage(combined)
           res.send("Ok")
         } else {
           res.status(400).send("Invalid request")
         }
+      } else {
+        res.status(400).send("Invalid request")
       }
     })
   }
