@@ -388,7 +388,17 @@ app.get('/drive/:path(*)', (req, res) => {
 app.get('/api/preview/:id.html', (req, res) => {
   const component = state.components[req.params.id || ""]
   if (component) {
-    res.send(renderComponent(component))
+    const parameters = Object.entries(req.query).reduce(
+      (acc, [k, v]) =>
+        k.startsWith('param-') && typeof v === 'string' ?
+          {
+            ...acc,
+            [k.slice(6)]: v
+          }
+        : acc,
+      {}
+    )
+    res.send(renderComponent(component, parameters))
   } else {
     res.status(404).send("Component not found")
   }
@@ -397,8 +407,9 @@ app.get('/api/preview/:id.html', (req, res) => {
 app.get('/api/preview/:id.png', (req, res) => {
   const id = req.params.id || ""
   const component = state.components[id]
+  const query = new URL("http://localhost" + req.url).search
   if (component) {
-    capture(`http://localhost:${accessPort}/api/preview/${id}.html`).then((p) => {
+    capture(`http://localhost:${accessPort}/api/preview/${id}.html${query}`).then((p) => {
       res.setHeader("Content-type", "image/png")
       res.send(p)
     }).catch((e) => {

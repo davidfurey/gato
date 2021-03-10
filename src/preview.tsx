@@ -4,7 +4,10 @@ import { OSDComponent } from './OSDComponent';
 import { OnScreenComponentState } from './reducers/shared'
 import ReactDOMServer from 'react-dom/server';
 
-export function renderComponent(component: OSDComponent): string {
+export function renderComponent(
+  component: OSDComponent,
+  parameters: { [name: string]: string }
+): string {
   const onScreenComponent: { state: OnScreenComponentState, component: OSDComponent } = {
     state: "visible",
     component
@@ -21,7 +24,7 @@ export function renderComponent(component: OSDComponent): string {
           showCaption={false}
           preview={false}
           components={[onScreenComponent]}
-          parameters={{}}
+          parameters={parameters}
         />
       </body>
       </html>
