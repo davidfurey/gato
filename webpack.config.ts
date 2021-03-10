@@ -102,6 +102,23 @@ const serverConfig = (
             }
           ],
         },
+        {
+          test: /\.css$/i,
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+                url: (url: string, _resourcePath: string) => {
+                  if (url.startsWith("/")) {
+                    return false;
+                  }
+                  return true;
+                }
+              }
+            },
+          ]
+        }
       ]
     },
   }
@@ -121,7 +138,8 @@ const clientConfig = (
       app: './src/index.tsx',
       control: './src/control.tsx',
       viewer: './src/viewer.tsx',
-      manage: './src/manage.tsx'
+      manage: './src/manage.tsx',
+      preview: './src/preview.tsx'
     },
     devtool: 'inline-source-map',
     module: {

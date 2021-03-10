@@ -79,6 +79,7 @@
     "@types/uuid": "^8.3.0",
     "array.prototype.flat": "^1.2.4",
     "bootswatch": "^4.5.3",
+    "capture-website": "^1.4.0",
     "compression": "^1.7.4",
     "core-js": "^3.8.3",
     "express": "^4.17.1",

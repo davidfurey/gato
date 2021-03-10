@@ -17,10 +17,14 @@ import url from 'url'
 import flat from 'array.prototype.flat'
 import { Config, loadConfig } from '../config';
 import { createApiRoutes } from './api';
+import { renderComponent } from '../preview';
+import { capture } from '../screenshot';
 
 flat.shim()
 
 const port = 3040;
+
+const accessPort = process.env.NODE_ENV === "production" ? port : 8080
 
 const app = express();
 
@@ -381,6 +385,29 @@ app.get('/drive/:path(*)', (req, res) => {
   }
 });
 
+app.get('/api/preview/:id.html', (req, res) => {
+  const component = state.components[req.params.id || ""]
+  if (component) {
+    res.send(renderComponent(component))
+  } else {
+    res.status(404).send("Component not found")
+  }
+})
+
+app.get('/api/preview/:id.png', (req, res) => {
+  const id = req.params.id || ""
+  const component = state.components[id]
+  if (component) {
+    capture(`http://localhost:${accessPort}/api/preview/${id}.html`).then((p) => {
+      res.setHeader("Content-type", "image/png")
+      res.send(p)
+    }).catch((e) => {
+      res.status(500).send(JSON.stringify(e))
+    })
+  } else {
+    res.status(404).send("Component not found")
+  }
+})
 
 server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
   if (!request.url) {
@@ -409,8 +436,8 @@ server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: B
 
 server.listen(port, () => {
   if (process.env.NODE_ENV === "production") {
-    console.log(`Server listening on port ${port}!`);
+    console.log(`Server listening on port ${port}`);
   } else {
-    console.log(`Webpack dev server is listening on port ${port}`);
+    console.log(`Webpack dev server is listening on port ${accessPort}, app running on ${port}`);
   }
 });
