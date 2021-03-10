@@ -206,7 +206,7 @@ const clientConfig = (
         title: 'GATO - Manage'
       }),
       new MiniCssExtractPlugin({
-        filename: 'css/[name].[chunkhash].css',
+        filename: 'css/[name].css',
       }),
     ],
     output: {
