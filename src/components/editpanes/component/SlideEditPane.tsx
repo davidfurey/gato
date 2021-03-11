@@ -26,7 +26,7 @@ export function SlideEditPane(props: {
     return update(field, parseInt)
   }
 
-  function updateString(field: "name" | "src" | "title" | "subtitle"): (v: string) => void {
+  function updateString(field: "name" | "src" | "title" | "subtitle" | "body"): (v: string) => void {
     return update(field, (s) => s)
   }
 
@@ -54,6 +54,10 @@ export function SlideEditPane(props: {
       <Group>
         <Label>Subtitle</Label>
         <EditableText lg={7} value={c.subtitle} update={updateString("subtitle")} />
+      </Group>
+      <Group>
+        <Label>Body</Label>
+        <EditableText lg={7} value={c.body || ""} update={updateString("body")} />
       </Group>
       <Group>
         <Label>Source</Label>

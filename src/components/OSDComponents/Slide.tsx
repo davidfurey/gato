@@ -19,6 +19,7 @@ interface SlideProps {
   className: string | null;
   title: string;
   subtitle: string;
+  body: string;
 }
 
 function withOrdinals(s: string): JSX.Element {
@@ -36,12 +37,14 @@ function Slide(props: SlideProps): JSX.Element {
   const customClassName = props.className ? ` ${props.className}` : ""
   const className = props.state === "entering" || props.state === "visible" ?  "slide-component slide-component-visible" : "slide-component slide-component-hidden"
   const subtitle = props.subtitle.split('\n').map ((item, i) => <p key={i}>{withOrdinals(item)}</p>)
+  const body = props.body.split('\n').map ((item, i) => <p key={i}>{withOrdinals(item)}</p>)
   return <div className={className + customClassName}>
     <div className="image" style={{top: props.top, left: props.left}}>
       <img alt="" src={props.src} width={props.width} height={props.height} />
     </div>
     <div className="title">{withOrdinals(props.title)}</div>
     <div className="subtitle">{subtitle}</div>
+    <div className="body">{body}</div>
     <div className="extra1"><span></span></div>
     <div className="extra2"><span></span></div>
     <div className="extra3"><span></span></div>
@@ -71,6 +74,7 @@ export class Slides extends Component<SlidesProps> {
             state={c.state}
             title={text(c.component.title)}
             subtitle={text(c.component.subtitle)}
+            body={text(c.component.body || "")}
             className={c.component.className === undefined ? null : c.component.className}
           />
         )}
