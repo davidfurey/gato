@@ -420,6 +420,32 @@ app.get('/api/preview/:id.png', (req, res) => {
   }
 })
 
+app.get('/api/preview.png', (req, res) => {
+  const eventName = req.query['event']
+  const componentName = req.query['component']
+  if (typeof eventName !== 'string' || typeof componentName !== 'string') {
+    return res.status(400).send("Missing required parameters event and component")
+  }
+
+  const event = Object.values(state.events).find((e) => e.name === eventName)
+  if (event === undefined) {
+    return res.status(404).send("Event not found")
+  }
+
+  const componentId = event.components.find((cId) => state.components[cId]?.name === componentName)
+  if (componentId === undefined) {
+    return res.status(404).send("Component not found")
+  }
+
+  const query = new URL("http://localhost" + req.url).search
+  capture(`http://localhost:${accessPort}/api/preview/${componentId}.html${query}`).then((p) => {
+    res.setHeader("Content-type", "image/png")
+    res.send(p)
+  }).catch((e) => {
+    res.status(500).send(JSON.stringify(e))
+  })
+})
+
 server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
   if (!request.url) {
     socket.destroy()
