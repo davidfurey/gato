@@ -23,7 +23,7 @@ interface SlideProps {
 }
 
 function withOrdinals(s: string): JSX.Element {
-  const index = s.search(/(1st|2nd|3rd|[0,4-9]th)/)
+  const index = s.search(/(1st|2nd|3rd|[0-9]th)/)
   if (index >= 0) {
     return <>
       {s.slice(0, index + 1)}
