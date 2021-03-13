@@ -420,7 +420,7 @@ app.get('/api/preview/:id.png', (req, res) => {
   }
 })
 
-app.get('/api/preview.png', (req, res) => {
+app.get('/public/preview.png', (req, res) => {
   const eventName = req.query['event']
   const componentName = req.query['component']
   if (typeof eventName !== 'string' || typeof componentName !== 'string') {
