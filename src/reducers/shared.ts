@@ -3,11 +3,18 @@ import * as Transistion from '../api/Transitions'
 import { Message } from '../api/Messages'
 import * as Component from '../api/Components'
 import * as Event from '../api/Events'
+import * as ThemeApi from '../api/Themes'
+import * as StyleApi from '../api/Styles'
 import { reduce as transitionReducer } from './shared/transistion'
 import { reduce as componentReducer } from './shared/component'
 import { reduce as eventReducer } from './shared/event'
 import { reduce as listReducer } from './shared/list'
+import { reduce as themeReducer } from './shared/theme'
+import { reduce as styleReducer } from './shared/style'
 import * as List from '../api/Lists'
+import { ImageType } from '../components/OSDComponents/ImageComponent'
+import { SlideType } from '../components/OSDComponents/SlideComponent'
+import { LowerThirdsType } from '../components/OSDComponents/LowerThirdsComponent'
 
 type uuidv4 = string
 
@@ -16,6 +23,25 @@ export interface SharedState {
   events: { [key: string]: OSDLiveEvent };
   displays: Display[];
   eventId: uuidv4;
+  themes: { [key: string]: Theme };
+  styles: { [key: string]: Style };
+}
+
+export interface Theme {
+  id: uuidv4;
+  name: string;
+  parent: uuidv4 | undefined;
+  less: string;
+  css: string;
+}
+
+export interface Style {
+  id: uuidv4;
+  name: string;
+  parent: uuidv4 | undefined;
+  less: string;
+  css: string;
+  componentType: typeof ImageType | typeof SlideType | typeof LowerThirdsType
 }
 
 export type ListType = "picked" | "slideshow"
@@ -35,6 +61,7 @@ export interface OSDLiveEvent {
     [name: string]: string;
   };
   template?: boolean;
+  theme?: uuidv4;
 }
 
 export type OnScreenComponentState = "entering" | "exiting" | "visible" | "hidden"
@@ -71,6 +98,10 @@ export function reducer(state: SharedState, message: Message): SharedState {
     return eventReducer(message, state)
   } else if (List.isListMessage(message)) {
     return listReducer(message, state)
+  } else if (ThemeApi.isThemeMessage(message)) {
+    return themeReducer(message, state)
+  } else if (StyleApi.isStyleMessage(message)) {
+    return styleReducer(message, state)
   }
   console.error("Unhandled message")
   console.error(message)

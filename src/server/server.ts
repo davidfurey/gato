@@ -85,6 +85,8 @@ let state: SharedState = {
     },
     onScreenComponents: [],
   }],
+  themes: {},
+  styles: {},
 }
 
 function handlePing(ws: WebSocket, message: Request.Ping, id: string): void {

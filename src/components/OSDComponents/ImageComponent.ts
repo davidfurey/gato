@@ -12,6 +12,7 @@ export const template: ImageComponent = {
   top: 0,
   left: 0,
   shared: true,
+  style: undefined,
 }
 
 export interface ImageComponent extends OSDComponent {

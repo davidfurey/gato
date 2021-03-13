@@ -42,6 +42,7 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<ManageSelectorPanelProp
             name,
             type,
             shared: true,
+            style: undefined,
           }
         }
         dispatch(send(create))

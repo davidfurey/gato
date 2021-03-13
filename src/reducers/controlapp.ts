@@ -20,7 +20,9 @@ const initialState: ControlAppState = {
     eventId: initialEvent.id,
     components: {},
     events: { [initialEvent.id]: initialEvent },
-    displays: []
+    displays: [],
+    themes: {},
+    styles: {},
   },
   connectivity: {
     serverName: undefined,

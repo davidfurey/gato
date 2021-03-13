@@ -3,6 +3,8 @@ import * as List from "./Lists"
 import * as Display from "./Displays"
 import * as Event from "./Events"
 import * as Transistion from "./Transitions"
+import * as Theme from "./Themes"
+import * as Style from "./Styles"
 import * as Request from "./Requests"
 import * as Response from "./Responses"
 import { AnnotatedType, TypeMap, GenericPattern, genericMatcher } from "./PatternHelpers"
@@ -17,6 +19,8 @@ export type MessageType =
   Event.MessageType |
   List.MessageType |
   Transistion.MessageType |
+  Theme.MessageType |
+  Style.MessageType |
   Request.MessageType |
   Response.MessageType
 
@@ -26,6 +30,8 @@ export type Message =
   Event.Message |
   List.Message |
   Transistion.Message |
+  Theme.Message |
+  Style.Message |
   Request.Message |
   Response.Message
 

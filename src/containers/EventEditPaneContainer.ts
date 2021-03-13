@@ -42,6 +42,7 @@ const mapDispatchToProps = (
               name,
               type,
               shared: false,
+              style: undefined,
             }
           }
           dispatch(send(create))

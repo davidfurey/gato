@@ -18,7 +18,8 @@ export function ComponentsPanel(props: ComponentActions & {
     id: "",
     name: "Missing component",
     type: "missing",
-    shared: false
+    shared: false,
+    style: undefined,
   }
   return <SubPanel title="Components" icon="widgets">
     <DraggableComponentList

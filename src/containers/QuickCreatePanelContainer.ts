@@ -24,6 +24,7 @@ const mapDispatchToProps = (dispatch: AppDispatch):
           type: "lower-thirds",
           shared: false,
           className: undefined,
+          style: undefined,
         }
       }
       dispatch(send(action))

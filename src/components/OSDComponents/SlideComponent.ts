@@ -16,6 +16,7 @@ export const template: SlideComponent = {
   subtitle: "(subtitle)",
   body: "(body)",
   className: undefined,
+  style: undefined,
 }
 
 export interface SlideComponent extends OSDComponent {
