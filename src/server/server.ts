@@ -237,7 +237,13 @@ function broadcastMessage(rawMessage: string): void {
 wss.on('connection', (ws, req) => {
   const ip = req.socket.remoteAddress;
   const user = Array.isArray(req.headers['x-user']) ? req.headers['x-user'][0] : req.headers['x-user']
-  const iface = req.url != null && url.parse(req.url).path === "/manage-connection" ? "manage" : "control"
+  const iface = req.url != null ? ((s: string) => {
+    switch (url.parse(s).path) {
+      case "/manage-connection": return "manage"
+      case "/configure-connection": return "configure"
+      default: return "control"
+    }
+  })(req.url) : "manage"
   const id = uuid()
   clients.push({
     ip: ip || "unknown",
@@ -465,6 +471,10 @@ server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: B
       viewerServer.emit('connection', ws, request);
     });
   } else if (pathname === '/manage-connection') {
+    wss.handleUpgrade(request, socket, head, function done(ws) {
+      wss.emit('connection', ws, request);
+    });
+  } else if (pathname === '/configure-connection') {
     wss.handleUpgrade(request, socket, head, function done(ws) {
       wss.emit('connection', ws, request);
     });
