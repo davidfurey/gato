@@ -26,7 +26,7 @@ export interface ManageSelectorPanelProps {
   copyEvent: (actions: (EventActions.Create | ComponentActions.Create)[]) => void;
 }
 
-function untitledName(prefix: string, existing: string[]): string {
+export function untitledName(prefix: string, existing: string[]): string {
   const untitled = (i: number): string => `${prefix} ${i}`
   for (let i = 1; i < 100; i++) {
     if (!existing.includes(untitled(i))) {
