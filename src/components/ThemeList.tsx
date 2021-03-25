@@ -23,7 +23,7 @@ function ThemeListItem(props: {
   const openTab = props.openTab
   const settings: (() => void) | undefined = openTab ? (): void => {
     openTab({
-      type: EditPaneType.Event, // todo
+      type: EditPaneType.Theme,
       id: props.theme.id,
     })
   } : undefined

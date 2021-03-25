@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { OSDComponents } from './OSDComponent';
-import { Display, OSDLiveEvent, Theme } from './reducers/shared'
+import { Display, OSDLiveEvent, Theme, Style } from './reducers/shared'
 import { connect } from 'react-redux'
 import './style.css';
 import { createStore, applyMiddleware, Store } from 'redux'
@@ -27,6 +27,7 @@ interface ConfigureProps {
   components: OSDComponents;
   events: { [key: string]: OSDLiveEvent };
   themes: { [key: string]: Theme };
+  styles: { [key: string]: Style };
   editPanel: EditPanelState;
 }
 
@@ -89,7 +90,7 @@ export class Configure extends Component<ConfigureProps> {
           <Col sm="auto" style={{ width: "25rem"}}>
             <ConfigureSelectorPanelContainer
               themes={this.props.themes}
-              styles={{}}
+              styles={this.props.styles}
             />
             <ConnectivityPanelContainer />
           </Col>
@@ -98,6 +99,8 @@ export class Configure extends Component<ConfigureProps> {
               editPanel={this.props.editPanel}
               components={this.props.components}
               events={this.props.events}
+              themes={this.props.themes}
+              styles={this.props.styles}
             />
           </Col>
         </Row>
@@ -113,6 +116,7 @@ const mapStateToProps = (state: ConfigureAppState): ConfigureProps => {
     events: state.shared.events,
     editPanel: state.editPanel,
     themes: state.shared.themes,
+    styles: state.shared.styles,
   }
 }
 
@@ -125,7 +129,7 @@ Navigation.init(store)
 
 ReactDOM.render(
   <Provider store={store}>
-    <PageNav page="manage" />
+    <PageNav page="configure" />
     <ConfigureContainer />
     <PageFooter />
   </Provider>,

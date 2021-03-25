@@ -6,13 +6,13 @@ import * as ComponentMessage from '../api/Components'
 import { OSDComponent } from "../OSDComponent";
 
 const mapDispatchToProps = (dispatch: AppDispatch): Pick<ComponentEditPaneProps,
-  "updateComponent"> => {
+  "update"> => {
     return {
-      updateComponent: <T extends OSDComponent>(component: T): void => {
+      update: <T extends OSDComponent>(id: string, component: Partial<T>): void => {
         const action: ComponentMessage.Update = {
           type: ComponentMessage.MessageType.Update,
           component: component,
-          id: component.id
+          id: id
         }
         dispatch(send(action))
       }

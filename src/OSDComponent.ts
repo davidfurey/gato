@@ -7,7 +7,7 @@ export interface OSDComponent {
   name: string;
   type: string;
   shared: boolean;
-  style: string | undefined;
+  style: string | null | undefined;
 }
 
 export function copy(component: OSDComponent, newId: string): ComponentActions.Create {

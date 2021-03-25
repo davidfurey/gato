@@ -2,6 +2,7 @@ import { SharedState } from '../shared'
 import * as Theme from '../../api/Themes'
 import { MessageType as M } from '../../api/Themes'
 import { assertNever } from '../../api/PatternHelpers'
+import { isAncestor } from '../../components/ParentSelector'
 
 function createTheme(action: Theme.Create, state: SharedState): SharedState {
   return {
@@ -18,13 +19,19 @@ function createTheme(action: Theme.Create, state: SharedState): SharedState {
 function updateTheme(action: Theme.Update, state: SharedState): SharedState {
   const theme = state.themes[action.id]
   if (theme) {
-    return {
-      ...state,
-      themes: {
-        ...state.themes,
-        [action.id]: {
-          ...theme,
-          ...action.theme
+    const updatedTheme = {
+      ...theme,
+      ...action.theme
+    }
+    if (theme.parent && isAncestor(theme.id, theme.parent, state.themes)) {
+      console.warn("Attempted to create parent/child theme loop")
+      return state
+    } else {
+      return {
+        ...state,
+        themes: {
+          ...state.themes,
+          [action.id]: updatedTheme
         }
       }
     }
@@ -56,7 +63,7 @@ function deleteTheme(action: Theme.Delete, state: SharedState): SharedState {
     theme.parent === action.id ?
       {
         ...theme,
-        parent: undefined
+        parent: null
       } : theme
   )
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { OSDComponents } from './OSDComponent';
-import { Display, OSDLiveEvent } from './reducers/shared'
+import { Display, OSDLiveEvent, Styles, Themes } from './reducers/shared'
 import { connect } from 'react-redux'
 import './style.css';
 import { createStore, applyMiddleware, Store } from 'redux'
@@ -21,11 +21,14 @@ import { PageNav } from './components/PageNav';
 import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';
 import { PageFooter } from './components/PageFooter';
 import * as Navigation from './libs/navigation';
+import { PageStyle } from './components/PageStyle';
 
 interface ManageProps {
   displays: Display[];
   components: OSDComponents;
   events: { [key: string]: OSDLiveEvent };
+  themes: Themes;
+  styles: Styles;
   editPanel: EditPanelState;
   liveEventId: string;
 }
@@ -107,6 +110,8 @@ export class Manage extends Component<ManageProps> {
               editPanel={this.props.editPanel}
               components={this.props.components}
               events={this.props.events}
+              styles={this.props.styles}
+              themes={this.props.themes}
             />
           </Col>
         </Row>
@@ -121,7 +126,9 @@ const mapStateToProps = (state: ManageAppState): ManageProps => {
     displays: state.shared.displays,
     events: state.shared.events,
     editPanel: state.editPanel,
-    liveEventId: state.shared.eventId
+    liveEventId: state.shared.eventId,
+    styles: state.shared.styles,
+    themes: state.shared.themes
   }
 }
 
@@ -134,6 +141,7 @@ Navigation.init(store)
 
 ReactDOM.render(
   <Provider store={store}>
+    <PageStyle />
     <PageNav page="manage" />
     <ManageContainer />
     <PageFooter />

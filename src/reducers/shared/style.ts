@@ -2,6 +2,7 @@ import { SharedState } from '../shared'
 import * as Style from '../../api/Styles'
 import { MessageType as M } from '../../api/Styles'
 import { assertNever } from '../../api/PatternHelpers'
+import { isAncestor } from '../../components/ParentSelector'
 
 function createStyle(action: Style.Create, state: SharedState): SharedState {
   return {
@@ -18,13 +19,19 @@ function createStyle(action: Style.Create, state: SharedState): SharedState {
 function updateStyle(action: Style.Update, state: SharedState): SharedState {
   const style = state.styles[action.id]
   if (style) {
-    return {
-      ...state,
-      styles: {
-        ...state.styles,
-        [action.id]: {
-          ...style,
-          ...action.style
+    const updatedStyle = {
+      ...style,
+      ...action.style
+    }
+    if (style.parent && isAncestor(style.id, style.parent, state.styles)) {
+      console.warn("Attempted to create parent/child style loop")
+      return state
+    } else {
+      return {
+        ...state,
+        styles: {
+          ...state.styles,
+          [action.id]: updatedStyle
         }
       }
     }
@@ -56,7 +63,7 @@ function deleteStyle(action: Style.Delete, state: SharedState): SharedState {
     style.parent === action.id ?
       {
         ...style,
-        parent: undefined
+        parent: null
       } : style
   )
 

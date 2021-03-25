@@ -1,49 +1,3 @@
-div.lower-thirds {
-  color: black;
-  position: absolute;
-  font-size: 40px;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  height: 162px;
-}
-
-.lower-thirds {
-  -webkit-transition: 1.0s;
-  -moz-transition: 1.0s;
-  -o-transition: 1.0s;
-  transition: 1.0s;
-  background:rgba(255,255,255,0.0);
-  visibility: hidden;
-}
-
-div.lower-thirds.visible {
-  background:rgba(255,255,255,0.95);
-  visibility: visible;
-}
-
-div.lower-third-visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-.lower-third {
-  text-align: center;
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  height: 162px;
-  -webkit-transition: 1.0s;
-  -moz-transition: 1.0s;
-  -o-transition: 1.0s;
-  transition: 1.0s;
-  opacity: 0;
-  visibility: visible;
-  padding: 0;
-  margin: 0;
-}
-
 .acclamation {
   font-style: normal;
   height: 240px;
@@ -96,22 +50,6 @@ div.lower-third-visible {
 .lent-acclamation.four-line {
   height: 400px;
   background-size: 100% 238px;
-}
-
-
-.lower-third .title {
-  font-family: Arial;
-  font-size: 77px;
-  margin: -10px 0 0 0;
-  padding: 0;
-}
-
-.lower-third .subtitle {
-  font-family: Arial;
-  font-style: italic;
-  font-size: 60px;
-  margin: -30px 0 0 0;
-  padding: 0;
 }
 
 .psalm>.subtitle {

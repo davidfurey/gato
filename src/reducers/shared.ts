@@ -1,4 +1,4 @@
-import { OSDComponents } from '../OSDComponent'
+import { OSDComponent, OSDComponents } from '../OSDComponent'
 import * as Transistion from '../api/Transitions'
 import { Message } from '../api/Messages'
 import * as Component from '../api/Components'
@@ -18,6 +18,8 @@ import { LowerThirdsType } from '../components/OSDComponents/LowerThirdsComponen
 
 type uuidv4 = string
 
+export type ComponentType = typeof ImageType | typeof SlideType | typeof LowerThirdsType
+
 export interface SharedState {
   components: OSDComponents;
   events: { [key: string]: OSDLiveEvent };
@@ -30,19 +32,21 @@ export interface SharedState {
 export interface Theme {
   id: uuidv4;
   name: string;
-  parent: uuidv4 | undefined;
+  parent: uuidv4 | null;
   less: string;
-  css: string;
 }
+
+export type Themes = { [key: string]: Theme }
 
 export interface Style {
   id: uuidv4;
   name: string;
-  parent: uuidv4 | undefined;
+  parent: uuidv4 | null;
   less: string;
-  css: string;
-  componentType: typeof ImageType | typeof SlideType | typeof LowerThirdsType
+  componentType: ComponentType
 }
+
+export type Styles = { [key: string]: Style }
 
 export type ListType = "picked" | "slideshow"
 
@@ -61,10 +65,15 @@ export interface OSDLiveEvent {
     [name: string]: string;
   };
   template?: boolean;
-  theme?: uuidv4;
+  theme?: uuidv4 | null;
 }
 
 export type OnScreenComponentState = "entering" | "exiting" | "visible" | "hidden"
+
+export interface OSDWithState<T extends OSDComponent> {
+  state: OnScreenComponentState;
+  component: T;
+}
 
 export interface OnScreenComponent {
   id: uuidv4;

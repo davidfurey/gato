@@ -9,6 +9,7 @@ export function PageNav(props: { page: string; event?: string }): JSX.Element {
       <Nav className="mr-auto">
         <Nav.Link active={props.page === "manage"} href="manage.html">Manage</Nav.Link>
         <Nav.Link active={props.page === "control"} href="control.html">Control</Nav.Link>
+        <Nav.Link active={props.page === "configure"} href="configure.html">Configure</Nav.Link>
       </Nav>
     { props.event ? <Navbar.Text>Event: { props.event }</Navbar.Text> : null }
     </Navbar.Collapse>

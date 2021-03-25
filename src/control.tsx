@@ -5,7 +5,7 @@ import { ViewPanel } from './components/ViewPanel';
 import { OSDComponent, OSDComponents } from './OSDComponent';
 import QuickCreatePanelContainer from './containers/QuickCreatePanelContainer'
 import PickedComponentsPanelContainer from './containers/PickedComponentsPanelContainer'
-import { Display, OnScreenComponent, OnScreenComponentState, OSDLiveEvent } from './reducers/shared'
+import { Display, OnScreenComponent, OnScreenComponentState, OSDLiveEvent, OSDWithState, Styles, Themes } from './reducers/shared'
 import { connect } from 'react-redux'
 import './style.css';
 import { createStore, applyMiddleware, Store } from 'redux'
@@ -21,10 +21,13 @@ import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContai
 import { SettingsPanelContainer } from './containers/SettingsPanelContainer';
 import LiveComponentsPanelContainer from './containers/LiveComponentsPanelContainer';
 import { PageFooter } from './components/PageFooter';
+import { PageStyle } from './components/PageStyle';
 
 interface ControlProps {
   displays: Display[];
   components: OSDComponents;
+  themes: Themes;
+  styles: Styles;
   events: { [key: string]: OSDLiveEvent };
   connectivity: {
     serverName: string | undefined;
@@ -76,7 +79,7 @@ export class Control extends Component<ControlProps> {
   }
 
   lookupComponent = (osc: OnScreenComponent):
-    { state: OnScreenComponentState; component: OSDComponent}[] => {
+    OSDWithState<OSDComponent>[] => {
     const component = this.props.components[osc.id]
     if (component) {
       return [{
@@ -132,6 +135,9 @@ export class Control extends Component<ControlProps> {
                 preview={true}
                 components={display.onScreenComponents.flatMap(this.lookupComponent)}
                 parameters={liveEvent?.parameters}
+                themes={this.props.themes}
+                styles={this.props.styles}
+                themeId={liveEvent?.theme || null}
               />
             ))}
 {/* <ViewPanel name="Preview" components={this.props.components} showCaption={true} /> */}
@@ -149,7 +155,9 @@ const mapStateToProps = (state: ControlAppState): ControlProps => {
     displays: state.shared.displays,
     events: state.shared.events,
     connectivity: state.connectivity,
-    eventId: state.shared.eventId
+    eventId: state.shared.eventId,
+    styles: state.shared.styles,
+    themes: state.shared.themes
   }
 }
 
@@ -164,11 +172,11 @@ const mapStateToNavProps =
   }
 }
 
-
 const ConnectedNav = connect(mapStateToNavProps)(PageNav)
 
 ReactDOM.render(
   <Provider store={store}>
+    <PageStyle />
     <ConnectedNav page="control" />
     <ControlContainer />
     <PageFooter />

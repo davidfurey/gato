@@ -6,6 +6,7 @@ import { LowerThirdsType } from './OSDComponents/LowerThirdsComponent';
 import { TabbedPanel, TabContainer, Icon } from './ui'
 import { ImageType } from './OSDComponents/ImageComponent';
 import { SlideType } from './OSDComponents/SlideComponent';
+import { componentTypes, componentTypeAsString } from './OSDComponents';
 
 interface ComponentPickerProps {
   components?: OSDComponent[];
@@ -86,9 +87,10 @@ function CreateComponent(props: {
           <Form.Label lg={3} column="sm">Type</Form.Label>
           <Col>
           <Form.Control as="select" onChange={(event): void => setType(event.target.value)}>
-            <option value={LowerThirdsType}>Banner</option>
-            <option value={ImageType}>Image</option>
-            <option value={SlideType}>Slide</option>
+            { componentTypes.map((type) =>
+                <option key={type} value={type}>{componentTypeAsString(type)}</option>
+              )
+            }
           </Form.Control>
           </Col>
       </Form.Row>

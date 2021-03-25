@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { OnScreenComponentState } from '../../reducers/shared';
+import { OnScreenComponentState, OSDWithState, Styles } from '../../reducers/shared';
 import './slide.css';
 import { SlideComponent } from './SlideComponent'
 import * as Mustache from 'mustache'
+import { classes } from '.';
+import { SharedStyles } from './SharedStyles';
 
 interface SlidesProps {
-  components: { state: OnScreenComponentState; component: SlideComponent }[];
+  components: OSDWithState<SlideComponent>[];
   parameters?: { [name: string]: string };
+  styles: Styles;
 }
 
 interface SlideProps {
@@ -38,7 +41,7 @@ function Slide(props: SlideProps): JSX.Element {
   const className = props.state === "entering" || props.state === "visible" ?  "slide-component slide-component-visible" : "slide-component slide-component-hidden"
   const subtitle = props.subtitle.split('\n').map ((item, i) => <p key={i}>{withOrdinals(item)}</p>)
   const body = props.body.split('\n').map ((item, i) => <p key={i}>{withOrdinals(item)}</p>)
-  return <div className={className + customClassName}>
+  return <div className={"individual " + className + customClassName}>
     <div className="image" style={{top: props.top, left: props.left}}>
       <img alt="" src={props.src} width={props.width} height={props.height} />
     </div>
@@ -61,24 +64,23 @@ export class Slides extends Component<SlidesProps> {
     const text = (template: string): string =>
       this.props.parameters ? Mustache.render(template, this.props.parameters) : template
 
-    return (
-      <div className={this.props.components.find((c) => c.state === "entering" || c.state === "visible") ? "slide-components visible" : "slide-components"}>
-        { this.props.components.map((c) =>
-          <Slide
-            key={c.component.id}
-            src={text(c.component.src)}
-            width={c.component.width}
-            height={c.component.height}
-            top={c.component.top}
-            left={c.component.left}
-            state={c.state}
-            title={text(c.component.title)}
-            subtitle={text(c.component.subtitle)}
-            body={text(c.component.body || "")}
-            className={c.component.className === undefined ? null : c.component.className}
-          />
-        )}
-      </div>
-    )
+    return <>
+      <SharedStyles components={this.props.components} styles={this.props.styles} />
+      { this.props.components.map((c) =>
+        <Slide
+          key={c.component.id}
+          src={text(c.component.src)}
+          width={c.component.width}
+          height={c.component.height}
+          top={c.component.top}
+          left={c.component.left}
+          state={c.state}
+          title={text(c.component.title)}
+          subtitle={text(c.component.subtitle)}
+          body={text(c.component.body || "")}
+          className={classes(c.component.style || null, this.props.styles)}
+        />
+      )}
+    </>
   }
 }

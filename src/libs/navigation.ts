@@ -9,6 +9,8 @@ export function windowHashFromPanels(editPanel: EditPanelState): string {
     const type = EditPane.matcher({
       [EditPane.EditPaneType.Component]: () => "c",
       [EditPane.EditPaneType.Event]: () => "e",
+      [EditPane.EditPaneType.Theme]: () => "t",
+      [EditPane.EditPaneType.Style]: () => "s",
     })(pane)
     return `${type}${flag}=${pane.id}`
   }).join(",")
@@ -18,6 +20,8 @@ function paneType(letter: string): EditPane.EditPaneType | null {
   switch (letter) {
     case "c": return EditPane.EditPaneType.Component
     case "e": return EditPane.EditPaneType.Event
+    case "t": return EditPane.EditPaneType.Theme
+    case "s": return EditPane.EditPaneType.Style
     default: return null
   }
 }

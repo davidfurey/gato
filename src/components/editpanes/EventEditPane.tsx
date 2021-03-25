@@ -1,6 +1,6 @@
 import React from 'react';
 import * as EditPane from '../../types/editpane';
-import { OSDLiveEvent } from '../../reducers/shared';
+import { OSDLiveEvent, Themes } from '../../reducers/shared';
 import { OSDComponents } from '../../OSDComponent';
 import { Container } from 'react-bootstrap';
 import './EventEditPane.css'
@@ -37,6 +37,7 @@ export interface EventEditPaneProps {
   upsertParameter: (name: string, value: string) => void;
   removeParameter: (name: string) => void;
   components: OSDComponents;
+  themes: Themes;
 }
 
 export function EventEditPane(props: EventEditPaneProps): JSX.Element {
@@ -46,6 +47,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
       updateEvent={props.updateEvent}
       upsertParameter={props.upsertParameter}
       removeParameter={props.removeParameter}
+      themes={props.themes}
     />
     <ComponentsPanel
       event={props.event}

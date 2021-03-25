@@ -9,7 +9,7 @@ import { Message } from '../api/Messages'
 import * as Request from '../api/Requests'
 import * as Response from '../api/Responses'
 import { ClientStatus, ClientInterface } from '../api/Responses'
-import { OSDLiveEvent, SharedState, reducer, Display } from '../reducers/shared'
+import { OSDLiveEvent, SharedState, reducer, Display, Theme, Style } from '../reducers/shared'
 import { v4 as uuid } from 'uuid';
 import fs from 'fs'
 import { OSDComponents } from '../OSDComponent';
@@ -176,6 +176,14 @@ function storeEvents(events: { [key: string]: OSDLiveEvent }): void {
   fs.mkdirSync('config', { recursive: true })
   fs.writeFile('config/events.json', JSON.stringify(events), {}, emptyCallback)
 }
+function storeThemes(themes: { [key: string]: Theme }): void {
+  fs.mkdirSync('config', { recursive: true })
+  fs.writeFile('config/themes.json', JSON.stringify(themes), {}, emptyCallback)
+}
+function storeStyles(styles: { [key: string]: Style }): void {
+  fs.mkdirSync('config', { recursive: true })
+  fs.writeFile('config/styles.json', JSON.stringify(styles), {}, emptyCallback)
+}
 
 function loadComponents(): Promise<OSDComponents> {
   const p = fs.promises.readFile('config/components.json', 'utf8').then((data) => JSON.parse(data) as OSDComponents)
@@ -193,6 +201,18 @@ function loadEvents(): Promise<{ [key: string]: OSDLiveEvent }> {
   return p
 }
 
+function loadThemes(): Promise<{ [key: string]: Theme }> {
+  const p = fs.promises.readFile('config/themes.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: Theme })
+  p.catch((error) => { console.log("Error parsing themes"); console.log(error) })
+  return p
+}
+
+function loadStyles(): Promise<{ [key: string]: Style }> {
+  const p = fs.promises.readFile('config/styles.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: Style })
+  p.catch((error) => { console.log("Error parsing styles"); console.log(error) })
+  return p
+}
+
 function updateState(message: Message): void {
   const newState = reducer(state, message)
   if (newState.components !== state.components) {
@@ -203,6 +223,12 @@ function updateState(message: Message): void {
   }
   if (newState.events !== state.events) {
     storeEvents(newState.events)
+  }
+  if (newState.themes !== state.themes) {
+    storeThemes(newState.themes)
+  }
+  if (newState.styles !== state.styles) {
+    storeStyles(newState.styles)
   }
   state = newState
 }
@@ -217,6 +243,12 @@ function loadStateFromDisk(): void {
   void loadEvents().then((events) => {
     state['events'] = events
     state['eventId'] = Object.values(events)[0]?.id || "" // todo: should persist this to disk!
+  })
+  void loadThemes().then((themes) => {
+    state['themes'] = themes
+  })
+  void loadStyles().then((styles) => {
+    state['styles'] = styles
   })
 }
 // needs better error handling to avoid bad requests killing the server
@@ -406,7 +438,14 @@ app.get('/api/preview/:id.html', (req, res) => {
         : acc,
       {}
     )
-    res.send(renderComponent(component, parameters))
+    renderComponent(
+      component,
+      parameters,
+      state.themes,
+      state.styles
+    ).then((html) => res.send(html)).catch(() => {
+      res.status(500).send("Error rendering component")
+    })
   } else {
     res.status(404).send("Component not found")
   }
