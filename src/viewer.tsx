@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { ViewPanel } from './components/ViewPanel';
 import { OSDComponent, OSDComponents } from './OSDComponent';
-import { SharedState, Display, OnScreenComponent, OnScreenComponentState, OSDLiveEvent, Styles, Themes, OSDWithState } from './reducers/shared'
+import { SharedState, Display, OnScreenComponent, OSDLiveEvent, Styles, Themes, OSDWithState } from './reducers/shared'
 import { connect } from 'react-redux'
 import './viewer.css';
 import './style.css';

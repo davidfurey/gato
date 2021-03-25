@@ -4,8 +4,6 @@ import { Button, Popover, Overlay, Form, Col, Container, Row, Card } from 'react
 import { ComponentSelectorList } from './ComponentSelectorList';
 import { LowerThirdsType } from './OSDComponents/LowerThirdsComponent';
 import { TabbedPanel, TabContainer, Icon } from './ui'
-import { ImageType } from './OSDComponents/ImageComponent';
-import { SlideType } from './OSDComponents/SlideComponent';
 import { componentTypes, componentTypeAsString } from './OSDComponents';
 
 interface ComponentPickerProps {

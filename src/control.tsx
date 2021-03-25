@@ -5,7 +5,7 @@ import { ViewPanel } from './components/ViewPanel';
 import { OSDComponent, OSDComponents } from './OSDComponent';
 import QuickCreatePanelContainer from './containers/QuickCreatePanelContainer'
 import PickedComponentsPanelContainer from './containers/PickedComponentsPanelContainer'
-import { Display, OnScreenComponent, OnScreenComponentState, OSDLiveEvent, OSDWithState, Styles, Themes } from './reducers/shared'
+import { Display, OnScreenComponent, OSDLiveEvent, OSDWithState, Styles, Themes } from './reducers/shared'
 import { connect } from 'react-redux'
 import './style.css';
 import { createStore, applyMiddleware, Store } from 'redux'

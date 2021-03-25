@@ -5,7 +5,7 @@ import { Images } from './OSDComponents/Image';
 import { Slides } from './OSDComponents/Slide';
 import { ImageComponent, ImageType } from './OSDComponents/ImageComponent';
 import { LowerThirdsComponent, LowerThirdsType } from './OSDComponents/LowerThirdsComponent';
-import { OnScreenComponentState, OSDWithState, Styles, Theme, Themes } from '../reducers/shared'
+import { OSDWithState, Styles, Theme, Themes } from '../reducers/shared'
 import { SlideComponent, SlideType } from './OSDComponents/SlideComponent';
 
 function ancestors(
