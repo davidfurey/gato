@@ -4,6 +4,8 @@ import * as Transistion from '../api/Transitions'
 import { send } from '@giantmachines/redux-websocket';
 import * as List from '../api/Lists';
 import { AppDispatch } from '../control';
+import { ControlAppState } from '../reducers/controlapp';
+import { OSDComponent } from '../OSDComponent';
 
 interface PickedComponentsPanelContainerProps {
   eventId: string;
@@ -47,6 +49,26 @@ const mapDispatchToProps = (
   }
 }
 
-const PickedComponentsPanelContainer = connect(null, mapDispatchToProps)(PickedComponentsPanel)
+const mapStateToProps =
+  (state: ControlAppState): Pick<PickedComponentsPanelProps, "pickedComponents" | "components" | "displays"> => {
+
+  const liveEvent = state.shared.events[state.shared.eventId]
+
+  const lookupComponentById = (id: string): OSDComponent[] => {
+    const component = state.shared.components[id]
+    return component ? [component] : []
+  }
+
+  return {
+    pickedComponents: liveEvent ? liveEvent.lists.find((l) => l.listType === "picked")?.components || [] : [],
+    components: liveEvent ? liveEvent.components.flatMap(lookupComponentById) : [],
+    displays: state.shared.displays
+  }
+}
+
+const PickedComponentsPanelContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PickedComponentsPanel)
 
 export default PickedComponentsPanelContainer
