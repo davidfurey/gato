@@ -8,7 +8,7 @@ import { LowerThirdsComponent, LowerThirdsType } from './OSDComponents/LowerThir
 import { OSDWithState, Styles, Theme, Themes } from '../reducers/shared'
 import { SlideComponent, SlideType } from './OSDComponents/SlideComponent';
 
-function ancestors(
+export function ancestors(
   themeId: string | null,
   themes: Themes,
   selectedThemes: Theme[] = []
@@ -35,15 +35,11 @@ interface ViewPanelProps {
   parameters?: { [name: string]: string };
 }
 
-export class ViewPanel extends Component<ViewPanelProps> {
+export function ViewPanel(props: ViewPanelProps): JSX.Element {
 
-  constructor(props: ViewPanelProps) {
-    super(props);
-  }
-
-  private visibleComponentSummary = (): string => {
+  const visibleComponentSummary = (): string => {
     // todo: sort visibleComponents by name to avoid jumping
-    const visibleComponents = this.props.components.filter((c) => c.state === "entering" || c.state === "visible").sort(
+    const visibleComponents = props.components.filter((c) => c.state === "entering" || c.state === "visible").sort(
       (a, b) => a.component.name < b.component.name ? -1 : 1
     )
     const [first, second, third] = visibleComponents
@@ -57,56 +53,54 @@ export class ViewPanel extends Component<ViewPanelProps> {
     return "(blank)"
   }
 
-  lowerThirdsComponents = (
+  const lowerThirdsComponents = (
     components: OSDWithState<OSDComponent>[]
   ): OSDWithState<LowerThirdsComponent>[] => {
     return components.filter((c) => c.component.type === LowerThirdsType) as
     OSDWithState<LowerThirdsComponent>[]
   }
 
-  imageComponents = (
+  const imageComponents = (
     components: OSDWithState<OSDComponent>[]
   ): OSDWithState<ImageComponent>[] => {
     return components.filter((c) => c.component.type === ImageType) as
     OSDWithState<ImageComponent>[]
   }
 
-  slideComponents = (
+  const slideComponents = (
     components: OSDWithState<OSDComponent>[]
   ): OSDWithState<SlideComponent>[] => {
     return components.filter((c) => c.component.type === SlideType) as
     OSDWithState<SlideComponent>[]
   }
 
-  render(): JSX.Element {
-    const themes = ancestors(this.props.themeId, this.props.themes)
-    return (
-      <div className="view-panel">
-        <div className={(this.props.preview ? "view-panel-content view-panel-content-preview " : "view-panel-content ")
-          + themes.map((t) => `theme_${t.id}`).join(" ")}>
-        <LowerThirds
-          components={this.lowerThirdsComponents(this.props.components)}
-          parameters={this.props.parameters}
-          styles={this.props.styles}
-        />
-        <Images
-          components={this.imageComponents(this.props.components)}
-          parameters={this.props.parameters}
-          styles={this.props.styles}
-        />
-        <Slides
-          components={this.slideComponents(this.props.components)}
-          parameters={this.props.parameters}
-          styles={this.props.styles}
-        />
-        </div>
-        { this.props.showCaption ?
-        <div className="view-panel-caption">
-          <span className="view-panel-name">{this.props.name}</span>:&nbsp;
-          <span className="view-panel-component">{this.visibleComponentSummary()}</span>
-        </div>
-        : null}
+  const themes = ancestors(props.themeId, props.themes)
+  return (
+    <div className="view-panel">
+      <div className={(props.preview ? "view-panel-content view-panel-content-preview " : "view-panel-content ")
+        + themes.map((t) => `theme_${t.id}`).join(" ")}>
+      <LowerThirds
+        components={lowerThirdsComponents(props.components)}
+        parameters={props.parameters}
+        styles={props.styles}
+      />
+      <Images
+        components={imageComponents(props.components)}
+        parameters={props.parameters}
+        styles={props.styles}
+      />
+      <Slides
+        components={slideComponents(props.components)}
+        parameters={props.parameters}
+        styles={props.styles}
+      />
       </div>
-    )
-  }
+      { props.showCaption ?
+      <div className="view-panel-caption">
+        <span className="view-panel-name">{props.name}</span>:&nbsp;
+        <span className="view-panel-component">{visibleComponentSummary()}</span>
+      </div>
+      : null}
+    </div>
+  )
 }
