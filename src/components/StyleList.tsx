@@ -33,7 +33,7 @@ function StyleListItem(props: {
   const handleClose = (): void => setShow(false)
   const handleShow = (): void => setShow(true)
 
-  return <ListGroup.Item active={props.active} action={props.onClick !== undefined} className="d-flex justify-content-between align-items-center" onClick={props.onClick}>
+  return <ListGroup.Item active={props.active} action={props.onClick !== undefined} className="d-flex justify-content-between align-items-center pl-5 border-bottom-0" onClick={props.onClick}>
     {props.style.name}
     <ButtonGroup size="sm">
       {settings ? <IconButton variant="info" onClick={settings} icon="settings" /> : null }
@@ -69,11 +69,14 @@ interface StyleListProps {
   scroll?: boolean;
 }
 
-function Sublist(props: { type: ComponentType }  & StyleListProps): JSX.Element {
+function Sublist(props: { type: ComponentType, first: boolean }  & StyleListProps): JSX.Element {
   const deleteStyle = props.deleteStyle
   const onClick = props.onClick
   return <>
-  <ListGroup.Item>{ componentTypeAsString(props.type) }</ListGroup.Item>
+  <ListGroup.Item className={
+    props.first ? "text-light font-weight-bold border-bottom-0 pb-1 pt-3" :
+      "text-light font-weight-bold border-top border-secondary border-bottom-0 mt-2 pb-1"
+  }>{ componentTypeAsString(props.type) }s</ListGroup.Item>
   {props.styles.filter((t) => t.componentType === props.type).map((style) =>
     <StyleListItem
       key={style.id}
@@ -91,6 +94,7 @@ function Sublist(props: { type: ComponentType }  & StyleListProps): JSX.Element 
 export function StyleList(props: StyleListProps): JSX.Element {
   const style: CSSProperties = props.scroll ? {height: "30em", overflowY: "scroll"} : {}
   return <ListGroup variant="flush" style={style}>
-    { componentTypes.map((type) => <Sublist key={type} {...props} type={type} />) }
+    { componentTypes.map((type, index) =>
+        <Sublist key={type} {...props} type={type} first={index === 0} />) }
   </ListGroup>
 }
