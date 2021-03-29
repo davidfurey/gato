@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Styles, Theme, Themes } from '../reducers/shared'
+import { Style, Styles, Theme, Themes } from '../reducers/shared'
 import { connect } from 'react-redux'
 import { ControlAppState } from '../reducers/controlapp'
 import less from 'less'
 import { Helmet } from "react-helmet";
+import { notEmpty } from '../api/FunctionalHelpers';
 
 function renderLess(css: string): Promise<string> {
   return less.render(css).then((output) => output.css)
@@ -30,6 +31,24 @@ interface PageStyleComponentProps {
   themeId: string | null;
 }
 
+// Ensure parent styles are included before children
+// so that CSS precendence is as expected
+function traverseStyles(
+  styles: Style[],
+  visited: string[] = []
+): string[] {
+  const batch = styles
+    .filter((s) => s.parent === null || visited.includes(s.parent))
+    .map((s) => s.id)
+  const remaining = styles
+    .filter((s) => !(s.parent === null || visited.includes(s.parent)))
+  if (batch.length === 0) {
+    return visited
+  } else {
+    return traverseStyles(remaining, visited.concat(batch))
+  }
+}
+
 export function compileCss(
   themes: Themes,
   styles: Styles,
@@ -37,7 +56,12 @@ export function compileCss(
 ): Promise<string> {
   const less = `.view-panel-content {
     ${ancestors(themeId, themes).map((t) => t.less).join('\n')}
-    ${Object.values(styles).map((s) => `.style_${s.id} { ${s.less} }`).join('\n')}
+    ${traverseStyles(Object.values(styles))
+      .map((sId) => styles[sId])
+      .filter(notEmpty)
+      .map((s) => `.style_${s.id} { ${s.less} }`)
+      .join('\n')
+    }
   }`
   return renderLess(less)
 }
@@ -46,7 +70,6 @@ function PageStyleComponent(props: PageStyleComponentProps): JSX.Element {
   const [css, setCss] = useState("")
 
   useEffect(() => {
-    // todo: stop recompiling less every second
     void compileCss(props.themes, props.styles, props.themeId).then((data) => {
       setCss(data)
     })
