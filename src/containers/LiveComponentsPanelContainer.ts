@@ -4,7 +4,7 @@ import * as Transistion from '../api/Transitions'
 import { send } from '@giantmachines/redux-websocket';
 import { AppDispatch } from '../control';
 import { ControlAppState } from '../reducers/controlapp';
-import { OSDComponent } from '../OSDComponent';
+import { selectOnAirDisplays, selectVisibleComponentIds, selectVisibleComponents } from '../selectors';
 
 // todo: Live should be a cross for this panel
 const mapDispatchToProps = (dispatch: AppDispatch):
@@ -36,21 +36,10 @@ const mapDispatchToProps = (dispatch: AppDispatch):
 const mapStateToProps =
   (state: ControlAppState): Pick<PickedComponentsPanelProps, "pickedComponents" | "components" | "displays"> => {
 
-  const lookupComponentById = (id: string): OSDComponent[] => {
-    const component = state.shared.components[id]
-    return component ? [component] : []
-  }
-
-  const onAirDisplays = state.shared.displays.filter((d) => d.type === "OnAir")
-
-  const visibleComponents = onAirDisplays.flatMap((d) =>
-    d.onScreenComponents.filter((c) => c.state === "entering" || c.state === "visible").map((c) => c.id)
-  )
-
   return {
-    pickedComponents: visibleComponents,
-    components: visibleComponents.flatMap(lookupComponentById),
-    displays: onAirDisplays
+    pickedComponents: selectVisibleComponentIds(state.shared),
+    components: selectVisibleComponents(state.shared),
+    displays: selectOnAirDisplays(state.shared)
   }
 }
 

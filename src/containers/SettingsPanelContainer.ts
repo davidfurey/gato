@@ -4,11 +4,12 @@ import { connect } from 'react-redux'
 import { AppDispatch } from '../control'
 import * as Event from '../api/Events'
 import { send } from '@giantmachines/redux-websocket';
+import { selectNonTemplates } from '../selectors'
 
 const mapStateToProps = (state: ControlAppState):
   Pick<SettingsPanelProps, "events" | "event"> => {
   return {
-    events: Object.values(state.shared.events).filter((evt) => !evt.template),
+    events: selectNonTemplates(state.shared),
     event: state.shared.events[state.shared.eventId],
   }
 }

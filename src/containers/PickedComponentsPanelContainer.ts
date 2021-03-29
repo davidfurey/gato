@@ -5,7 +5,7 @@ import { send } from '@giantmachines/redux-websocket';
 import * as List from '../api/Lists';
 import { AppDispatch } from '../control';
 import { ControlAppState } from '../reducers/controlapp';
-import { OSDComponent } from '../OSDComponent';
+import { eventComponents } from '../selectors';
 
 interface PickedComponentsPanelContainerProps {
   eventId: string;
@@ -54,14 +54,9 @@ const mapStateToProps =
 
   const liveEvent = state.shared.events[state.shared.eventId]
 
-  const lookupComponentById = (id: string): OSDComponent[] => {
-    const component = state.shared.components[id]
-    return component ? [component] : []
-  }
-
   return {
     pickedComponents: liveEvent ? liveEvent.lists.find((l) => l.listType === "picked")?.components || [] : [],
-    components: liveEvent ? liveEvent.components.flatMap(lookupComponentById) : [],
+    components: eventComponents(state.shared),
     displays: state.shared.displays
   }
 }

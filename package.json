@@ -101,6 +101,8 @@
     "react-redux": "^7.2.2",
     "react-simple-code-editor": "^0.11.0",
     "redux": "^4.0.5",
+    "reselect": "^4.0.0",
+    "shallow-equal": "^1.2.1",
     "typescript-is": "^0.17.1",
     "uuid": "^8.3.2",
     "ws": "^7.4.2"
