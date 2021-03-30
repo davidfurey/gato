@@ -22,7 +22,7 @@ export const selectVisibleComponentIds = createSelector(
   (onAirDisplays) => {
     return onAirDisplays.flatMap((d) =>
       d.onScreenComponents.filter((c) => c.state === "entering" || c.state === "visible").map((c) => c.id)
-    )
+    ).reduce<string[]>((agg, item) => agg.some((x) => x === item) ? agg : [...agg, item], [])
   }
 )
 
