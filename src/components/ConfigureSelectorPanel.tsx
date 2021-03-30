@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { ComponentType, Style, Theme } from '../reducers/shared';
+import { ComponentType, Styles, Themes } from '../reducers/shared';
 import { untitledName } from './ManageSelectorPanel';
 import { ThemeList } from './ThemeList';
 import { Icon, TabbedPanel, TabContainer } from './ui'
@@ -10,8 +10,8 @@ import { StyleList } from './StyleList';
 import { CreateStyleButton } from './CreateStyleButton';
 
 export interface ConfigureSelectorPanelProps {
-  themes: { [key: string]: Theme };
-  styles: { [key: string]: Style };
+  themes: Themes;
+  styles: Styles;
   newTheme: (themeId: string, name: string) => void;
   deleteTheme: (themeId: string) => void;
   newStyle: (styleId: string, name: string, componentType: ComponentType) => void;

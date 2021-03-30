@@ -9,7 +9,7 @@ import { Message } from '../api/Messages'
 import * as Request from '../api/Requests'
 import * as Response from '../api/Responses'
 import { ClientStatus, ClientInterface } from '../api/Responses'
-import { OSDLiveEvent, SharedState, reducer, Display, Theme, Style } from '../reducers/shared'
+import { OSDLiveEvent, OSDLiveEvents, SharedState, reducer, Display, Themes, Styles } from '../reducers/shared'
 import { v4 as uuid } from 'uuid';
 import fs from 'fs'
 import { OSDComponents } from '../OSDComponent';
@@ -172,15 +172,15 @@ function storeDisplays(displays: Display[]): void {
   fs.mkdirSync('config', { recursive: true })
   fs.writeFile('config/displays.json', JSON.stringify(displays), {}, emptyCallback)
 }
-function storeEvents(events: { [key: string]: OSDLiveEvent }): void {
+function storeEvents(events: OSDLiveEvents): void {
   fs.mkdirSync('config', { recursive: true })
   fs.writeFile('config/events.json', JSON.stringify(events), {}, emptyCallback)
 }
-function storeThemes(themes: { [key: string]: Theme }): void {
+function storeThemes(themes: Themes): void {
   fs.mkdirSync('config', { recursive: true })
   fs.writeFile('config/themes.json', JSON.stringify(themes), {}, emptyCallback)
 }
-function storeStyles(styles: { [key: string]: Style }): void {
+function storeStyles(styles: Styles): void {
   fs.mkdirSync('config', { recursive: true })
   fs.writeFile('config/styles.json', JSON.stringify(styles), {}, emptyCallback)
 }
@@ -195,20 +195,20 @@ function loadDisplays(): Promise<Display[]> {
   p.catch((error) => { console.log("Error parsing displays"); console.log(error) })
   return p
 }
-function loadEvents(): Promise<{ [key: string]: OSDLiveEvent }> {
-  const p = fs.promises.readFile('config/events.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: OSDLiveEvent })
+function loadEvents(): Promise<OSDLiveEvents> {
+  const p = fs.promises.readFile('config/events.json', 'utf8').then((data) => JSON.parse(data) as OSDLiveEvents)
   p.catch((error) => { console.log("Error parsing events"); console.log(error) })
   return p
 }
 
-function loadThemes(): Promise<{ [key: string]: Theme }> {
-  const p = fs.promises.readFile('config/themes.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: Theme })
+function loadThemes(): Promise<Themes> {
+  const p = fs.promises.readFile('config/themes.json', 'utf8').then((data) => JSON.parse(data) as Themes)
   p.catch((error) => { console.log("Error parsing themes"); console.log(error) })
   return p
 }
 
-function loadStyles(): Promise<{ [key: string]: Style }> {
-  const p = fs.promises.readFile('config/styles.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: Style })
+function loadStyles(): Promise<Styles> {
+  const p = fs.promises.readFile('config/styles.json', 'utf8').then((data) => JSON.parse(data) as Styles)
   p.catch((error) => { console.log("Error parsing styles"); console.log(error) })
   return p
 }

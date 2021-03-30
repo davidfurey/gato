@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { ViewPanel } from './components/ViewPanel';
 import { OSDComponent, OSDComponents } from './OSDComponent';
-import { SharedState, Display, OnScreenComponent, OSDLiveEvent, Styles, Themes, OSDWithState } from './reducers/shared'
+import { SharedState, Display, OnScreenComponent, OSDLiveEvents, Styles, Themes, OSDWithState } from './reducers/shared'
 import { connect } from 'react-redux'
 import './viewer.css';
 import './style.css';
@@ -19,7 +19,7 @@ import { PageStyle } from './components/PageStyle';
 interface ViewerProps {
   displays: Display[];
   components: OSDComponents;
-  events: { [key: string]: OSDLiveEvent };
+  events: OSDLiveEvents;
   eventId: string;
   themes: Themes;
   styles: Styles;

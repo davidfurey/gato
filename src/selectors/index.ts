@@ -1,6 +1,6 @@
 import { createSelector } from "reselect"
 import { OSDComponent, OSDComponents } from "../OSDComponent"
-import { SharedState } from "../reducers/shared"
+import { OSDLiveEvents, SharedState } from "../reducers/shared"
 
 const selectDisplays = (state: SharedState) =>
   state.displays
@@ -8,7 +8,7 @@ const selectDisplays = (state: SharedState) =>
 const selectComponents = (state: SharedState) =>
   state.components
 
-export const selectEvents = (state: SharedState) =>
+export const selectEvents = (state: SharedState): OSDLiveEvents =>
   state.events
 
 export const selectOnAirDisplays = createSelector(

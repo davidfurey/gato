@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { OSDComponents } from './OSDComponent';
-import { Display, OSDLiveEvent, Styles, Themes } from './reducers/shared'
+import { Display, OSDLiveEvents, Styles, Themes } from './reducers/shared'
 import { connect } from 'react-redux'
 import './style.css';
 import { createStore, applyMiddleware, Store } from 'redux'
@@ -26,7 +26,7 @@ import { PageStyle } from './components/PageStyle';
 interface ManageProps {
   displays: Display[];
   components: OSDComponents;
-  events: { [key: string]: OSDLiveEvent };
+  events: OSDLiveEvents;
   themes: Themes;
   styles: Styles;
   editPanel: EditPanelState;

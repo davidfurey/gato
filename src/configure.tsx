@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { OSDComponents } from './OSDComponent';
-import { Display, OSDLiveEvent, Theme, Style } from './reducers/shared'
+import { Display, OSDLiveEvents, Styles, Themes } from './reducers/shared'
 import { connect } from 'react-redux'
 import './style.css';
 import { createStore, applyMiddleware, Store } from 'redux'
@@ -25,9 +25,9 @@ import * as Navigation from './libs/navigation';
 interface ConfigureProps {
   displays: Display[];
   components: OSDComponents;
-  events: { [key: string]: OSDLiveEvent };
-  themes: { [key: string]: Theme };
-  styles: { [key: string]: Style };
+  events: OSDLiveEvents;
+  themes: Themes;
+  styles: Styles;
   editPanel: EditPanelState;
 }
 

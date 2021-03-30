@@ -3,7 +3,7 @@ import { TabbedPanel, TabContainer } from '../components/ui';
 import * as EditPane from '../types/editpane';
 import { EditPanelState } from '../reducers/editpanel';
 import { OSDComponents } from '../OSDComponent';
-import { OSDLiveEvent, Style, Themes } from '../reducers/shared';
+import { OSDLiveEvents, Styles, Style, Themes } from '../reducers/shared';
 import { ComponentEditPaneContainer } from '../containers/ComponentEditPaneContainer';
 import { EventEditPaneContainer } from '../containers/EventEditPaneContainer';
 import { ThemeEditPaneContainer } from '../containers/ThemeEditPaneContainer';
@@ -17,15 +17,15 @@ export interface EditPanelProps {
   selectTab: (id: string) => void;
   openTab: (pane: EditPane.EditPane) => void;
   components: OSDComponents;
-  events: { [key: string]: OSDLiveEvent };
+  events: OSDLiveEvents;
   themes: Themes;
-  styles: { [key: string]: Style };
+  styles: Styles;
 }
 
 export function Pane(props: {
   pane: EditPane.EditPane;
   components: OSDComponents;
-  events: { [key: string]: OSDLiveEvent };
+  events: OSDLiveEvents;
   themes: Themes;
   styles: { [key: string]: Style };
   openTab: (pane: EditPane.EditPane) => void;

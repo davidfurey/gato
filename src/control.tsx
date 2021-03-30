@@ -1,11 +1,11 @@
-import React, { Component, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import * as ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { ViewPanel } from './components/ViewPanel';
 import { OSDComponent, OSDComponents } from './OSDComponent';
 import QuickCreatePanelContainer from './containers/QuickCreatePanelContainer'
 import PickedComponentsPanelContainer from './containers/PickedComponentsPanelContainer'
-import { Display, OnScreenComponent, OSDLiveEvent, OSDWithState, Styles, Themes } from './reducers/shared'
+import { Display, OnScreenComponent, OSDLiveEvents, OSDWithState, Styles, Themes } from './reducers/shared'
 import { connect } from 'react-redux'
 import './style.css';
 import { createStore, applyMiddleware, Store } from 'redux'
@@ -27,7 +27,7 @@ interface ControlProps {
   components: OSDComponents;
   themes: Themes;
   styles: Styles;
-  events: { [key: string]: OSDLiveEvent };
+  events: OSDLiveEvents;
   eventId: string;
 }
 

@@ -1,5 +1,5 @@
 import { OSDComponent } from '../OSDComponent'
-import React, { Component } from 'react';
+import React from 'react';
 import { LowerThirds } from './OSDComponents/LowerThirds';
 import { Images } from './OSDComponents/Image';
 import { Slides } from './OSDComponents/Slide';

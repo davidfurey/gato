@@ -22,11 +22,11 @@ export type ComponentType = typeof ImageType | typeof SlideType | typeof LowerTh
 
 export interface SharedState {
   components: OSDComponents;
-  events: { [key: string]: OSDLiveEvent };
+  events: OSDLiveEvents;
   displays: Display[];
   eventId: uuidv4;
-  themes: { [key: string]: Theme };
-  styles: { [key: string]: Style };
+  themes: Themes;
+  styles: Styles;
 }
 
 export interface Theme {
@@ -67,6 +67,8 @@ export interface OSDLiveEvent {
   template?: boolean;
   theme?: uuidv4 | null;
 }
+
+export type OSDLiveEvents = { [key: string]: OSDLiveEvent }
 
 export type OnScreenComponentState = "entering" | "exiting" | "visible" | "hidden"
 
