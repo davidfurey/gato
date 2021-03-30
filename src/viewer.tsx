@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import * as ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { ViewPanel } from './components/ViewPanel';
@@ -54,26 +54,20 @@ function socketUrl(): string {
 
 store.dispatch(websocketConnect(socketUrl()));
 
-export class Viewer extends Component<ViewerProps> {
-
-  constructor(props: ViewerProps) {
-    super(props)
-    // setInterval(() => {
-    //   console.log(store.getState())
-    // }, 1000)
-    setInterval(() => {
-      if (
-        store.getState().connectivity.connected
-        && Date.now() - store.getState().connectivity.lastPong > 2000) {
-        store.dispatch({ type: Connectivity.ActionType.Disconnected})
-      }
-      store.dispatch(send({"type": RequestMessage.MessageType.Ping }))
-    }, 1000)
+setInterval(() => {
+  if (
+    store.getState().connectivity.connected
+    && Date.now() - store.getState().connectivity.lastPong > 2000) {
+    store.dispatch({ type: Connectivity.ActionType.Disconnected})
   }
+  store.dispatch(send({"type": RequestMessage.MessageType.Ping }))
+}, 1000)
 
-  lookupComponent =
+export function Viewer(props: ViewerProps): JSX.Element {
+
+  const lookupComponent =
   (osc: OnScreenComponent): OSDWithState<OSDComponent>[] => {
-    const component = this.props.components[osc.id]
+    const component = props.components[osc.id]
     if (component) {
       return [{
         state: osc.state,
@@ -83,26 +77,25 @@ export class Viewer extends Component<ViewerProps> {
     return []
   }
 
-  render(): JSX.Element {
-    const display = this.props.displays.find((d) => d.name === displayName)
-    const liveEvent = this.props.events[this.props.eventId]
-    return (
-      <div>
-      {display ?
-        <ViewPanel
-          key={display.id}
-          name={display.name}
-          showCaption={false}
-          preview={false}
-          components={display.onScreenComponents.flatMap(this.lookupComponent)}
-          parameters={liveEvent?.parameters}
-          themes={this.props.themes}
-          styles={this.props.styles}
-          themeId={liveEvent?.theme || null}
-        /> : null}
-      </div>
-    )
-  }
+  const display = props.displays.find((d) => d.name === displayName)
+  const liveEvent = props.events[props.eventId]
+
+  return (
+    <div>
+    {display ?
+      <ViewPanel
+        key={display.id}
+        name={display.name}
+        showCaption={false}
+        preview={false}
+        components={display.onScreenComponents.flatMap(lookupComponent)}
+        parameters={liveEvent?.parameters}
+        themes={props.themes}
+        styles={props.styles}
+        themeId={liveEvent?.theme || null}
+      /> : null}
+    </div>
+  )
 }
 
 

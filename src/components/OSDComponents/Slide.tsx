@@ -55,32 +55,26 @@ function Slide(props: SlideProps): JSX.Element {
   </div>
 }
 
-export class Slides extends Component<SlidesProps> {
-  constructor(props: SlidesProps) {
-    super(props);
-  }
+export function Slides(props: SlidesProps): JSX.Element {
+  const text = (template: string): string =>
+    props.parameters ? Mustache.render(template, props.parameters) : template
 
-  render(): JSX.Element {
-    const text = (template: string): string =>
-      this.props.parameters ? Mustache.render(template, this.props.parameters) : template
-
-    return <>
-      <SharedStyles components={this.props.components} styles={this.props.styles} />
-      { this.props.components.map((c) =>
-        <Slide
-          key={c.component.id}
-          src={text(c.component.src)}
-          width={c.component.width}
-          height={c.component.height}
-          top={c.component.top}
-          left={c.component.left}
-          state={c.state}
-          title={text(c.component.title)}
-          subtitle={text(c.component.subtitle)}
-          body={text(c.component.body || "")}
-          className={classes(c.component.style || null, this.props.styles)}
-        />
-      )}
-    </>
-  }
+  return <>
+    <SharedStyles components={props.components} styles={props.styles} />
+    { props.components.map((c) =>
+      <Slide
+        key={c.component.id}
+        src={text(c.component.src)}
+        width={c.component.width}
+        height={c.component.height}
+        top={c.component.top}
+        left={c.component.left}
+        state={c.state}
+        title={text(c.component.title)}
+        subtitle={text(c.component.subtitle)}
+        body={text(c.component.body || "")}
+        className={classes(c.component.style || null, props.styles)}
+      />
+    )}
+  </>
 }

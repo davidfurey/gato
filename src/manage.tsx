@@ -60,56 +60,40 @@ function socketUrl(): string {
 
 store.dispatch(websocketConnect(socketUrl()));
 
-export class Manage extends Component<ManageProps> {
-  constructor(props: ManageProps) {
-    super(props)
-    setInterval(() => {
-      if (
-        store.getState().connectivity.connected &&
-        Date.now() - store.getState().connectivity.lastPong > 2000
-      ) {
-        store.dispatch({ type: Connectivity.ActionType.Disconnected})
-      }
-      store.dispatch(send({"type": RequestMessage.MessageType.Ping }))
-    }, 1000)
+setInterval(() => {
+  if (
+    store.getState().connectivity.connected &&
+    Date.now() - store.getState().connectivity.lastPong > 2000
+  ) {
+    store.dispatch({ type: Connectivity.ActionType.Disconnected})
   }
+  store.dispatch(send({"type": RequestMessage.MessageType.Ping }))
+}, 1000)
 
-  privateDisplay: Display = {
-    name: "local",
-    id: uuid(),
-    resolution: {
-      width: 1920,
-      height: 1080
-    },
-    type: "Preview",
-    onScreenComponents: [],
-  }
-
-  render(): JSX.Element {
-    return (
-      <Container className="mt-4">
-        <Row>
-          <Col sm="auto" style={{ width: "25rem"}}>
-            <ManageSelectorPanelContainer
-              events={this.props.events}
-              components={this.props.components}
-              liveEventId={this.props.liveEventId}
-            />
-            <ConnectivityPanelContainer />
-          </Col>
-          <Col xl={true}>
-            <EditPanelContainer
-              editPanel={this.props.editPanel}
-              components={this.props.components}
-              events={this.props.events}
-              styles={this.props.styles}
-              themes={this.props.themes}
-            />
-          </Col>
-        </Row>
-      </Container>
-    )
-  }
+export function Manage(props: ManageProps): JSX.Element {
+  return (
+    <Container className="mt-4">
+      <Row>
+        <Col sm="auto" style={{ width: "25rem"}}>
+          <ManageSelectorPanelContainer
+            events={props.events}
+            components={props.components}
+            liveEventId={props.liveEventId}
+          />
+          <ConnectivityPanelContainer />
+        </Col>
+        <Col xl={true}>
+          <EditPanelContainer
+            editPanel={props.editPanel}
+            components={props.components}
+            events={props.events}
+            styles={props.styles}
+            themes={props.themes}
+          />
+        </Col>
+      </Row>
+    </Container>
+  )
 }
 
 const mapStateToProps = (state: ManageAppState): ManageProps => {

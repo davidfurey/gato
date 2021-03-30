@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { OSDComponents } from './OSDComponent';
@@ -10,7 +10,6 @@ import { ConfigureAppState, createReducer } from './reducers/configureapp'
 import reduxWebsocket from '@giantmachines/redux-websocket';
 import { connect as websocketConnect, send } from '@giantmachines/redux-websocket';
 import * as ConfigureAppActions from './actions/configureapp';
-import { v4 as uuid } from 'uuid';
 import { ConfigureSelectorPanelContainer } from './containers/ConfigureSelectorPanelContainer';
 import * as Connectivity from './actions/connectivity'
 import { EditPanelContainer } from './containers/EditPanelContainer'
@@ -58,55 +57,39 @@ function socketUrl(): string {
 
 store.dispatch(websocketConnect(socketUrl()));
 
-export class Configure extends Component<ConfigureProps> {
-  constructor(props: ConfigureProps) {
-    super(props)
-    setInterval(() => {
-      if (
-        store.getState().connectivity.connected &&
-        Date.now() - store.getState().connectivity.lastPong > 2000
-      ) {
-        store.dispatch({ type: Connectivity.ActionType.Disconnected})
-      }
-      store.dispatch(send({"type": RequestMessage.MessageType.Ping }))
-    }, 1000)
+setInterval(() => {
+  if (
+    store.getState().connectivity.connected &&
+    Date.now() - store.getState().connectivity.lastPong > 2000
+  ) {
+    store.dispatch({ type: Connectivity.ActionType.Disconnected})
   }
+  store.dispatch(send({"type": RequestMessage.MessageType.Ping }))
+}, 1000)
 
-  privateDisplay: Display = {
-    name: "local",
-    id: uuid(),
-    resolution: {
-      width: 1920,
-      height: 1080
-    },
-    type: "Preview",
-    onScreenComponents: [],
-  }
-
-  render(): JSX.Element {
-    return (
-      <Container className="mt-4">
-        <Row>
-          <Col sm="auto" style={{ width: "25rem"}}>
-            <ConfigureSelectorPanelContainer
-              themes={this.props.themes}
-              styles={this.props.styles}
-            />
-            <ConnectivityPanelContainer />
-          </Col>
-          <Col xl={true}>
-            <EditPanelContainer
-              editPanel={this.props.editPanel}
-              components={this.props.components}
-              events={this.props.events}
-              themes={this.props.themes}
-              styles={this.props.styles}
-            />
-          </Col>
-        </Row>
-      </Container>
-    )
-  }
+export function Configure(props: ConfigureProps): JSX.Element {
+  return (
+    <Container className="mt-4">
+      <Row>
+        <Col sm="auto" style={{ width: "25rem"}}>
+          <ConfigureSelectorPanelContainer
+            themes={props.themes}
+            styles={props.styles}
+          />
+          <ConnectivityPanelContainer />
+        </Col>
+        <Col xl={true}>
+          <EditPanelContainer
+            editPanel={props.editPanel}
+            components={props.components}
+            events={props.events}
+            themes={props.themes}
+            styles={props.styles}
+          />
+        </Col>
+      </Row>
+    </Container>
+  )
 }
 
 const mapStateToProps = (state: ConfigureAppState): ConfigureProps => {

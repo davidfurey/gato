@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { OnScreenComponentState, OSDWithState, Styles } from '../../reducers/shared';
 import './lower-thirds.css';
 import { LowerThirdsComponent } from './LowerThirdsComponent'
@@ -29,26 +29,20 @@ function LowerThird(props: LowerThirdProps): JSX.Element {
   </div>
 }
 
-export class LowerThirds extends Component<LowerThirdsProps> {
-  constructor(props: LowerThirdsProps) {
-    super(props);
-  }
+export function LowerThirds(props: LowerThirdsProps): JSX.Element {
+  const text = (template: string): string =>
+    props.parameters ? Mustache.render(template, props.parameters) : template
 
-  render(): JSX.Element {
-    const text = (template: string): string =>
-      this.props.parameters ? Mustache.render(template, this.props.parameters) : template
-
-    return <>
-      <SharedStyles components={this.props.components} styles={this.props.styles} />
-      { this.props.components.map((c) =>
-        <LowerThird
-          key={c.component.id}
-          title={text(c.component.title)}
-          subtitle={text(c.component.subtitle)}
-          state={c.state}
-          className={classes(c.component.style || null, this.props.styles)}
-        />
-      )}
-    </>
-  }
+  return <>
+    <SharedStyles components={props.components} styles={props.styles} />
+    { props.components.map((c) =>
+      <LowerThird
+        key={c.component.id}
+        title={text(c.component.title)}
+        subtitle={text(c.component.subtitle)}
+        state={c.state}
+        className={classes(c.component.style || null, props.styles)}
+      />
+    )}
+  </>
 }

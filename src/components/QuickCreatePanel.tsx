@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Display } from '../reducers/shared';
 import { Card, Form, Button, Col } from 'react-bootstrap'
 import { CollapsablePanel } from './ui'
@@ -9,57 +9,39 @@ export interface QuickCreatePanelProps {
   eventId: string;
 }
 
-interface QuickCreatePanelState {
-  title: string;
-  subtitle: string;
-}
+export function QuickCreatePanel(props: QuickCreatePanelProps): JSX.Element {
+  const [title, setTitle] = useState("")
+  const [subtitle, setSubtitle] = useState("")
 
-export class QuickCreatePanel extends Component<QuickCreatePanelProps, QuickCreatePanelState> {
-
-  state = {
-    title: "",
-    subtitle: ""
-  };
-
-  constructor(props: QuickCreatePanelProps) {
-    super(props);
+  const create = (): void => {
+    props.show(title, subtitle, props.display, props.eventId)
   }
 
-  create = (): void => {
-    this.props.show(this.state.title, this.state.subtitle, this.props.display, this.props.eventId)
+  const titleChanged = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setTitle(event.target.value)
   }
 
-  titleChanged = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({
-      title: event.target.value
-    });
+  const subtitleChanged = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setSubtitle(event.target.value)
   }
 
-  subtitleChanged = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({
-      subtitle: event.target.value
-    });
-  }
-
-  render(): JSX.Element {
-    return (
-      <CollapsablePanel header="Quick create">
-        <Card.Body>
-        <Form.Row>
-          <Form.Label lg={3} column="sm">Title</Form.Label>
-          <Col>
-          <Form.Control size="sm" type="text" onChange={this.titleChanged} />
-          </Col>
-        </Form.Row>
-        <Form.Row>
-          <Form.Label lg={3} column="sm">Subtitle</Form.Label>
-          <Col>
-          <Form.Control size="sm" type="text" onChange={this.subtitleChanged} />
-          </Col>
-        </Form.Row>
-        <Button variant="danger" size="sm" type="submit" onClick={this.create}>Go live</Button>
-        </Card.Body>
-      </CollapsablePanel>
-    )
-  }
+  return (
+    <CollapsablePanel header="Quick create">
+      <Card.Body>
+      <Form.Row>
+        <Form.Label lg={3} column="sm">Title</Form.Label>
+        <Col>
+        <Form.Control size="sm" type="text" onChange={titleChanged} />
+        </Col>
+      </Form.Row>
+      <Form.Row>
+        <Form.Label lg={3} column="sm">Subtitle</Form.Label>
+        <Col>
+        <Form.Control size="sm" type="text" onChange={subtitleChanged} />
+        </Col>
+      </Form.Row>
+      <Button variant="danger" size="sm" type="submit" onClick={create}>Go live</Button>
+      </Card.Body>
+    </CollapsablePanel>
+  )
 }

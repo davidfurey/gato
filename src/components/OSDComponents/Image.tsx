@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { classes } from '.';
 import { OnScreenComponentState, OSDWithState, Styles } from '../../reducers/shared';
 import './image.css';
@@ -29,26 +29,20 @@ function Image(props: ImageProps): JSX.Element {
   </div>
 }
 
-export class Images extends Component<ImagesProps> {
-  constructor(props: ImagesProps) {
-    super(props);
-  }
-
-  render(): JSX.Element {
-    return <>
-      <SharedStyles components={this.props.components} styles={this.props.styles} />
-      { this.props.components.map((c) =>
-        <Image
-          key={c.component.id}
-          src={c.component.src}
-          width={c.component.width}
-          height={c.component.height}
-          top={c.component.top}
-          left={c.component.left}
-          state={c.state}
-          className={classes(c.component.style || null, this.props.styles)}
-        />
-      )}
-    </>
-  }
+export function Images(props: ImagesProps): JSX.Element {
+  return <>
+    <SharedStyles components={props.components} styles={props.styles} />
+    { props.components.map((c) =>
+      <Image
+        key={c.component.id}
+        src={c.component.src}
+        width={c.component.width}
+        height={c.component.height}
+        top={c.component.top}
+        left={c.component.left}
+        state={c.state}
+        className={classes(c.component.style || null, props.styles)}
+      />
+    )}
+  </>
 }
