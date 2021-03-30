@@ -126,9 +126,6 @@ const mapStateToProps = (state: ManageAppState): ManageProps => {
 
 const ManageContainer = connect(mapStateToProps)(Manage)
 
-// Temporary to tidy previous data
-window.localStorage.removeItem("gato.editPanel")
-
 Navigation.init(store)
 
 ReactDOM.render(
