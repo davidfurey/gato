@@ -428,6 +428,12 @@ app.get('/drive/:path(*)', (req, res) => {
 app.get('/api/preview/:id.html', (req, res) => {
   const component = state.components[req.params.id || ""]
   if (component) {
+    const themeName = req.query['theme']
+    const themeId = typeof req.query['themeId'] === 'string' ?
+      req.query['themeId'] :
+      typeof themeName === 'string' ?
+      Object.values(state.themes).find((t) => t.name === themeName)?.id || null :
+      null
     const parameters = Object.entries(req.query).reduce(
       (acc, [k, v]) =>
         k.startsWith('param-') && typeof v === 'string' ?
@@ -442,9 +448,11 @@ app.get('/api/preview/:id.html', (req, res) => {
       component,
       parameters,
       state.themes,
-      state.styles
-    ).then((html) => res.send(html)).catch(() => {
+      state.styles,
+      themeId
+    ).then((html) => res.send(html)).catch((e) => {
       res.status(500).send("Error rendering component")
+      console.log(e)
     })
   } else {
     res.status(404).send("Component not found")

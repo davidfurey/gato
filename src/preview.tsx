@@ -9,14 +9,15 @@ export function renderComponent(
   component: OSDComponent,
   parameters: { [name: string]: string },
   themes: Themes,
-  styles: Styles
+  styles: Styles,
+  themeId: string | null,
 ): Promise<string> {
   const onScreenComponent: { state: OnScreenComponentState, component: OSDComponent } = {
     state: "visible",
     component
   }
 
-  return compileCss(themes, styles, null).then((css) =>
+  return compileCss(themes, styles, themeId).then((css) =>
     "<!doctype html>" + ReactDOMServer.renderToString(
       <html lang="en">
         <head>
@@ -32,7 +33,7 @@ export function renderComponent(
             parameters={parameters}
             themes={themes}
             styles={styles}
-            themeId={null}
+            themeId={themeId}
           />
         </body>
         </html>
