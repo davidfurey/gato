@@ -123,3 +123,14 @@ div.lower-third-visible {
   content:"R: ";
   font-weight: normal;
 }
+
+.psalm.taller {
+  font-style: normal;
+  height: 240px;
+  background: linear-gradient(0deg, rgba(255,255,255,0.95), rgba(255,255,255,0.95)) no-repeat;
+  background-size: 100% 78px;
+}
+
+.psalm.taller p {
+  margin-top: -30px;
+}
