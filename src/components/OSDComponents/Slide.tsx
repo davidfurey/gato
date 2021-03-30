@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { OnScreenComponentState, OSDWithState, Styles } from '../../reducers/shared';
 import './slide.css';
 import { SlideComponent } from './SlideComponent'
