@@ -95,17 +95,9 @@ export class Manage extends Component<ManageProps> {
               components={this.props.components}
               liveEventId={this.props.liveEventId}
             />
-            {/* todo: should only be shared components */}
             <ConnectivityPanelContainer />
           </Col>
           <Col xl={true}>
-            {/* <ViewPanel
-              key={this.privateDisplay.id}
-              name={this.privateDisplay.name}
-              showCaption={true}
-              preview={true}
-              components={[]}
-            /> */}
             <EditPanelContainer
               editPanel={this.props.editPanel}
               components={this.props.components}
