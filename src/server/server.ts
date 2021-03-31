@@ -9,16 +9,16 @@ import { Message } from '../api/Messages'
 import * as Request from '../api/Requests'
 import * as Response from '../api/Responses'
 import { ClientStatus, ClientInterface } from '../api/Responses'
-import { OSDLiveEvent, OSDLiveEvents, SharedState, reducer, Display, Themes, Styles } from '../reducers/shared'
+import { OSDLiveEvent, SharedState, reducer } from '../reducers/shared'
 import { v4 as uuid } from 'uuid';
 import fs from 'fs'
-import { OSDComponents } from '../OSDComponent';
 import url from 'url'
 import flat from 'array.prototype.flat'
 import { Config, loadConfig } from '../config';
 import { createApiRoutes } from './api';
 import { renderComponent } from '../preview';
 import { capture } from '../screenshot';
+import { loadState, storeComponents, storeDisplays, storeEvents, storeSettings, storeStyles, storeThemes } from './datastore';
 
 flat.shim()
 
@@ -56,7 +56,6 @@ let clients: ConnectionStatus[] = []
 let state: SharedState = {
   components: {},
   events: { [initialEvent.id]: initialEvent },
-  eventId: initialEvent.id,
   displays: [{
     type: "OnAir",
     name: "Overlay",
@@ -87,6 +86,11 @@ let state: SharedState = {
   }],
   themes: {},
   styles: {},
+  settings: {
+    eventId: initialEvent.id,
+    defaultTheme: null,
+    defaultStyle: null
+  },
 }
 
 function handlePing(ws: WebSocket, message: Request.Ping, id: string): void {
@@ -160,58 +164,7 @@ setInterval(() => {
   cleanupConnections()
 }, 10000)
 
-const emptyCallback = (): void => {
-  // do nothing.
-}
 
-function storeComponents(components: OSDComponents ): void {
-  fs.mkdirSync('config', { recursive: true })
-  fs.writeFile('config/components.json', JSON.stringify(components), {}, emptyCallback)
-}
-function storeDisplays(displays: Display[]): void {
-  fs.mkdirSync('config', { recursive: true })
-  fs.writeFile('config/displays.json', JSON.stringify(displays), {}, emptyCallback)
-}
-function storeEvents(events: OSDLiveEvents): void {
-  fs.mkdirSync('config', { recursive: true })
-  fs.writeFile('config/events.json', JSON.stringify(events), {}, emptyCallback)
-}
-function storeThemes(themes: Themes): void {
-  fs.mkdirSync('config', { recursive: true })
-  fs.writeFile('config/themes.json', JSON.stringify(themes), {}, emptyCallback)
-}
-function storeStyles(styles: Styles): void {
-  fs.mkdirSync('config', { recursive: true })
-  fs.writeFile('config/styles.json', JSON.stringify(styles), {}, emptyCallback)
-}
-
-function loadComponents(): Promise<OSDComponents> {
-  const p = fs.promises.readFile('config/components.json', 'utf8').then((data) => JSON.parse(data) as OSDComponents)
-  p.catch((error) => { console.log("Error parsing components"); console.log(error) })
-  return p
-}
-function loadDisplays(): Promise<Display[]> {
-  const p = fs.promises.readFile('config/displays.json', 'utf8').then((data) => JSON.parse(data) as Display[])
-  p.catch((error) => { console.log("Error parsing displays"); console.log(error) })
-  return p
-}
-function loadEvents(): Promise<OSDLiveEvents> {
-  const p = fs.promises.readFile('config/events.json', 'utf8').then((data) => JSON.parse(data) as OSDLiveEvents)
-  p.catch((error) => { console.log("Error parsing events"); console.log(error) })
-  return p
-}
-
-function loadThemes(): Promise<Themes> {
-  const p = fs.promises.readFile('config/themes.json', 'utf8').then((data) => JSON.parse(data) as Themes)
-  p.catch((error) => { console.log("Error parsing themes"); console.log(error) })
-  return p
-}
-
-function loadStyles(): Promise<Styles> {
-  const p = fs.promises.readFile('config/styles.json', 'utf8').then((data) => JSON.parse(data) as Styles)
-  p.catch((error) => { console.log("Error parsing styles"); console.log(error) })
-  return p
-}
 
 function updateState(message: Message): void {
   const newState = reducer(state, message)
@@ -230,27 +183,13 @@ function updateState(message: Message): void {
   if (newState.styles !== state.styles) {
     storeStyles(newState.styles)
   }
+  if (newState.settings !== state.settings) {
+    storeSettings(newState.settings)
+  }
   state = newState
 }
 
-function loadStateFromDisk(): void {
-  void loadComponents().then((components) => {
-    state['components'] = components
-  })
-  void loadDisplays().then((displays) => {
-    state['displays'] = displays
-  })
-  void loadEvents().then((events) => {
-    state['events'] = events
-    state['eventId'] = Object.values(events)[0]?.id || "" // todo: should persist this to disk!
-  })
-  void loadThemes().then((themes) => {
-    state['themes'] = themes
-  })
-  void loadStyles().then((styles) => {
-    state['styles'] = styles
-  })
-}
+
 // needs better error handling to avoid bad requests killing the server
 
 function broadcastMessage(rawMessage: string): void {
@@ -299,7 +238,7 @@ wss.on('connection', (ws, req) => {
     })
 });
 
-loadStateFromDisk()
+loadState(state)
 
 viewerServer.on('connection', (ws, req) => {
   const ip = req.socket.remoteAddress;

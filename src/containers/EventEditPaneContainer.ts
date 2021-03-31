@@ -42,7 +42,7 @@ const mapDispatchToProps = (
               name,
               type,
               shared: false,
-              style: undefined,
+              style: undefined, // todo: should use default style
             }
           }
           dispatch(send(create))

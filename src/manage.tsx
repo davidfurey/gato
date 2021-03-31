@@ -101,7 +101,7 @@ const mapStateToProps = (state: ManageAppState): ManageProps => {
     displays: state.shared.displays,
     events: state.shared.events,
     editPanel: state.editPanel,
-    liveEventId: state.shared.eventId,
+    liveEventId: state.shared.settings.eventId,
     styles: state.shared.styles,
     themes: state.shared.themes
   }

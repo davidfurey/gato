@@ -84,7 +84,7 @@ const mapStateToProps =
   return {
     themes: state.shared.themes,
     styles: state.shared.styles,
-    themeId: state.shared.events[state.shared.eventId]?.theme || null
+    themeId: state.shared.events[state.shared.settings.eventId]?.theme || null
   }
 }
 

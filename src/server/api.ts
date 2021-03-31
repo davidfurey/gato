@@ -21,7 +21,7 @@ export function createApiRoutes(
   const displays = (): Display[] => state().displays
 
   function eventComponents(eventId: string): OSDComponent[] {
-    const event = state().events[eventId === "current" ? state().eventId : eventId]
+    const event = state().events[eventId === "current" ? state().settings.eventId : eventId]
     return event ?
       event.components.map((cId) => state().components[cId]).filter(notEmpty) :
       []
@@ -39,7 +39,7 @@ export function createApiRoutes(
   function currentEventFilter<T extends { id: string }>(pathArgs: T): T {
     return pathArgs.id === "current" ? {
       ...pathArgs,
-      id: state().eventId
+      id: state().settings.eventId
     } : pathArgs
   }
 

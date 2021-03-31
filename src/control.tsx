@@ -137,7 +137,7 @@ const mapStateToProps = (state: ControlAppState): ControlProps => {
     components: state.shared.components,
     displays: state.shared.displays,
     events: state.shared.events,
-    eventId: state.shared.eventId,
+    eventId: state.shared.settings.eventId,
     styles: state.shared.styles,
     themes: state.shared.themes
   }
@@ -147,7 +147,7 @@ const ControlContainer = connect(mapStateToProps)(Control)
 
 const mapStateToNavProps =
   (state: ControlAppState, ownProps: { page: string }): { event?: string; page: string } => {
-  const event = state.shared.events[state.shared.eventId]
+  const event = state.shared.events[state.shared.settings.eventId]
   return {
     event: event?.name,
     page: ownProps.page

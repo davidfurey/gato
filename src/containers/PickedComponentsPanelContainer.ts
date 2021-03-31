@@ -52,7 +52,7 @@ const mapDispatchToProps = (
 const mapStateToProps =
   (state: ControlAppState): Pick<PickedComponentsPanelProps, "pickedComponents" | "components" | "displays"> => {
 
-  const liveEvent = state.shared.events[state.shared.eventId]
+  const liveEvent = state.shared.events[state.shared.settings.eventId]
 
   return {
     pickedComponents: liveEvent ? liveEvent.lists.find((l) => l.listType === "picked")?.components || [] : [],

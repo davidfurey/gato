@@ -5,6 +5,7 @@ import * as Event from "./Events"
 import * as Transistion from "./Transitions"
 import * as Theme from "./Themes"
 import * as Style from "./Styles"
+import * as Settings from "./Settings"
 import * as Request from "./Requests"
 import * as Response from "./Responses"
 import { AnnotatedType, TypeMap, GenericPattern, genericMatcher } from "./PatternHelpers"
@@ -21,6 +22,7 @@ export type MessageType =
   Transistion.MessageType |
   Theme.MessageType |
   Style.MessageType |
+  Settings.MessageType |
   Request.MessageType |
   Response.MessageType
 
@@ -32,6 +34,7 @@ export type Message =
   Transistion.Message |
   Theme.Message |
   Style.Message |
+  Settings.Message |
   Request.Message |
   Response.Message
 

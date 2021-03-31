@@ -31,12 +31,16 @@ const initialEvent: OSDLiveEvent = {
 
 const initialManageState: ManageAppState = {
   shared: {
-    eventId: initialEvent.id,
     components: {},
     events: { [initialEvent.id]: initialEvent },
     displays: [],
     themes: {},
     styles: {},
+    settings: {
+      eventId: initialEvent.id,
+      defaultTheme: null,
+      defaultStyle: null
+    },
   },
   connectivity: {
     serverName: undefined,

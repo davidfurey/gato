@@ -10,7 +10,7 @@ const mapStateToProps = (state: ControlAppState):
   Pick<SettingsPanelProps, "events" | "event"> => {
   return {
     events: selectNonTemplates(state.shared),
-    event: state.shared.events[state.shared.eventId],
+    event: state.shared.events[state.shared.settings.eventId],
   }
 }
 

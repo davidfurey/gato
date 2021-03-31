@@ -108,7 +108,7 @@ const mapStateToProps = (state: ViewerApplicationState): ViewerProps => {
     components: state.shared.components,
     displays: state.shared.displays,
     events: state.shared.events,
-    eventId: state.shared.eventId,
+    eventId: state.shared.settings.eventId,
     themes: state.shared.themes,
     styles: state.shared.styles
   }

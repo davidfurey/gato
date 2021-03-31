@@ -71,13 +71,14 @@ export function copyEvent(
     id: eventId,
     components: newComponentIds.filter(notEmpty),
     lists: copyLists(sourceEvent.lists, objectZip(sourceEvent.components, newComponentIds)),
-    template
+    template,
+    theme: sourceEvent.theme
   }
   const newEventAction: EventActions.Create = {
     type: EventActions.MessageType.Create,
     id: newEvent.id,
     name: name,
-    event: newEvent
+    event: newEvent,
   }
   return [newEventAction, ...newComponents]
 }

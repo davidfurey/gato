@@ -42,7 +42,7 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<ManageSelectorPanelProp
             name,
             type,
             shared: true,
-            style: undefined,
+            style: undefined, // todo: should use default style
           }
         }
         dispatch(send(create))
@@ -51,7 +51,10 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<ManageSelectorPanelProp
         const create: EventMessage.Create = {
           type: EventMessage.MessageType.Create,
           id: eventId,
-          name
+          name,
+          event: {
+            theme: undefined // todo: should use default theme
+          }
         }
         dispatch(send(create))
       },
@@ -62,6 +65,7 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<ManageSelectorPanelProp
           name,
           event: {
             template: true,
+            theme: undefined // todo: should use default theme
           }
         }
         dispatch(send(create))

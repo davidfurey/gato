@@ -41,7 +41,7 @@ export const selectVisibleComponents = createSelector(
 )
 
 const selectEventComponents = (state: SharedState) =>
-    (state.events[state.eventId]?.components || [])
+    (state.events[state.settings.eventId]?.components || [])
 
 export const eventComponents = createSelector(
   selectEventComponents,

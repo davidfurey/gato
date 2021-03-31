@@ -8,7 +8,7 @@ import { reorder } from '../../libs/lists'
 import { assertNever } from '../../api/PatternHelpers'
 
 function updateDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
-  if (state.eventId === event.id) {
+  if (state.settings.eventId === event.id) {
     const displays = state.displays.map((display) => {
       const filteredComponets = display.onScreenComponents.filter(
         (c) => event.components.includes(c.id)
@@ -100,7 +100,7 @@ function CreateEvent(action: Event.Create, state: SharedState): SharedState {
 
 function DeleteEvent(action: Event.Delete, state: SharedState): SharedState {
   // todo: if event has private components, deleting the events should delete the components
-  if (state.eventId !== action.id) {
+  if (state.settings.eventId !== action.id) {
     const { [action.id]: ignored, ...rest } = state.events;
     return {
       ...state,
@@ -163,12 +163,18 @@ function Load(action: Event.Load, state: SharedState): SharedState {
             lists
           }
         },
-        eventId: action.id,
+        settings: {
+          ...state.settings,
+          eventId: action.id,
+        }
       }, event)
     }
     return updateDisplays({
       ...state,
-      eventId: action.id,
+      settings: {
+        ...state.settings,
+        eventId: action.id,
+      }
     }, event)
   }
   console.warn(`Attempted to load mising event ${action.id}`)

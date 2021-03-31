@@ -5,12 +5,14 @@ import * as Component from '../api/Components'
 import * as Event from '../api/Events'
 import * as ThemeApi from '../api/Themes'
 import * as StyleApi from '../api/Styles'
+import * as SettingsApi from '../api/Settings'
 import { reduce as transitionReducer } from './shared/transistion'
 import { reduce as componentReducer } from './shared/component'
 import { reduce as eventReducer } from './shared/event'
 import { reduce as listReducer } from './shared/list'
 import { reduce as themeReducer } from './shared/theme'
 import { reduce as styleReducer } from './shared/style'
+import { reduce as settingsReducer } from './shared/settings'
 import * as List from '../api/Lists'
 import { ImageType } from '../components/OSDComponents/ImageComponent'
 import { SlideType } from '../components/OSDComponents/SlideComponent'
@@ -24,9 +26,15 @@ export interface SharedState {
   components: OSDComponents;
   events: OSDLiveEvents;
   displays: Display[];
-  eventId: uuidv4;
   themes: Themes;
   styles: Styles;
+  settings: Settings;
+}
+
+export interface Settings {
+  eventId: uuidv4,
+  defaultStyle: uuidv4 | null,
+  defaultTheme: uuidv4 | null,
 }
 
 export interface Theme {
@@ -113,6 +121,8 @@ export function reducer(state: SharedState, message: Message): SharedState {
     return themeReducer(message, state)
   } else if (StyleApi.isStyleMessage(message)) {
     return styleReducer(message, state)
+  } else if (SettingsApi.isSettingsMessage(message)) {
+    return settingsReducer(message, state)
   }
   console.error("Unhandled message")
   console.error(message)
