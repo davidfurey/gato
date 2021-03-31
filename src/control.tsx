@@ -17,7 +17,7 @@ import * as Connectivity from  './actions/connectivity';
 import * as RequestMessage from './api/Requests'
 import { PageNav } from './components/PageNav';
 import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';
-import { SettingsPanelContainer } from './containers/SettingsPanelContainer';
+import { LoadEventPanelContainer } from './containers/LoadEventPanelContainer';
 import LiveComponentsPanelContainer from './containers/LiveComponentsPanelContainer';
 import { PageFooter } from './components/PageFooter';
 import { PageStyle } from './components/PageStyle';
@@ -107,7 +107,7 @@ export function Control(props: ControlProps): JSX.Element {
             display={overlayDisplay}
             eventId={props.eventId}
           /> : null }
-          <SettingsPanelContainer />
+          <LoadEventPanelContainer />
           <ConnectivityPanelContainer />
         </div>
         <div className="col-md-auto">

@@ -1,4 +1,4 @@
-import { SettingsPanel, SettingsPanelProps } from '../components/SettingsPanel'
+import { LoadEventPanel, LoadEventPanelProps } from '../components/LoadEventPanel'
 import { ControlAppState } from '../reducers/controlapp'
 import { connect } from 'react-redux'
 import { AppDispatch } from '../control'
@@ -7,7 +7,7 @@ import { send } from '@giantmachines/redux-websocket';
 import { selectNonTemplates } from '../selectors'
 
 const mapStateToProps = (state: ControlAppState):
-  Pick<SettingsPanelProps, "events" | "event"> => {
+  Pick<LoadEventPanelProps, "events" | "event"> => {
   return {
     events: selectNonTemplates(state.shared),
     event: state.shared.events[state.shared.settings.eventId],
@@ -15,7 +15,7 @@ const mapStateToProps = (state: ControlAppState):
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch):
-  Pick<SettingsPanelProps, "setEvent"> => {
+  Pick<LoadEventPanelProps, "setEvent"> => {
   return {
     setEvent: (eventId: string): void => {
       const action: Event.Load = {
@@ -27,4 +27,4 @@ const mapDispatchToProps = (dispatch: AppDispatch):
   }
 }
 
-export const SettingsPanelContainer = connect(mapStateToProps, mapDispatchToProps)(SettingsPanel)
+export const LoadEventPanelContainer = connect(mapStateToProps, mapDispatchToProps)(LoadEventPanel)

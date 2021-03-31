@@ -3,13 +3,13 @@ import { Row, Modal, Button, Form, ListGroup, ListGroupItem, Col } from 'react-b
 import { OSDLiveEvent } from '../reducers/shared'
 import { CollapsablePanel } from './ui'
 
-export interface SettingsPanelProps {
+export interface LoadEventPanelProps {
   event: OSDLiveEvent | undefined;
   events: OSDLiveEvent[];
   setEvent: (eventId: string) => void;
 }
 
-export function SettingsPanel(props: SettingsPanelProps): JSX.Element {
+export function LoadEventPanel(props: LoadEventPanelProps): JSX.Element {
   const [loadEventId, setLoadEventId] = useState(props.event?.id || ""); // todo
   const [showLoadEvent, setShowLoadEvent] = useState(false);
 
@@ -20,7 +20,7 @@ export function SettingsPanel(props: SettingsPanelProps): JSX.Element {
   }
 
   return (
-    <CollapsablePanel header="Settings" open={false}>
+    <CollapsablePanel header="Event" open={true}>
       <ListGroup>
         <ListGroupItem className="d-flex justify-content-between align-items-center">
           <Row><Col sm="auto">Event:</Col><Col>
