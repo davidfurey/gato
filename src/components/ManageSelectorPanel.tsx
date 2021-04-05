@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentList } from './ComponentList'
 import { EventList } from './EventList'
-import { OSDLiveEvents } from '../reducers/shared';
+import { ComponentType, OSDLiveEvents } from '../reducers/shared';
 import { OSDComponents } from '../OSDComponent';
 import { TabbedPanel, TabContainer } from './ui'
 import { EditPane, EditPaneType } from '../types/editpane';
@@ -20,10 +20,11 @@ export interface ManageSelectorPanelProps {
   deleteComponent: (id: string) => void;
   deleteEvent: (id: string) => void;
   openTab: (pane: EditPane) => void;
-  newComponent: (componentId: string, name: string, type: string) => void;
+  newComponent: (componentId: string, name: string, type: string, styleId: string | null) => void;
   newEvent: (eventId: string, name: string) => void;
   newTemplate: (eventId: string, name: string) => void;
   copyEvent: (actions: (EventActions.Create | ComponentActions.Create)[]) => void;
+  defaultStyles: Record<ComponentType, string | null>;
 }
 
 export function untitledName(prefix: string, existing: string[]): string {
@@ -88,9 +89,9 @@ export function ManageSelectorPanel(props: ManageSelectorPanelProps): JSX.Elemen
     })
   }
 
-  const newComponent = (name: string, type: string): void => {
+  const newComponent = (name: string, type: ComponentType): void => {
     const componentId = uuid()
-    props.newComponent(componentId, name, type)
+    props.newComponent(componentId, name, type, props.defaultStyles[type])
     props.openTab({
       type: EditPaneType.Component,
       id: componentId,

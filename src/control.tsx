@@ -83,10 +83,10 @@ export function Control(props: ControlProps): JSX.Element {
   }
 
   const overlayDisplay = props.displays.find((d) => d.name === "Overlay")
+  const previewDisplay = props.displays.find((d) => d.name === "preview")
   const liveEvent = props.events[props.eventId]
   const displays = useMemo(
     () => {
-      console.log('CALCULATING')
       return props.displays.map((display) =>
         display.onScreenComponents.flatMap(lookupComponent)
       )
@@ -103,8 +103,9 @@ export function Control(props: ControlProps): JSX.Element {
             eventId={liveEvent.id} /> : null
             }
             <LiveComponentsPanelContainer title="Live Components" />
-          { overlayDisplay ? <QuickCreatePanelContainer
+          { overlayDisplay && previewDisplay ? <QuickCreatePanelContainer
             display={overlayDisplay}
+            previewDisplay={previewDisplay}
             eventId={props.eventId}
           /> : null }
           <LoadEventPanelContainer />

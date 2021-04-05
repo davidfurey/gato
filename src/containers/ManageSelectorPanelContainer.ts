@@ -33,7 +33,11 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<ManageSelectorPanelProp
         }
         dispatch(action)
       },
-      newComponent: (componentId: string, name: string, type: string): void => {
+      newComponent: (componentId: string,
+        name: string,
+        type: string,
+        styleId: string | null
+      ): void => {
         const create: ComponentMessage.Create = {
           type: ComponentMessage.MessageType.Create,
           id: componentId,
@@ -42,7 +46,7 @@ const mapDispatchToProps = (dispatch: AppDispatch): Pick<ManageSelectorPanelProp
             name,
             type,
             shared: true,
-            style: undefined, // todo: should use default style
+            style: styleId,
           }
         }
         dispatch(send(create))

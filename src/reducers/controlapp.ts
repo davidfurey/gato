@@ -24,8 +24,11 @@ const initialState: ControlAppState = {
     styles: {},
     settings: {
       eventId: initialEvent.id,
-      defaultTheme: null,
-      defaultStyle: null
+      defaultStyles: {
+        'image': null,
+        'lower-thirds': null,
+        'slide': null
+      }
     },
   },
   connectivity: {

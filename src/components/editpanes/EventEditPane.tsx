@@ -1,6 +1,6 @@
 import React from 'react';
 import * as EditPane from '../../types/editpane';
-import { OSDLiveEvent, Themes } from '../../reducers/shared';
+import { ComponentType, OSDLiveEvent, Themes } from '../../reducers/shared';
 import { OSDComponents } from '../../OSDComponent';
 import { Container } from 'react-bootstrap';
 import './EventEditPane.css'
@@ -11,7 +11,7 @@ import { ListPanel } from './event/ListPanel';
 export interface ComponentActions {
   add: (componentId: string) => void;
   remove: (componentId: string) => void;
-  new: (componentId: string, name: string, type: string) => void;
+  new: (componentId: string, name: string, type: string, styleId: string | null) => void;
   move: (componentId: string, from: number, to: number) => void;
 }
 
@@ -38,6 +38,7 @@ export interface EventEditPaneProps {
   removeParameter: (name: string) => void;
   components: OSDComponents;
   themes: Themes;
+  defaultStyles: Record<ComponentType, string | null>;
 }
 
 export function EventEditPane(props: EventEditPaneProps): JSX.Element {
@@ -54,6 +55,7 @@ export function EventEditPane(props: EventEditPaneProps): JSX.Element {
       {...props.componentActions}
       components={props.components}
       openTab={props.openTab}
+      defaultStyles={props.defaultStyles}
     />
     {props.event.lists.map((eList, index) =>
       <ListPanel

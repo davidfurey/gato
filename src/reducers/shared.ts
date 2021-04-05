@@ -32,9 +32,8 @@ export interface SharedState {
 }
 
 export interface Settings {
-  eventId: uuidv4,
-  defaultStyle: uuidv4 | null,
-  defaultTheme: uuidv4 | null,
+  eventId: uuidv4;
+  defaultStyles: Record<ComponentType, uuidv4 | null>;
 }
 
 export interface Theme {

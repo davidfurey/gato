@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { OSDComponents } from './OSDComponent';
-import { Display, OSDLiveEvents, Styles, Themes } from './reducers/shared'
+import { ComponentType, Display, OSDLiveEvents, Styles, Themes } from './reducers/shared'
 import { connect } from 'react-redux'
 import './style.css';
 import { createStore, applyMiddleware, Store } from 'redux'
@@ -30,6 +30,7 @@ interface ManageProps {
   styles: Styles;
   editPanel: EditPanelState;
   liveEventId: string;
+  defaultStyles: Record<ComponentType, string | null>;
 }
 
 let maybeStore: Store<ManageAppState, ManageAppActions.Action> | undefined = undefined
@@ -78,6 +79,7 @@ export function Manage(props: ManageProps): JSX.Element {
             events={props.events}
             components={props.components}
             liveEventId={props.liveEventId}
+            defaultStyles={props.defaultStyles}
           />
           <ConnectivityPanelContainer />
         </Col>
@@ -88,6 +90,7 @@ export function Manage(props: ManageProps): JSX.Element {
             events={props.events}
             styles={props.styles}
             themes={props.themes}
+            defaultStyles={props.defaultStyles}
           />
         </Col>
       </Row>
@@ -103,7 +106,8 @@ const mapStateToProps = (state: ManageAppState): ManageProps => {
     editPanel: state.editPanel,
     liveEventId: state.shared.settings.eventId,
     styles: state.shared.styles,
-    themes: state.shared.themes
+    themes: state.shared.themes,
+    defaultStyles: state.shared.settings.defaultStyles
   }
 }
 

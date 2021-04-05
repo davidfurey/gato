@@ -5,13 +5,29 @@ import * as EventMessage from '../api/Events'
 import * as Transistion from '../api/Transitions'
 import { v4 as uuid } from 'uuid';
 import { send } from '@giantmachines/redux-websocket';
-import { Display } from '../reducers/shared'
+import { Display, SharedState } from '../reducers/shared'
 import { AppDispatch } from '../control'
+import { createSelector } from 'reselect'
+import { ControlAppState } from '../reducers/controlapp'
+
+const selectStyles = (state: SharedState) =>
+  state.styles
+
+export const selectLowerThirdsStyles = createSelector(
+  selectStyles,
+  (styles) =>
+    Object.values(styles).filter((s) => s.componentType === "lower-thirds")
+)
 
 const mapDispatchToProps = (dispatch: AppDispatch):
   Pick<QuickCreatePanelProps, "show"> => {
   return {
-    show: (title: string, subtitle: string, display: Display, eventId: string): void => {
+    show: (title: string,
+      subtitle: string,
+      display: Display,
+      eventId: string,
+      styleId: string | null
+    ): void => {
       const id = uuid();
       const action: ComponentMessage.CreateLowerThird = {
         id,
@@ -24,7 +40,7 @@ const mapDispatchToProps = (dispatch: AppDispatch):
           type: "lower-thirds",
           shared: false,
           className: undefined,
-          style: undefined,
+          style: styleId,
         }
       }
       dispatch(send(action))
@@ -49,6 +65,11 @@ const mapDispatchToProps = (dispatch: AppDispatch):
   }
 }
 
-const QuickCreatePanelContainer = connect(null, mapDispatchToProps)(QuickCreatePanel)
+const mapStateToProps = (state: ControlAppState): Pick<QuickCreatePanelProps, "styles" | "defaultStyle"> => ({
+  styles: selectLowerThirdsStyles(state.shared),
+  defaultStyle: state.shared.settings.defaultStyles['lower-thirds']
+})
+
+const QuickCreatePanelContainer = connect(mapStateToProps, mapDispatchToProps)(QuickCreatePanel)
 
 export default QuickCreatePanelContainer

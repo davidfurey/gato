@@ -3,7 +3,7 @@ import { TabbedPanel, TabContainer } from '../components/ui';
 import * as EditPane from '../types/editpane';
 import { EditPanelState } from '../reducers/editpanel';
 import { OSDComponents } from '../OSDComponent';
-import { OSDLiveEvents, Styles, Style, Themes } from '../reducers/shared';
+import { OSDLiveEvents, Styles, Style, Themes, ComponentType } from '../reducers/shared';
 import { ComponentEditPaneContainer } from '../containers/ComponentEditPaneContainer';
 import { EventEditPaneContainer } from '../containers/EventEditPaneContainer';
 import { ThemeEditPaneContainer } from '../containers/ThemeEditPaneContainer';
@@ -20,6 +20,7 @@ export interface EditPanelProps {
   events: OSDLiveEvents;
   themes: Themes;
   styles: Styles;
+  defaultStyles: Record<ComponentType, string | null>;
 }
 
 export function Pane(props: {
@@ -29,6 +30,7 @@ export function Pane(props: {
   themes: Themes;
   styles: { [key: string]: Style };
   openTab: (pane: EditPane.EditPane) => void;
+  defaultStyles: Record<ComponentType, string | null>;
 }): JSX.Element {
   switch (props.pane.type) {
     case EditPane.EditPaneType.Component: {
@@ -48,6 +50,7 @@ export function Pane(props: {
         components={props.components}
         themes={props.themes}
         openTab={props.openTab}
+        defaultStyles={props.defaultStyles}
       /> : <MissingEditPane pane={props.pane} />
     }
     case EditPane.EditPaneType.Theme: {
@@ -100,6 +103,7 @@ export function EditPanel(props: EditPanelProps): JSX.Element {
             openTab={props.openTab}
             styles={props.styles}
             themes={props.themes}
+            defaultStyles={props.defaultStyles}
           />
         </TabContainer>
         )

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { OSDComponents } from './OSDComponent';
-import { Display, OSDLiveEvents, Styles, Themes } from './reducers/shared'
+import { ComponentType, Display, OSDLiveEvents, Styles, Themes } from './reducers/shared'
 import { connect } from 'react-redux'
 import './style.css';
 import { createStore, applyMiddleware, Store } from 'redux'
@@ -20,6 +20,7 @@ import { PageNav } from './components/PageNav';
 import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';
 import { PageFooter } from './components/PageFooter';
 import * as Navigation from './libs/navigation';
+import { SettingsPanelContainer } from './containers/SettingsPanelContainer';
 
 interface ConfigureProps {
   displays: Display[];
@@ -28,6 +29,7 @@ interface ConfigureProps {
   themes: Themes;
   styles: Styles;
   editPanel: EditPanelState;
+  defaultStyles: Record<ComponentType, string | null>;
 }
 
 let maybeStore: Store<ConfigureAppState, ConfigureAppActions.Action> | undefined = undefined
@@ -76,6 +78,7 @@ export function Configure(props: ConfigureProps): JSX.Element {
             themes={props.themes}
             styles={props.styles}
           />
+          <SettingsPanelContainer />
           <ConnectivityPanelContainer />
         </Col>
         <Col xl={true}>
@@ -85,6 +88,7 @@ export function Configure(props: ConfigureProps): JSX.Element {
             events={props.events}
             themes={props.themes}
             styles={props.styles}
+            defaultStyles={props.defaultStyles}
           />
         </Col>
       </Row>
@@ -100,6 +104,7 @@ const mapStateToProps = (state: ConfigureAppState): ConfigureProps => {
     editPanel: state.editPanel,
     themes: state.shared.themes,
     styles: state.shared.styles,
+    defaultStyles: state.shared.settings.defaultStyles,
   }
 }
 
