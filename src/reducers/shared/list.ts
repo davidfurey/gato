@@ -47,10 +47,10 @@ function addComponent(action: List.AddComponent, state: SharedState): SharedStat
           return {
             ...l,
             components: l.components.slice(
-              0, action.position
+              0, action.position !== -1 ? action.position : undefined
             ).concat(
               action.componentId
-            ).concat(l.components.slice(action.position))
+            ).concat(action.position !== -1 ? l.components.slice(action.position) : [])
           }
         } else {
           return l

@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 import { QuickCreatePanel, QuickCreatePanelProps } from '../components/QuickCreatePanel'
 import * as ComponentMessage from '../api/Components'
 import * as EventMessage from '../api/Events'
+import * as ListMessage from '../api/Lists'
 import * as Transistion from '../api/Transitions'
 import { v4 as uuid } from 'uuid';
 import { send } from '@giantmachines/redux-websocket';
@@ -29,7 +30,7 @@ const mapDispatchToProps = (dispatch: AppDispatch):
       styleId: string | null
     ): void => {
       const id = uuid();
-      const action: ComponentMessage.CreateLowerThird = {
+      const createComponent: ComponentMessage.CreateLowerThird = {
         id,
         type: ComponentMessage.MessageType.CreateLowerThird,
         component: {
@@ -43,24 +44,29 @@ const mapDispatchToProps = (dispatch: AppDispatch):
           style: styleId,
         }
       }
-      dispatch(send(action))
-      const action2: EventMessage.AddComponent = {
+      const addComponent: EventMessage.AddComponent = {
         id: eventId,
         componentId: id,
         type: EventMessage.MessageType.AddComponent,
       }
-      dispatch(send(action2))
-      setTimeout(() => {
-        const action2: Transistion.GoTransistion = {
-          displayId: display.id,
-          type: Transistion.MessageType.Go,
-          inComponentId: id,
-          transition: "default",
-          transistionDuration: 500,
-        }
-        dispatch(send(action2))
-// this should work without the timeout because each dispatched action forces a re-render
-      }, 100);
+      const addComponentToList: ListMessage.AddComponent = {
+        eventId: eventId,
+        name: "quick",
+        componentId: id,
+        position: -1,
+        type: ListMessage.MessageType.AddComponent
+      }
+      const transition: Transistion.GoTransistion = {
+        displayId: display.id,
+        type: Transistion.MessageType.Go,
+        inComponentId: id,
+        transition: "default",
+        transistionDuration: 500,
+      }
+      dispatch(send(createComponent))
+      dispatch(send(addComponent))
+      dispatch(send(addComponentToList))
+      dispatch(send(transition))
     }
   }
 }
