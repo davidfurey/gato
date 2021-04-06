@@ -71,6 +71,7 @@ setInterval(() => {
 }, 1000)
 
 export function Manage(props: ManageProps): JSX.Element {
+  const themeId = props.events[props.liveEventId]?.theme
   return (
     <Container className="mt-4">
       <Row>
@@ -91,6 +92,7 @@ export function Manage(props: ManageProps): JSX.Element {
             styles={props.styles}
             themes={props.themes}
             defaultStyles={props.defaultStyles}
+            theme={themeId ? props.themes[themeId] : undefined}
           />
         </Col>
       </Row>

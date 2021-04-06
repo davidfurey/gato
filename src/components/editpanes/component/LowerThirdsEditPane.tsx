@@ -6,12 +6,13 @@ import { SharedStatusContainer } from "../../../containers/SharedStatusContainer
 import { ViewPanel } from "../../ViewPanel";
 import { Group, Label } from "../Pane";
 import { StyleSelector } from "../ComponentEditPane";
-import { Styles, Themes } from "../../../reducers/shared";
+import { Styles, Theme, Themes } from "../../../reducers/shared";
 
 export function LowerThirdsEditPane(props: {
     component: LowerThirdsComponent;
     styles: Styles;
     themes: Themes;
+    theme: Theme | undefined;
     update: (id: string, component: Partial<LowerThirdsComponent>) => void;
   }): JSX.Element {
 
@@ -34,7 +35,7 @@ export function LowerThirdsEditPane(props: {
           }]}
           themes={props.themes}
           styles={props.styles}
-          themeId={null}
+          themeId={props.theme ? props.theme.id : null}
         />
         <Form.Group>
         <Group>

@@ -30,6 +30,7 @@ interface ConfigureProps {
   styles: Styles;
   editPanel: EditPanelState;
   defaultStyles: Record<ComponentType, string | null>;
+  liveEventId: string;
 }
 
 let maybeStore: Store<ConfigureAppState, ConfigureAppActions.Action> | undefined = undefined
@@ -70,6 +71,7 @@ setInterval(() => {
 }, 1000)
 
 export function Configure(props: ConfigureProps): JSX.Element {
+  const themeId = props.events[props.liveEventId]?.theme
   return (
     <Container className="mt-4">
       <Row>
@@ -89,6 +91,7 @@ export function Configure(props: ConfigureProps): JSX.Element {
             themes={props.themes}
             styles={props.styles}
             defaultStyles={props.defaultStyles}
+            theme={themeId ? props.themes[themeId] : undefined}
           />
         </Col>
       </Row>
@@ -105,6 +108,7 @@ const mapStateToProps = (state: ConfigureAppState): ConfigureProps => {
     themes: state.shared.themes,
     styles: state.shared.styles,
     defaultStyles: state.shared.settings.defaultStyles,
+    liveEventId: state.shared.settings.eventId
   }
 }
 
