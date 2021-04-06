@@ -3,7 +3,7 @@ import * as EditPane from '../../types/editpane';
 import { Style, Styles } from '../../reducers/shared';
 import { Alert, Button, Card, Col, Container, Form } from 'react-bootstrap';
 import { Group, Label } from './Pane';
-import { EditableText, Icon } from '../ui';
+import { EditableText, Icon, IconButton } from '../ui';
 import { componentTypeAsString } from '../OSDComponents';
 
 import Editor from "react-simple-code-editor";
@@ -71,10 +71,15 @@ export function StyleEditPane(props: StyleEditPaneProps): JSX.Element {
     /> : <Alert variant="danger">Missing grammar for less</Alert> }
     </div>
       <Card.Footer className="p-2">
-        <Button onClick={() => props.update(props.style.id, { less: code })}>
-          <Icon name="file_upload" raised />
-          Update
-        </Button>
+        { code === props.style.less ?
+          <IconButton raised={true} icon="sync" disabled> CSS in sync</IconButton> :
+          <IconButton
+            variant="danger"
+            raised={true}
+            icon="file_upload"
+            onClick={() => props.update(props.style.id, { less: code })}> Update
+        </IconButton>
+        }
       </Card.Footer>
     </SubPanel>
   </Container>

@@ -3,7 +3,7 @@ import * as EditPane from '../../types/editpane';
 import { Theme, Themes } from '../../reducers/shared';
 import { Alert, Button, Card, Container, Form } from 'react-bootstrap';
 import { Group, Label } from './Pane';
-import { EditableText, Icon } from '../ui';
+import { EditableText, Icon, IconButton } from '../ui';
 
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs";
@@ -65,10 +65,15 @@ export function ThemeEditPane(props: ThemeEditPaneProps): JSX.Element {
     /> : <Alert variant="danger">Missing grammar for less</Alert> }
     </div>
       <Card.Footer className="p-2">
-        <Button onClick={() => props.update(props.theme.id, { less: code })}>
-          <Icon name="file_upload" raised />
-          Update
-        </Button>
+        { code === props.theme.less ?
+          <IconButton raised={true} icon="sync" disabled> CSS in sync</IconButton> :
+          <IconButton
+            variant="danger"
+            raised={true}
+            icon="file_upload"
+            onClick={() => props.update(props.theme.id, { less: code })}> Update
+          </IconButton>
+        }
       </Card.Footer>
     </SubPanel>
   </Container>
