@@ -1,9 +1,10 @@
 import React from 'react';
 import * as EditPane from '../../types/editpane';
 import { Style, Styles } from '../../reducers/shared';
-import { Button, Card, Container, Form } from 'react-bootstrap';
+import { Button, Card, Col, Container, Form } from 'react-bootstrap';
 import { Group, Label } from './Pane';
 import { EditableText, Icon } from '../ui';
+import { componentTypeAsString } from '../OSDComponents';
 
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs";
@@ -38,7 +39,8 @@ export function StyleEditPane(props: StyleEditPaneProps): JSX.Element {
         <EditableText lg={7} value={props.style.name} update={update("name")} />
       </Group>
       <Group>
-        <Label>Type</Label>{ props.style.componentType}
+        <Label>Type</Label>
+        <Col lg={7}><div className="form-control-plaintext">{ componentTypeAsString(props.style.componentType) }</div></Col>
       </Group>
       <Group>
         <Label>Parent</Label>
