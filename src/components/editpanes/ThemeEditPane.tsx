@@ -1,7 +1,7 @@
 import React from 'react';
 import * as EditPane from '../../types/editpane';
 import { Theme, Themes } from '../../reducers/shared';
-import { Button, Card, Container, Form } from 'react-bootstrap';
+import { Alert, Button, Card, Container, Form } from 'react-bootstrap';
 import { Group, Label } from './Pane';
 import { EditableText, Icon } from '../ui';
 
@@ -61,9 +61,8 @@ export function ThemeEditPane(props: ThemeEditPaneProps): JSX.Element {
       style={{
         fontFamily: '"Fira code", "Fira Mono", monospace',
         fontSize: 12,
-        // background: "var(--secondary)",
       }}
-    /> : <p>Missing grammar for less</p> }
+    /> : <Alert variant="danger">Missing grammar for less</Alert> }
     </div>
       <Card.Footer className="p-2">
         <Button onClick={() => props.update(props.theme.id, { less: code })}>
