@@ -1,6 +1,6 @@
 {
   "name": "gato",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "On screen graphic and text overlays for live streaming",
   "private": true,
   "scripts": {
