@@ -6,6 +6,23 @@ import * as Image from '../../components/OSDComponents/ImageComponent'
 import * as Slide from '../../components/OSDComponents/SlideComponent'
 import { assertNever } from '../../api/PatternHelpers'
 
+if (!Object.fromEntries) {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  /* eslint-disable @typescript-eslint/no-unsafe-return */
+  /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+  /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+  Object.fromEntries = function fromEntries(iterable: any): any {
+    return [...iterable].reduce((obj, [key, val]) => {
+      obj[key] = val
+      return obj
+    }, {})
+  }
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+  /* eslint-enable @typescript-eslint/no-unsafe-return */
+  /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+  /* eslint-enable @typescript-eslint/no-unsafe-member-access */
+}
+
 function createLowerThird(action: Component.CreateLowerThird, state: SharedState): SharedState {
   return {
     ...state,
