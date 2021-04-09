@@ -132,8 +132,8 @@ export function SettingsPanel(props: SettingsPanelProps): JSX.Element {
         /></Row>
         </ListGroupItem>})}
         <ListGroup.Item className="text-light font-weight-bold border-top border-secondary border-bottom-0 mt-2 pb-1">Import/Export</ListGroup.Item>
-        <ImportExport import="/api/import/styles" export="/api/export/styles" name="Styles" />
-        <ImportExport import="/api/import/themes" export="/api/export/themes" name="Themes" />
+        <ImportExport import="api/import/styles" export="api/export/styles" name="Styles" />
+        <ImportExport import="api/import/themes" export="api/export/themes" name="Themes" />
       </ListGroup>
     </CollapsablePanel>
   )
