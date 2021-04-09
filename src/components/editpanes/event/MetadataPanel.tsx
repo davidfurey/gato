@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Dropdown, DropdownButton, Container, Form, Card } from 'react-bootstrap';
 import { validParameterName } from '../../../libs/events';
-import { OSDLiveEvent } from '../../../reducers/shared';
+import { OSDLiveEvent, Theme } from '../../../reducers/shared';
 import { EditableText, TextPopup } from '../../ui';
 import { EventEditPaneProps } from '../EventEditPane';
 import { Group } from '../Pane';
@@ -27,10 +27,33 @@ function TypeSelector(props: {
   </Col>
 }
 
+function ThemeSelector(props: {
+  themes: Theme[]
+  selected: Theme | undefined;
+  updateEvent: (event: Partial<OSDLiveEvent>) => void;
+}): JSX.Element {
+  return <Col>
+    <DropdownButton
+      variant="secondary"
+      title={props.selected ? props.selected.name : "(none)"}
+    >
+      <Dropdown.Item onClick={(): void => props.updateEvent({ theme: null })}>
+        (none)
+      </Dropdown.Item>
+      {props.themes.map((theme) =>
+        <Dropdown.Item key={theme.id} onClick={(): void => props.updateEvent({
+          theme: theme.id
+        })}>{theme.name}</Dropdown.Item>
+      )}
+    </DropdownButton>
+  </Col>
+}
+
 export function MetadataPanel(props: Pick<EventEditPaneProps, "event" |
 "updateEvent" |
 "upsertParameter" |
-"removeParameter"
+"removeParameter" |
+"themes"
 >): JSX.Element {
   const parameters = props.event.parameters
   return <SubPanel title="Metadata" icon="description">
@@ -51,6 +74,14 @@ export function MetadataPanel(props: Pick<EventEditPaneProps, "event" |
         <TypeSelector
           id={props.event.id}
           template={props.event.template || false}
+          updateEvent={props.updateEvent}
+        />
+      </Group>
+      <Group>
+        <Form.Label column lg={4}>Theme</Form.Label>
+        <ThemeSelector
+          selected={props.event.theme ? props.themes[props.event.theme] : undefined}
+          themes={Object.values(props.themes)}
           updateEvent={props.updateEvent}
         />
       </Group>

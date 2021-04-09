@@ -7,18 +7,20 @@ import { ComponentActions } from '../EventEditPane';
 import { SubPanel } from './SubPanel';
 import { v4 as uuid } from 'uuid';
 import { EditPane, EditPaneType } from '../../../types/editpane';
-import { OSDLiveEvent } from '../../../reducers/shared';
+import { ComponentType, OSDLiveEvent } from '../../../reducers/shared';
 
 export function ComponentsPanel(props: ComponentActions & {
   event: OSDLiveEvent;
   components: OSDComponents;
   openTab: (pane: EditPane) => void;
+  defaultStyles: Record<ComponentType, string | null>;
 }): JSX.Element {
   const missingComponent: OSDComponent = {
     id: "",
     name: "Missing component",
     type: "missing",
-    shared: false
+    shared: false,
+    style: undefined,
   }
   return <SubPanel title="Components" icon="widgets">
     <DraggableComponentList
@@ -41,9 +43,9 @@ export function ComponentsPanel(props: ComponentActions & {
         existingComponents={(componentIds): void =>
           componentIds.forEach((componentId => props.add(componentId)))
         }
-        newComponent={(name: string, type: string): void => {
+        newComponent={(name: string, type: ComponentType): void => {
           const componentId = uuid()
-          props.new(componentId, name, type)
+          props.new(componentId, name, type, props.defaultStyles[type])
           props.add(componentId)
           props.openTab({
             type: EditPaneType.Component,

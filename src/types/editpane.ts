@@ -2,10 +2,12 @@ import { genericMatcher, GenericPattern, AnnotatedType, TypeMap } from '../api/P
 
 export enum EditPaneType {
   Component = 'Component',
-  Event = 'Event'
+  Event = 'Event',
+  Theme = 'Theme',
+  Style = 'Style'
 }
 
-export type EditPane = ComponentEditPane | EventEditPane
+export type EditPane = ComponentEditPane | EventEditPane | ThemeEditPane | StyleEditPane
 
 export type Pattern<T> = GenericPattern<TypeMap<EditPaneType, EditPane>, T>
 
@@ -16,5 +18,9 @@ interface BasePane<T extends EditPaneType> extends AnnotatedType<T> {
 export type ComponentEditPane = BasePane<EditPaneType.Component>
 
 export type EventEditPane = BasePane<EditPaneType.Event>
+
+export type ThemeEditPane = BasePane<EditPaneType.Theme>
+
+export type StyleEditPane = BasePane<EditPaneType.Style>
 
 export const matcher: <T>(pattern: Pattern<T>) => (pane: EditPane) => T = genericMatcher

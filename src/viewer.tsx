@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import * as ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { ViewPanel } from './components/ViewPanel';
 import { OSDComponent, OSDComponents } from './OSDComponent';
-import { SharedState, Display, OnScreenComponent, OnScreenComponentState, OSDLiveEvent } from './reducers/shared'
+import { SharedState, Display, OnScreenComponent, OSDLiveEvents, Styles, Themes, OSDWithState } from './reducers/shared'
 import { connect } from 'react-redux'
 import './viewer.css';
 import './style.css';
@@ -14,12 +14,15 @@ import { connect as websocketConnect, send } from '@giantmachines/redux-websocke
 import * as ViewAppActions from './actions/viewapp';
 import * as Connectivity from './actions/connectivity';
 import * as RequestMessage from './api/Requests'
+import { PageStyle } from './components/PageStyle';
 
 interface ViewerProps {
   displays: Display[];
   components: OSDComponents;
-  events: { [key: string]: OSDLiveEvent };
+  events: OSDLiveEvents;
   eventId: string;
+  themes: Themes;
+  styles: Styles;
 }
 
 let maybeStore: Store<ViewerAppState, ViewAppActions.Action> | undefined = undefined
@@ -51,26 +54,20 @@ function socketUrl(): string {
 
 store.dispatch(websocketConnect(socketUrl()));
 
-export class Viewer extends Component<ViewerProps> {
-
-  constructor(props: ViewerProps) {
-    super(props)
-    // setInterval(() => {
-    //   console.log(store.getState())
-    // }, 1000)
-    setInterval(() => {
-      if (
-        store.getState().connectivity.connected
-        && Date.now() - store.getState().connectivity.lastPong > 2000) {
-        store.dispatch({ type: Connectivity.ActionType.Disconnected})
-      }
-      store.dispatch(send({"type": RequestMessage.MessageType.Ping }))
-    }, 1000)
+setInterval(() => {
+  if (
+    store.getState().connectivity.connected
+    && Date.now() - store.getState().connectivity.lastPong > 2000) {
+    store.dispatch({ type: Connectivity.ActionType.Disconnected})
   }
+  store.dispatch(send({"type": RequestMessage.MessageType.Ping }))
+}, 1000)
 
-  lookupComponent =
-  (osc: OnScreenComponent): { state: OnScreenComponentState; component: OSDComponent}[] => {
-    const component = this.props.components[osc.id]
+export function Viewer(props: ViewerProps): JSX.Element {
+
+  const lookupComponent =
+  (osc: OnScreenComponent): OSDWithState<OSDComponent>[] => {
+    const component = props.components[osc.id]
     if (component) {
       return [{
         state: osc.state,
@@ -80,23 +77,25 @@ export class Viewer extends Component<ViewerProps> {
     return []
   }
 
-  render(): JSX.Element {
-    const display = this.props.displays.find((d) => d.name === displayName)
-    const liveEvent = this.props.events[this.props.eventId]
-    return (
-      <div>
-      {display ?
-        <ViewPanel
-          key={display.id}
-          name={display.name}
-          showCaption={false}
-          preview={false}
-          components={display.onScreenComponents.flatMap(this.lookupComponent)}
-          parameters={liveEvent?.parameters}
-        /> : null}
-      </div>
-    )
-  }
+  const display = props.displays.find((d) => d.name === displayName)
+  const liveEvent = props.events[props.eventId]
+
+  return (
+    <div>
+    {display ?
+      <ViewPanel
+        key={display.id}
+        name={display.name}
+        showCaption={false}
+        preview={false}
+        components={display.onScreenComponents.flatMap(lookupComponent)}
+        parameters={liveEvent?.parameters}
+        themes={props.themes}
+        styles={props.styles}
+        themeId={liveEvent?.theme || null}
+      /> : null}
+    </div>
+  )
 }
 
 
@@ -109,7 +108,9 @@ const mapStateToProps = (state: ViewerApplicationState): ViewerProps => {
     components: state.shared.components,
     displays: state.shared.displays,
     events: state.shared.events,
-    eventId: state.shared.eventId
+    eventId: state.shared.settings.eventId,
+    themes: state.shared.themes,
+    styles: state.shared.styles
   }
 }
 
@@ -117,6 +118,7 @@ const ViewerContainer = connect(mapStateToProps)(Viewer)
 
 ReactDOM.render(
   <Provider store={store}>
+    <PageStyle />
     <ViewerContainer />
   </Provider>,
   document.getElementById("root")

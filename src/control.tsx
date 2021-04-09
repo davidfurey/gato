@@ -1,36 +1,33 @@
-import React, { Component } from 'react';
+import React, { useMemo } from 'react';
 import * as ReactDOM from "react-dom";
 import { Provider } from 'react-redux'
 import { ViewPanel } from './components/ViewPanel';
 import { OSDComponent, OSDComponents } from './OSDComponent';
 import QuickCreatePanelContainer from './containers/QuickCreatePanelContainer'
 import PickedComponentsPanelContainer from './containers/PickedComponentsPanelContainer'
-import { Display, OnScreenComponent, OnScreenComponentState, OSDLiveEvent } from './reducers/shared'
+import { Display, OnScreenComponent, OSDLiveEvents, OSDWithState, Styles, Themes } from './reducers/shared'
 import { connect } from 'react-redux'
 import './style.css';
 import { createStore, applyMiddleware, Store } from 'redux'
 import { ControlAppState, createReducer } from './reducers/controlapp'
 import reduxWebsocket from '@giantmachines/redux-websocket';
 import { connect as websocketConnect, send } from '@giantmachines/redux-websocket';
-import { ClientStatus } from './api/Responses';
 import * as ControlAppActions from './actions/controlapp';
 import * as Connectivity from  './actions/connectivity';
 import * as RequestMessage from './api/Requests'
 import { PageNav } from './components/PageNav';
 import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';
-import { SettingsPanelContainer } from './containers/SettingsPanelContainer';
+import { LoadEventPanelContainer } from './containers/LoadEventPanelContainer';
 import LiveComponentsPanelContainer from './containers/LiveComponentsPanelContainer';
 import { PageFooter } from './components/PageFooter';
+import { PageStyle } from './components/PageStyle';
 
 interface ControlProps {
   displays: Display[];
   components: OSDComponents;
-  events: { [key: string]: OSDLiveEvent };
-  connectivity: {
-    serverName: string | undefined;
-    connected: boolean;
-    clients: ClientStatus[];
-  };
+  themes: Themes;
+  styles: Styles;
+  events: OSDLiveEvents;
   eventId: string;
 }
 
@@ -61,23 +58,21 @@ function socketUrl(): string {
 
 store.dispatch(websocketConnect(socketUrl()));
 
-export class Control extends Component<ControlProps> {
-  constructor(props: ControlProps) {
-    super(props)
-    setInterval(() => {
-      if (
-        store.getState().connectivity.connected &&
-        Date.now() - store.getState().connectivity.lastPong > 2000
-      ) {
-        store.dispatch({ type: Connectivity.ActionType.Disconnected})
-      }
-      store.dispatch(send({"type": RequestMessage.MessageType.Ping }))
-    }, 1000)
+setInterval(() => {
+  if (
+    store.getState().connectivity.connected &&
+    Date.now() - store.getState().connectivity.lastPong > 2000
+  ) {
+    store.dispatch({ type: Connectivity.ActionType.Disconnected})
   }
+  store.dispatch(send({"type": RequestMessage.MessageType.Ping }))
+}, 1000)
 
-  lookupComponent = (osc: OnScreenComponent):
-    { state: OnScreenComponentState; component: OSDComponent}[] => {
-    const component = this.props.components[osc.id]
+export function Control(props: ControlProps): JSX.Element {
+
+  const lookupComponent = (osc: OnScreenComponent):
+    OSDWithState<OSDComponent>[] => {
+    const component = props.components[osc.id]
     if (component) {
       return [{
         state: osc.state,
@@ -87,60 +82,55 @@ export class Control extends Component<ControlProps> {
     return []
   }
 
-  lookupComponentById = (id: string): OSDComponent[] => {
-    const component = this.props.components[id]
-    return component ? [component] : []
-  }
+  const overlayDisplay = props.displays.find((d) => d.name === "Overlay")
+  const previewDisplay = props.displays.find((d) => d.name === "preview")
+  const liveEvent = props.events[props.eventId]
+  const displays = useMemo(
+    () => {
+      return props.displays.map((display) =>
+        display.onScreenComponents.flatMap(lookupComponent)
+      )
+    },
+    [props.components, props.displays]
+  )
 
-  render(): JSX.Element {
-    const overlayDisplay = this.props.displays.find((d) => d.name === "Overlay")
-    const onAirDisplays = this.props.displays.filter((d) => d.type === "OnAir")
-    const liveEvent = this.props.events[this.props.eventId]
-    const visibleComponents = onAirDisplays.flatMap((d) =>
-      d.onScreenComponents.filter((c) => c.state === "entering" || c.state === "visible").map((c) => c.id)
-    )
-    return (
-      <div className="container mt-4">
-        <div className="row">
-          <div className="col col-sm-auto" style={{ width: '30rem' }}>
-            { liveEvent ? <PickedComponentsPanelContainer
-              title="Picked Components"
-              eventId={liveEvent.id}
-              pickedComponents={liveEvent.lists.find((l) => l.listType === "picked")?.components || []}
-              components={liveEvent.components.flatMap(this.lookupComponentById)}
-              displays={this.props.displays}/> : null
-              }
-              { visibleComponents ? <LiveComponentsPanelContainer
-              title="Live Components"
-              pickedComponents={visibleComponents}
-              components={visibleComponents.flatMap(this.lookupComponentById)}
-              displays={onAirDisplays}/> : null
-              }
-            { overlayDisplay ? <QuickCreatePanelContainer
-              display={overlayDisplay}
-              eventId={this.props.eventId}
-            /> : null }
-            <SettingsPanelContainer />
-            <ConnectivityPanelContainer />
-          </div>
-          <div className="col-md-auto">
-            {this.props.displays.map((display =>
-              <ViewPanel
-                key={display.id}
-                name={display.name}
-                showCaption={true}
-                preview={true}
-                components={display.onScreenComponents.flatMap(this.lookupComponent)}
-                parameters={liveEvent?.parameters}
-              />
-            ))}
-{/* <ViewPanel name="Preview" components={this.props.components} showCaption={true} /> */}
+  return (
+    <div className="container mt-4">
+      <div className="row">
+        <div className="col col-sm-auto" style={{ width: '30rem' }}>
+          { liveEvent ? <PickedComponentsPanelContainer
+            title="Picked Components"
+            eventId={liveEvent.id} /> : null
+            }
+            <LiveComponentsPanelContainer title="Live Components" />
+          { overlayDisplay && previewDisplay ? <QuickCreatePanelContainer
+            display={overlayDisplay}
+            previewDisplay={previewDisplay}
+            eventId={props.eventId}
+          /> : null }
+          <LoadEventPanelContainer />
+          <ConnectivityPanelContainer />
+        </div>
+        <div className="col-md-auto">
+          {props.displays.map((display, index) =>
+            <ViewPanel
+              key={display.id}
+              name={display.name}
+              showCaption={true}
+              preview={true}
+              components={displays[index] || []}
+              parameters={liveEvent?.parameters}
+              themes={props.themes}
+              styles={props.styles}
+              themeId={liveEvent?.theme || null}
+            />
+          )}
+{/* <ViewPanel name="Preview" components={props.components} showCaption={true} /> */}
 
-          </div>
         </div>
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 const mapStateToProps = (state: ControlAppState): ControlProps => {
@@ -148,8 +138,9 @@ const mapStateToProps = (state: ControlAppState): ControlProps => {
     components: state.shared.components,
     displays: state.shared.displays,
     events: state.shared.events,
-    connectivity: state.connectivity,
-    eventId: state.shared.eventId
+    eventId: state.shared.settings.eventId,
+    styles: state.shared.styles,
+    themes: state.shared.themes
   }
 }
 
@@ -157,18 +148,18 @@ const ControlContainer = connect(mapStateToProps)(Control)
 
 const mapStateToNavProps =
   (state: ControlAppState, ownProps: { page: string }): { event?: string; page: string } => {
-  const event = state.shared.events[state.shared.eventId]
+  const event = state.shared.events[state.shared.settings.eventId]
   return {
     event: event?.name,
     page: ownProps.page
   }
 }
 
-
 const ConnectedNav = connect(mapStateToNavProps)(PageNav)
 
 ReactDOM.render(
   <Provider store={store}>
+    <PageStyle />
     <ConnectedNav page="control" />
     <ControlContainer />
     <PageFooter />

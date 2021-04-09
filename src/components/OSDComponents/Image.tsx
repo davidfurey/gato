@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import { OnScreenComponentState } from '../../reducers/shared';
-import './image.css';
+import React from 'react';
+import { renderNode, usedStylesTree } from '.';
+import { OnScreenComponentState, OSDWithState, Styles } from '../../reducers/shared';
 import { ImageComponent } from './ImageComponent'
 
 interface ImagesProps {
-  components: { state: OnScreenComponentState; component: ImageComponent }[];
+  components: OSDWithState<ImageComponent>[];
   parameters?: { [name: string]: string };
+  styles: Styles;
 }
 
 interface ImageProps {
@@ -18,31 +19,28 @@ interface ImageProps {
 }
 
 function Image(props: ImageProps): JSX.Element {
-  return <div style={{top: props.top, left: props.left}} className={props.state === "entering" || props.state === "visible" ?  "image-component image-component-visible" : "image-component image-component-hidden"}>
+  const className = props.state === "entering" || props.state === "visible" ?  "component-visible" : "component-hidden"
+  return <div style={{top: props.top, left: props.left}} className={"individual " + className}>
     <img alt="" src={props.src} width={props.width} height={props.height} />
+    <div className="extra1"><span></span></div>
+    <div className="extra2"><span></span></div>
+    <div className="extra3"><span></span></div>
+    <div className="extra4"><span></span></div>
   </div>
 }
 
-export class Images extends Component<ImagesProps> {
-  constructor(props: ImagesProps) {
-    super(props);
-  }
+export function Images(props: ImagesProps): JSX.Element {
+  const tree = usedStylesTree(props.components, props.styles)
 
-  render(): JSX.Element {
-    return (
-      <div className={this.props.components.find((c) => c.state === "entering" || c.state === "visible") ? "image-components visible" : "image-components"}>
-        { this.props.components.map((c) =>
-          <Image
-            key={c.component.id}
-            src={c.component.src}
-            width={c.component.width}
-            height={c.component.height}
-            top={c.component.top}
-            left={c.component.left}
-            state={c.state}
-          />
-        )}
-      </div>
-    )
-  }
+  return <>{tree.children.map((n) => renderNode(n, props.components, props.styles, (c) =>
+    <Image
+        key={c.component.id}
+        src={c.component.src}
+        width={c.component.width}
+        height={c.component.height}
+        top={c.component.top}
+        left={c.component.left}
+        state={c.state}
+      />
+  ))}</>
 }

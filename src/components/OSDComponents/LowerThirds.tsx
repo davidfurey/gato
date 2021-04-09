@@ -1,52 +1,46 @@
-import React, { Component } from 'react';
-import { OnScreenComponentState } from '../../reducers/shared';
-import './lower-thirds.css';
+import React from 'react';
+import { OnScreenComponentState, OSDWithState, Styles } from '../../reducers/shared';
 import { LowerThirdsComponent } from './LowerThirdsComponent'
 import * as Mustache from 'mustache'
+import { renderNode, usedStylesTree } from '.';
 
 interface LowerThirdsProps {
-  components: { state: OnScreenComponentState; component: LowerThirdsComponent }[];
+  components: OSDWithState<LowerThirdsComponent>[];
   parameters?: { [name: string]: string };
+  styles: Styles;
 }
 
 interface LowerThirdProps {
   title: string;
   subtitle: string;
   state: OnScreenComponentState;
-  className: string | null;
 }
 
 function LowerThird(props: LowerThirdProps): JSX.Element {
-  const customClassName = props.className ? ` ${props.className}` : ""
-  const className = props.state === "entering" || props.state === "visible" ?  "lower-third lower-third-visible" : "lower-third lower-third-hidden"
+  const className = props.state === "entering" || props.state === "visible" ?  "component-visible" : "component-hidden"
   const subtitle = props.subtitle.split('\n').map ((item, i) => <p key={i}>{item}</p>)
-  return <div className={className + customClassName}>
+  return <div className={"individual " + className}>
     <div className="title">{props.title}</div>
     <div className="subtitle">{subtitle}</div>
+    <div className="extra1"><span></span></div>
+    <div className="extra2"><span></span></div>
+    <div className="extra3"><span></span></div>
+    <div className="extra4"><span></span></div>
   </div>
 }
 
-export class LowerThirds extends Component<LowerThirdsProps> {
-  constructor(props: LowerThirdsProps) {
-    super(props);
-  }
+export function LowerThirds(props: LowerThirdsProps): JSX.Element {
+  const text = (template: string): string =>
+    props.parameters ? Mustache.render(template, props.parameters) : template
 
-  render(): JSX.Element {
-    const text = (template: string): string =>
-      this.props.parameters ? Mustache.render(template, this.props.parameters) : template
+  const tree = usedStylesTree(props.components, props.styles)
 
-    return (
-      <div className={this.props.components.find((c) => c.state === "entering" || c.state === "visible") ? "lower-thirds visible" : "lower-thirds"}>
-        { this.props.components.map((c) =>
-          <LowerThird
-            key={c.component.id}
-            title={text(c.component.title)}
-            subtitle={text(c.component.subtitle)}
-            state={c.state}
-            className={c.component.className === undefined ? null : c.component.className}
-          />
-        )}
-      </div>
-    )
-  }
+  return <>{tree.children.map((n) => renderNode(n, props.components, props.styles, (c) =>
+    <LowerThird
+      key={c.component.id}
+      title={text(c.component.title)}
+      subtitle={text(c.component.subtitle)}
+      state={c.state}
+    />
+  ))}</>
 }

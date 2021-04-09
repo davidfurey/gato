@@ -10,6 +10,21 @@ function handleNewState<T extends BaseAppState>(
     return { ...state, shared: action.state }
 }
 
+function compareClientStatus(a: Response.ClientStatus, b: Response.ClientStatus): boolean {
+  return a.name === b.name &&
+    a.interface === b.interface &&
+    a.screenName === b.screenName &&
+    a.connected === b.connected &&
+    a.id === b.id
+}
+
+function compareClientsStatus(a: Response.ClientStatus[], b: Response.ClientStatus[]): boolean {
+  return a.every((item, index) => {
+    const bItem = b[index]
+    return bItem && compareClientStatus(item, bItem)
+  })
+}
+
 function pong<T extends BaseAppState>(
   action: Response.Pong,
   state: T
@@ -18,7 +33,8 @@ function pong<T extends BaseAppState>(
     ...state,
     connectivity: {
       ...state.connectivity,
-      clients: action.clients,
+      clients: compareClientsStatus(action.clients, state.connectivity.clients) ?
+        state.connectivity.clients : action.clients,
       lastPong: Date.now(),
       connected: true
     }

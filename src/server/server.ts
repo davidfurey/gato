@@ -9,16 +9,16 @@ import { Message } from '../api/Messages'
 import * as Request from '../api/Requests'
 import * as Response from '../api/Responses'
 import { ClientStatus, ClientInterface } from '../api/Responses'
-import { OSDLiveEvent, SharedState, reducer, Display } from '../reducers/shared'
+import { OSDLiveEvent, SharedState, reducer } from '../reducers/shared'
 import { v4 as uuid } from 'uuid';
 import fs from 'fs'
-import { OSDComponents } from '../OSDComponent';
 import url from 'url'
 import flat from 'array.prototype.flat'
 import { Config, loadConfig } from '../config';
 import { createApiRoutes } from './api';
 import { renderComponent } from '../preview';
 import { capture } from '../screenshot';
+import { loadState, storeComponents, storeDisplays, storeEvents, storeSettings, storeStyles, storeThemes } from './datastore';
 
 flat.shim()
 
@@ -56,7 +56,6 @@ let clients: ConnectionStatus[] = []
 let state: SharedState = {
   components: {},
   events: { [initialEvent.id]: initialEvent },
-  eventId: initialEvent.id,
   displays: [{
     type: "OnAir",
     name: "Overlay",
@@ -85,6 +84,16 @@ let state: SharedState = {
     },
     onScreenComponents: [],
   }],
+  themes: {},
+  styles: {},
+  settings: {
+    eventId: initialEvent.id,
+    defaultStyles: {
+      'image': null,
+      'lower-thirds': null,
+      'slide': null
+    }
+  },
 }
 
 function handlePing(ws: WebSocket, message: Request.Ping, id: string): void {
@@ -158,38 +167,7 @@ setInterval(() => {
   cleanupConnections()
 }, 10000)
 
-const emptyCallback = (): void => {
-  // do nothing.
-}
 
-function storeComponents(components: OSDComponents ): void {
-  fs.mkdirSync('config', { recursive: true })
-  fs.writeFile('config/components.json', JSON.stringify(components), {}, emptyCallback)
-}
-function storeDisplays(displays: Display[]): void {
-  fs.mkdirSync('config', { recursive: true })
-  fs.writeFile('config/displays.json', JSON.stringify(displays), {}, emptyCallback)
-}
-function storeEvents(events: { [key: string]: OSDLiveEvent }): void {
-  fs.mkdirSync('config', { recursive: true })
-  fs.writeFile('config/events.json', JSON.stringify(events), {}, emptyCallback)
-}
-
-function loadComponents(): Promise<OSDComponents> {
-  const p = fs.promises.readFile('config/components.json', 'utf8').then((data) => JSON.parse(data) as OSDComponents)
-  p.catch((error) => { console.log("Error parsing components"); console.log(error) })
-  return p
-}
-function loadDisplays(): Promise<Display[]> {
-  const p = fs.promises.readFile('config/displays.json', 'utf8').then((data) => JSON.parse(data) as Display[])
-  p.catch((error) => { console.log("Error parsing displays"); console.log(error) })
-  return p
-}
-function loadEvents(): Promise<{ [key: string]: OSDLiveEvent }> {
-  const p = fs.promises.readFile('config/events.json', 'utf8').then((data) => JSON.parse(data) as { [key: string]: OSDLiveEvent })
-  p.catch((error) => { console.log("Error parsing events"); console.log(error) })
-  return p
-}
 
 function updateState(message: Message): void {
   const newState = reducer(state, message)
@@ -202,21 +180,19 @@ function updateState(message: Message): void {
   if (newState.events !== state.events) {
     storeEvents(newState.events)
   }
+  if (newState.themes !== state.themes) {
+    storeThemes(newState.themes)
+  }
+  if (newState.styles !== state.styles) {
+    storeStyles(newState.styles)
+  }
+  if (newState.settings !== state.settings) {
+    storeSettings(newState.settings)
+  }
   state = newState
 }
 
-function loadStateFromDisk(): void {
-  void loadComponents().then((components) => {
-    state['components'] = components
-  })
-  void loadDisplays().then((displays) => {
-    state['displays'] = displays
-  })
-  void loadEvents().then((events) => {
-    state['events'] = events
-    state['eventId'] = Object.values(events)[0]?.id || "" // todo: should persist this to disk!
-  })
-}
+
 // needs better error handling to avoid bad requests killing the server
 
 function broadcastMessage(rawMessage: string): void {
@@ -235,7 +211,13 @@ function broadcastMessage(rawMessage: string): void {
 wss.on('connection', (ws, req) => {
   const ip = req.socket.remoteAddress;
   const user = Array.isArray(req.headers['x-user']) ? req.headers['x-user'][0] : req.headers['x-user']
-  const iface = req.url != null && url.parse(req.url).path === "/manage-connection" ? "manage" : "control"
+  const iface = req.url != null ? ((s: string) => {
+    switch (url.parse(s).path) {
+      case "/manage-connection": return "manage"
+      case "/configure-connection": return "configure"
+      default: return "control"
+    }
+  })(req.url) : "manage"
   const id = uuid()
   clients.push({
     ip: ip || "unknown",
@@ -259,7 +241,7 @@ wss.on('connection', (ws, req) => {
     })
 });
 
-loadStateFromDisk()
+loadState(state)
 
 viewerServer.on('connection', (ws, req) => {
   const ip = req.socket.remoteAddress;
@@ -388,6 +370,12 @@ app.get('/drive/:path(*)', (req, res) => {
 app.get('/api/preview/:id.html', (req, res) => {
   const component = state.components[req.params.id || ""]
   if (component) {
+    const themeName = req.query['theme']
+    const themeId = typeof req.query['themeId'] === 'string' ?
+      req.query['themeId'] :
+      typeof themeName === 'string' ?
+      Object.values(state.themes).find((t) => t.name === themeName)?.id || null :
+      null
     const parameters = Object.entries(req.query).reduce(
       (acc, [k, v]) =>
         k.startsWith('param-') && typeof v === 'string' ?
@@ -398,7 +386,16 @@ app.get('/api/preview/:id.html', (req, res) => {
         : acc,
       {}
     )
-    res.send(renderComponent(component, parameters))
+    renderComponent(
+      component,
+      parameters,
+      state.themes,
+      state.styles,
+      themeId
+    ).then((html) => res.send(html)).catch((e) => {
+      res.status(500).send("Error rendering component")
+      console.log(e)
+    })
   } else {
     res.status(404).send("Component not found")
   }
@@ -463,6 +460,10 @@ server.on('upgrade', (request: http.IncomingMessage, socket: net.Socket, head: B
       viewerServer.emit('connection', ws, request);
     });
   } else if (pathname === '/manage-connection') {
+    wss.handleUpgrade(request, socket, head, function done(ws) {
+      wss.emit('connection', ws, request);
+    });
+  } else if (pathname === '/configure-connection') {
     wss.handleUpgrade(request, socket, head, function done(ws) {
       wss.emit('connection', ws, request);
     });

@@ -4,13 +4,13 @@ import { Button, Popover, Overlay, Form, Col, Container, Row, Card } from 'react
 import { ComponentSelectorList } from './ComponentSelectorList';
 import { LowerThirdsType } from './OSDComponents/LowerThirdsComponent';
 import { TabbedPanel, TabContainer, Icon } from './ui'
-import { ImageType } from './OSDComponents/ImageComponent';
-import { SlideType } from './OSDComponents/SlideComponent';
+import { componentTypes, componentTypeAsString, isComponentType } from './OSDComponents';
+import { ComponentType } from '../reducers/shared';
 
 interface ComponentPickerProps {
   components?: OSDComponent[];
   existingComponents?: (ids: string[]) => void;
-  newComponent?: (name: string, type: string) => void;
+  newComponent?: (name: string, type: ComponentType) => void;
   className?: string;
 }
 
@@ -67,10 +67,10 @@ export function LoadComponent(props: {
 }
 
 function CreateComponent(props: {
-  newComponent: (name: string, type: string) => void;
+  newComponent: (name: string, type: ComponentType) => void;
   close: () => void;
 }): JSX.Element {
-  const [type, setType] = useState(LowerThirdsType);
+  const [type, setType] = useState<ComponentType>(LowerThirdsType);
   const [name, setName] = useState("");
 
   return <Container style={{height: "15rem", width: "15rem"}} className="container-fluid d-flex flex-column overflow-auto flex-fill p-0">
@@ -85,10 +85,11 @@ function CreateComponent(props: {
       <Form.Row>
           <Form.Label lg={3} column="sm">Type</Form.Label>
           <Col>
-          <Form.Control as="select" onChange={(event): void => setType(event.target.value)}>
-            <option value={LowerThirdsType}>Banner</option>
-            <option value={ImageType}>Image</option>
-            <option value={SlideType}>Slide</option>
+          <Form.Control as="select" onChange={(event): void => { isComponentType(event.target.value) && setType(event.target.value) }}>
+            { componentTypes.map((type) =>
+                <option key={type} value={type}>{componentTypeAsString(type)}</option>
+              )
+            }
           </Form.Control>
           </Col>
       </Form.Row>
@@ -113,7 +114,7 @@ function CreateComponent(props: {
 
 function PickerDialog(props: {
   close: () => void;
-  newComponent?: (name: string, type: string) => void;
+  newComponent?: (name: string, type: ComponentType) => void;
   existingComponents?: (ids: string[]) => void;
   components?: OSDComponent[];
 }): JSX.Element {
@@ -151,7 +152,7 @@ function PickerDialog(props: {
 
 function popover(
   close: () => void,
-  newComponent?: (name: string, type: string) => void,
+  newComponent?: (name: string, type: ComponentType) => void,
   existingComponents?: (id: string[]) => void,
   components?: OSDComponent[],
 ): JSX.Element {

@@ -3,6 +3,8 @@ import { PickedComponentsPanel, PickedComponentsPanelProps } from '../components
 import * as Transistion from '../api/Transitions'
 import { send } from '@giantmachines/redux-websocket';
 import { AppDispatch } from '../control';
+import { ControlAppState } from '../reducers/controlapp';
+import { selectOnAirDisplays, selectVisibleComponentIds, selectVisibleComponents } from '../selectors';
 
 // todo: Live should be a cross for this panel
 const mapDispatchToProps = (dispatch: AppDispatch):
@@ -31,6 +33,18 @@ const mapDispatchToProps = (dispatch: AppDispatch):
   }
 }
 
-const LiveComponentsPanelContainer = connect(null, mapDispatchToProps)(PickedComponentsPanel)
+const mapStateToProps =
+  (state: ControlAppState): Pick<PickedComponentsPanelProps, "pickedComponents" | "components" | "displays"> => {
+
+  return {
+    pickedComponents: selectVisibleComponentIds(state.shared),
+    components: selectVisibleComponents(state.shared),
+    displays: selectOnAirDisplays(state.shared)
+  }
+}
+
+const LiveComponentsPanelContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps)(PickedComponentsPanel)
 
 export default LiveComponentsPanelContainer

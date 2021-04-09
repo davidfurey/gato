@@ -2,7 +2,7 @@ import { BaseMessage, BaseMessageType } from './Messages'
 import { isType, TypeMap, GenericPattern, genericMatcher, isTypeGroup } from "./PatternHelpers"
 import { SharedState } from '../reducers/shared'
 
-export type ClientInterface = "control" | "view" | "manage"
+export type ClientInterface = "control" | "view" | "manage" | "configure"
 
 export interface ClientStatus {
   name: string;

@@ -2,26 +2,33 @@ import { SettingsPanel, SettingsPanelProps } from '../components/SettingsPanel'
 import { ControlAppState } from '../reducers/controlapp'
 import { connect } from 'react-redux'
 import { AppDispatch } from '../control'
-import * as Event from '../api/Events'
+import * as Settings from '../api/Settings'
 import { send } from '@giantmachines/redux-websocket';
+import { ComponentType } from '../reducers/shared'
 
 const mapStateToProps = (state: ControlAppState):
-  Pick<SettingsPanelProps, "events" | "event"> => {
+  Pick<SettingsPanelProps, "settings" | "events" | "themes" | "styles"> => {
   return {
-    events: Object.values(state.shared.events).filter((evt) => !evt.template),
-    event: state.shared.events[state.shared.eventId],
+    events: state.shared.events,
+    settings: state.shared.settings,
+    themes: state.shared.themes,
+    styles: state.shared.styles,
   }
 }
 
 const mapDispatchToProps = (dispatch: AppDispatch):
-  Pick<SettingsPanelProps, "setEvent"> => {
+  Pick<SettingsPanelProps, "setDefaultStyle" | "setEvent"> => {
   return {
-    setEvent: (eventId: string): void => {
-      const action: Event.Load = {
-        type: Event.MessageType.Load,
-        id: eventId,
+    setDefaultStyle: (styleId: string | null, componentType: ComponentType) => {
+      const action: Settings.UpdateDefaultStyle = {
+        type: Settings.MessageType.UpdateDefaultStyle,
+        componentType,
+        styleId,
       }
       dispatch(send(action))
+    },
+    setEvent: () => {
+      console.warn('missing function')
     }
   }
 }

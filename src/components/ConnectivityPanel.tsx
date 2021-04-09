@@ -38,6 +38,8 @@ export function ConnectivityPanel(props: ConnectivityPanelProps): JSX.Element {
         return <IconBadge variant="primary" className="ml-1" icon="tv" raised>{props.screenName}</IconBadge>
       case "manage":
         return <IconBadge variant="light" className="ml-1" icon="videogame_asset" raised>Manage</IconBadge>
+      case "configure":
+        return <IconBadge variant="light" className="ml-1" icon="settings" raised>Configure</IconBadge>
     }
   }
   const header = <div>

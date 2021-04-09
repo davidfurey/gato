@@ -139,6 +139,7 @@ const clientConfig = (
       control: './src/control.tsx',
       viewer: './src/viewer.tsx',
       manage: './src/manage.tsx',
+      configure: './src/configure.tsx',
       preview: './src/preview.tsx'
     },
     devtool: 'inline-source-map',
@@ -222,6 +223,12 @@ const clientConfig = (
         chunks: ['manage'],
         template: 'src/index.html',
         title: 'GATO - Manage'
+      }),
+      new HtmlWebpackPlugin({
+        filename: "configure.html",
+        chunks: ['configure'],
+        template: 'src/index.html',
+        title: 'GATO - Configure'
       }),
       new MiniCssExtractPlugin({
         filename: 'css/[name].css',

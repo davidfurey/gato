@@ -5,6 +5,9 @@ import { ManageAppState } from "../reducers/manageapp";
 import { AppDispatch } from "../manage";
 import * as ComponentMessage from '../api/Components'
 import { send } from '@giantmachines/redux-websocket';
+import { SharedState } from "../reducers/shared";
+import { createSelector } from "reselect";
+import { selectEvents } from "../selectors";
 
 interface ShareComponentButtonContainerProps {
   component: OSDComponent;
@@ -31,15 +34,26 @@ const mapDispatchToProps = (dispatch: AppDispatch,
     }
 }
 
-const mapStateToProps = (state: ManageAppState,
-  ownProps: ShareComponentButtonContainerProps): Pick<SharedStatusProps,
-  "events" | "shared"> => {
-    return {
-      events: Object.values(state.shared.events).filter(
-        (e) => e.components.includes(ownProps.component.id)),
-      shared: ownProps.component.shared
-    }
+const selectSharedId = (_: SharedState, props: ShareComponentButtonContainerProps) =>
+    props.component.id
+
+const makeMapStateToProps = () => {
+  const selectUsedByEvents = createSelector(
+    selectEvents,
+    selectSharedId,
+    (events, componentId) => Object.values(events).filter(
+      (e) => e.components.includes(componentId))
+  )
+
+  return (state: ManageAppState,
+    ownProps: ShareComponentButtonContainerProps): Pick<SharedStatusProps,
+    "events" | "shared"> => {
+      return {
+        events: selectUsedByEvents(state.shared, ownProps),
+        shared: ownProps.component.shared
+      }
+  }
 }
 
 export const SharedStatusContainer =
-  connect(mapStateToProps, mapDispatchToProps)(SharedStatus)
+  connect(makeMapStateToProps, mapDispatchToProps)(SharedStatus)

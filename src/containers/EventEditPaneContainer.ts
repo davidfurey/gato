@@ -33,7 +33,7 @@ const mapDispatchToProps = (
           }
           dispatch(send(action))
         },
-        new: (componentId: string, name: string, type: string): void => {
+        new: (componentId: string, name: string, type: string, styleId: string | null): void => {
           const create: ComponentMessage.Create = {
             type: ComponentMessage.MessageType.Create,
             id: componentId,
@@ -42,6 +42,7 @@ const mapDispatchToProps = (
               name,
               type,
               shared: false,
+              style: styleId,
             }
           }
           dispatch(send(create))

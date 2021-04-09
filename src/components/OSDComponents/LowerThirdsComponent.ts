@@ -10,6 +10,7 @@ export const template: LowerThirdsComponent = {
   id: "default",
   shared: true,
   className: undefined,
+  style: undefined,
 }
 
 export interface LowerThirdsComponent extends OSDComponent {

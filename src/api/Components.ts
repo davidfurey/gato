@@ -5,7 +5,7 @@ import { OSDComponent } from "../OSDComponent"
 
 export enum MessageType {
   Create = 'Component/Create',
-  CreateLowerThird = 'Component/Create/LowerThird',
+  CreateLowerThird = 'Component/Create/LowerThird', // todo: is this needed as a separate type?
   Delete = 'Component/Delete',
   Update = 'Component/Update',
   Share = 'Component/Share',
