@@ -22,7 +22,7 @@ export function renderComponent(
       <html lang="en">
         <head>
           <link href="../../css/preview.css" rel="stylesheet"></link>
-          <style type="text/css">{css}</style>
+          <style type="text/css" dangerouslySetInnerHTML={{ __html: css }} />
         </head>
         <body>
           <ViewPanel
