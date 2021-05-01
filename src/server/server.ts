@@ -435,7 +435,8 @@ app.get('/public/preview.png', (req, res) => {
   }
 
   const query = new URL("http://localhost" + req.url).search
-  capture(`http://localhost:${accessPort}/api/preview/${componentId}.html${query}`).then((p) => {
+  const themeParam = event.theme ? `&themeId=${event.theme}` : ""
+  capture(`http://localhost:${accessPort}/api/preview/${componentId}.html${query}${themeParam}`).then((p) => {
     res.setHeader("Content-type", "image/png")
     res.send(p)
   }).catch((e) => {
