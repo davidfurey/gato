@@ -330,7 +330,7 @@ app.get('/drive/:path(*)', (req, res) => {
   }
 
   const reqPath: string = req.params['path'] || ""
-  const basePath = config.drive.basePath
+  const basePath = path.normalize(config.drive.basePath)
   const absPath = path.normalize(basePath + reqPath)
 
   if (!absPath.startsWith(basePath)) {
