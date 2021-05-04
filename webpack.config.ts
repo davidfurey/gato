@@ -135,7 +135,6 @@ const clientConfig = (
     name: 'client',
     mode,
     entry: {
-      app: './src/index.tsx',
       control: './src/control.tsx',
       viewer: './src/viewer.tsx',
       manage: './src/manage.tsx',
@@ -200,11 +199,6 @@ const clientConfig = (
         'VERSION': JSON.stringify(gitRevisionPlugin.version()),
         'COMMITHASH': JSON.stringify(gitRevisionPlugin.commithash()),
         'BRANCH': JSON.stringify(gitRevisionPlugin.branch()),
-      }),
-      new HtmlWebpackPlugin({
-        chunks: ['app'],
-        template: 'src/index.html',
-        title: 'GATO'
       }),
       new HtmlWebpackPlugin({
         filename: "control.html",
