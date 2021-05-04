@@ -1,0 +1,1 @@
+{"5404565d-3a0c-463d-ba58-33a06f7011b3":{"id":"5404565d-3a0c-463d-ba58-33a06f7011b3","name":"Example theme","less":"@primary-color: #F87575;\n@secondary-color: #FFA9A3;\n@text-color: #333;\n\n.default-transition() {\n  -webkit-transition: 1.0s;\n  -moz-transition: 1.0s;\n  -o-transition: 1.0s;\n  transition: 1.0s;\n}","parent":null}}

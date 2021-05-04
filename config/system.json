@@ -1,0 +1,6 @@
+{
+  "drive": {
+    "baseUrl": "http://localhost:8080/drive",
+    "basePath": "./drive"
+  }
+}
