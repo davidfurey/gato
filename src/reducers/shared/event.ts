@@ -7,6 +7,28 @@ import { validParameterName } from '../../libs/events'
 import { reorder } from '../../libs/lists'
 import { assertNever } from '../../api/PatternHelpers'
 
+function clearDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
+  const displays = state.displays.map((display) => {
+    const onScreenComponents = event.components.map((c): OnScreenComponent => {
+      return {
+        id: c,
+        state: "hidden",
+        transitionInTimeMs: 1000,
+        transitionOutTimeMs: 1000,
+        stateStartTimeMs: Date.now()
+      }
+    })
+    return {
+      ...display,
+      onScreenComponents
+    }
+  })
+  return {
+    ...state,
+    displays
+  }
+}
+
 function updateDisplays(state: SharedState, event: OSDLiveEvent): SharedState {
   if (state.settings.eventId === event.id) {
     const displays = state.displays.map((display) => {
@@ -65,7 +87,7 @@ function MoveComponent(action: Event.MoveComponent, state: SharedState): SharedS
       ...event,
       components: reorder(event.components, action.sourcePosition, action.destinationPosition)
     }
-    return updateDisplays({
+    return updateDisplays({ // todo: should moving a component really trigger a display update?
       ...state,
       events: {
         ...state.events,
@@ -154,7 +176,7 @@ function Load(action: Event.Load, state: SharedState): SharedState {
         listType: "picked",
         components: [null, null, null, null, null]
       })
-      return updateDisplays({
+      return clearDisplays({
         ...state,
         events: {
           ...state.events,
@@ -169,7 +191,7 @@ function Load(action: Event.Load, state: SharedState): SharedState {
         }
       }, event)
     }
-    return updateDisplays({
+    return clearDisplays({
       ...state,
       settings: {
         ...state.settings,
