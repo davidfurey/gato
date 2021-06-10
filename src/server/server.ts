@@ -376,6 +376,8 @@ app.get('/api/preview/:id.html', (req, res) => {
       typeof themeName === 'string' ?
       Object.values(state.themes).find((t) => t.name === themeName)?.id || null :
       null
+    const eventId = typeof req.query['eventId'] === 'string' ? req.query['eventId'] : null
+    const event = eventId ? state.events[eventId] : undefined
     const parameters = Object.entries(req.query).reduce(
       (acc, [k, v]) =>
         k.startsWith('param-') && typeof v === 'string' ?
@@ -384,7 +386,7 @@ app.get('/api/preview/:id.html', (req, res) => {
             [k.slice(6)]: v
           }
         : acc,
-      {}
+      event?.parameters || {}
     )
     renderComponent(
       component,
@@ -436,7 +438,8 @@ app.get('/public/preview.png', (req, res) => {
 
   const query = new URL("http://localhost" + req.url).search
   const themeParam = event.theme ? `&themeId=${event.theme}` : ""
-  capture(`http://localhost:${accessPort}/api/preview/${componentId}.html${query}${themeParam}`).then((p) => {
+  const eventParam = `&eventId=${event.id}`
+  capture(`http://localhost:${accessPort}/api/preview/${componentId}.html${query}${themeParam}${eventParam}`).then((p) => {
     res.setHeader("Content-type", "image/png")
     res.send(p)
   }).catch((e) => {
