@@ -5,7 +5,7 @@ import { Images } from './OSDComponents/Image';
 import { Slides } from './OSDComponents/Slide';
 import { ImageComponent, ImageType } from './OSDComponents/ImageComponent';
 import { LowerThirdsComponent, LowerThirdsType } from './OSDComponents/LowerThirdsComponent';
-import { OSDWithState, Styles, Theme, Themes } from '../reducers/shared'
+import { EventParameters, OSDWithState, Styles, Theme, Themes } from '../reducers/shared'
 import { SlideComponent, SlideType } from './OSDComponents/SlideComponent';
 
 export function ancestors(
@@ -32,7 +32,7 @@ interface ViewPanelProps {
   themeId: string | null;
   showCaption: boolean;
   preview: boolean;
-  parameters?: { [name: string]: string };
+  parameters?: EventParameters;
 }
 
 export function ViewPanel(props: ViewPanelProps): JSX.Element {

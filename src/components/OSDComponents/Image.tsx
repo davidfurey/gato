@@ -1,11 +1,11 @@
 import React from 'react';
 import { renderNode, usedStylesTree } from '.';
-import { OnScreenComponentState, OSDWithState, Styles } from '../../reducers/shared';
+import { EventParameters, OnScreenComponentState, OSDWithState, Styles } from '../../reducers/shared';
 import { ImageComponent } from './ImageComponent'
 
 interface ImagesProps {
   components: OSDWithState<ImageComponent>[];
-  parameters?: { [name: string]: string };
+  parameters?: EventParameters;
   styles: Styles;
 }
 

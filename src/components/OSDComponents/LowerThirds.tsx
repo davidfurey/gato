@@ -1,12 +1,12 @@
 import React from 'react';
-import { OnScreenComponentState, OSDWithState, Styles } from '../../reducers/shared';
+import { EventParameters, OnScreenComponentState, OSDWithState, Styles } from '../../reducers/shared';
 import { LowerThirdsComponent } from './LowerThirdsComponent'
 import * as Mustache from 'mustache'
 import { renderNode, usedStylesTree } from '.';
 
 interface LowerThirdsProps {
   components: OSDWithState<LowerThirdsComponent>[];
-  parameters?: { [name: string]: string };
+  parameters?: EventParameters;
   styles: Styles;
 }
 

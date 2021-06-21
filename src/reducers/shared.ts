@@ -63,14 +63,15 @@ export interface ComponentList {
   components: (uuidv4 | null)[];
 }
 
+export interface EventParameters {
+  [name: string]: string;
+}
 export interface OSDLiveEvent {
   name: string;
   id: uuidv4;
   components: uuidv4[];
   lists: ComponentList[];
-  parameters?: {
-    [name: string]: string;
-  };
+  parameters?: EventParameters;
   template?: boolean;
   theme?: uuidv4 | null;
 }

@@ -1,13 +1,13 @@
 import React from 'react';
 import { ViewPanel } from './components/ViewPanel';
 import { OSDComponent } from './OSDComponent';
-import { OnScreenComponentState, Styles, Themes } from './reducers/shared'
+import { EventParameters, OnScreenComponentState, Styles, Themes } from './reducers/shared'
 import ReactDOMServer from 'react-dom/server';
 import { compileCss } from './components/PageStyle';
 
 export function renderComponent(
   component: OSDComponent,
-  parameters: { [name: string]: string },
+  parameters: EventParameters,
   themes: Themes,
   styles: Styles,
   themeId: string | null,

@@ -1,12 +1,12 @@
 import React from 'react';
-import { OnScreenComponentState, OSDWithState, Styles } from '../../reducers/shared';
+import { EventParameters, OnScreenComponentState, OSDWithState, Styles } from '../../reducers/shared';
 import { SlideComponent } from './SlideComponent'
 import * as Mustache from 'mustache'
 import { renderNode, usedStylesTree } from '.';
 
 interface SlidesProps {
   components: OSDWithState<SlideComponent>[];
-  parameters?: { [name: string]: string };
+  parameters?: EventParameters;
   styles: Styles;
 }
 
