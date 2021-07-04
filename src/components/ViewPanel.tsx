@@ -100,7 +100,7 @@ function IframeViewPanelContent(props: IframeViewPanelContentProps): JSX.Element
   const data = ReactDOMServer.renderToString(<html lang="en">
     <head>
       <link href="css/manage.css" rel="stylesheet"></link>
-      <style type="text/css">{css}</style>
+      <style type="text/css" dangerouslySetInnerHTML={{__html: css }} />
     </head>
   <body><ViewPanelContent {...props} /></body>
   </html>)
