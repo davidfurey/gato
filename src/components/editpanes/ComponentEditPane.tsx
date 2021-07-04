@@ -8,13 +8,13 @@ import { ImageEditPane } from './component/ImageEditPane';
 import { Col, Dropdown, DropdownButton, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { isSlideComponent } from '../OSDComponents/SlideComponent';
 import { SlideEditPane } from './component/SlideEditPane';
-import { ComponentType, Style, Styles, Theme, Themes } from '../../reducers/shared';
+import { ComponentType, OSDLiveEvent, Style, Styles, Themes } from '../../reducers/shared';
 
 export interface ComponentEditPaneProps {
   pane: EditPane.ComponentEditPane;
   styles: Styles;
   themes: Themes;
-  theme: Theme | undefined;
+  event: OSDLiveEvent | undefined;
   component: OSDComponent;
   update: <T extends OSDComponent>(id: string, component: Partial<T>) => void;
 }
@@ -43,13 +43,16 @@ export function StyleSelector(props: {
 }
 
 export function ComponentEditPane(props: ComponentEditPaneProps): JSX.Element {
+  const themeId = props.event?.theme
+  const theme = themeId ? props.themes[themeId] : undefined
   if (isLowerThirdsComponent(props.component)) {
     return <LowerThirdsEditPane
       component={props.component}
       styles={props.styles}
       update={props.update}
       themes={props.themes}
-      theme={props.theme}
+      theme={theme}
+      parameters={props.event?.parameters || {}}
     />
   } else if (isImageComponent(props.component)) {
     return <ImageEditPane
@@ -57,7 +60,8 @@ export function ComponentEditPane(props: ComponentEditPaneProps): JSX.Element {
       update={props.update}
       themes={props.themes}
       styles={props.styles}
-      theme={props.theme}
+      theme={theme}
+      parameters={props.event?.parameters || {}}
     />
   } else if (isSlideComponent(props.component)) {
     return <SlideEditPane
@@ -65,7 +69,8 @@ export function ComponentEditPane(props: ComponentEditPaneProps): JSX.Element {
       update={props.update}
       themes={props.themes}
       styles={props.styles}
-      theme={props.theme}
+      theme={theme}
+      parameters={props.event?.parameters || {}}
     />
   } else {
     return <ListGroup>

@@ -6,7 +6,7 @@ import { ViewPanel } from '../../ViewPanel';
 import { SharedStatusContainer } from '../../../containers/SharedStatusContainer';
 import { EditableImageUrl } from '../../ui/EditableImageUrl';
 import { Group, Label, TypePropertyNames } from '../Pane';
-import { Themes, Styles, Theme } from '../../../reducers/shared';
+import { Themes, Styles, Theme, EventParameters } from '../../../reducers/shared';
 import { StyleSelector } from '../ComponentEditPane';
 
 export function ImageEditPane(props: {
@@ -15,6 +15,7 @@ export function ImageEditPane(props: {
   themes: Themes,
   styles: Styles
   theme: Theme | undefined;
+  parameters: EventParameters;
 }): JSX.Element {
 
   function update<T extends keyof ImageComponent>
@@ -45,6 +46,7 @@ export function ImageEditPane(props: {
       themes={props.themes}
       styles={props.styles}
       themeId={props.theme ? props.theme.id : null}
+      parameters={props.parameters}
       iframe={true}
     />
     <Form.Group>

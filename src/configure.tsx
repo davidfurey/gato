@@ -87,6 +87,7 @@ export function Configure(props: ConfigureProps): JSX.Element {
           <EditPanelContainer
             editPanel={props.editPanel}
             components={props.components}
+            liveEvent={props.liveEventId}
             events={props.events}
             themes={props.themes}
             styles={props.styles}

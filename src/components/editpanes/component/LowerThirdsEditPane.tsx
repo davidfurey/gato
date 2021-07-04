@@ -6,7 +6,7 @@ import { SharedStatusContainer } from "../../../containers/SharedStatusContainer
 import { ViewPanel } from "../../ViewPanel";
 import { Group, Label } from "../Pane";
 import { StyleSelector } from "../ComponentEditPane";
-import { Styles, Theme, Themes } from "../../../reducers/shared";
+import { EventParameters, Styles, Theme, Themes } from "../../../reducers/shared";
 
 export function LowerThirdsEditPane(props: {
     component: LowerThirdsComponent;
@@ -14,6 +14,7 @@ export function LowerThirdsEditPane(props: {
     themes: Themes;
     theme: Theme | undefined;
     update: (id: string, component: Partial<LowerThirdsComponent>) => void;
+    parameters: EventParameters;
   }): JSX.Element {
 
     function update<T extends keyof LowerThirdsComponent>
@@ -36,6 +37,7 @@ export function LowerThirdsEditPane(props: {
           themes={props.themes}
           styles={props.styles}
           themeId={props.theme ? props.theme.id : null}
+          parameters={props.parameters}
           iframe={true}
         />
         <Form.Group>

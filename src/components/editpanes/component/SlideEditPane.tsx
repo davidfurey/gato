@@ -6,7 +6,7 @@ import { ViewPanel } from '../../ViewPanel';
 import { SharedStatusContainer } from '../../../containers/SharedStatusContainer';
 import { Group, Label, TypePropertyNames } from '../Pane';
 import { EditableImageUrl } from '../../ui/EditableImageUrl';
-import { Themes, Styles, Theme } from '../../../reducers/shared';
+import { Themes, Styles, Theme, EventParameters } from '../../../reducers/shared';
 import { StyleSelector } from '../ComponentEditPane';
 
 export function SlideEditPane(props: {
@@ -15,6 +15,7 @@ export function SlideEditPane(props: {
   styles: Styles,
   theme: Theme | undefined;
   update: (id: string, component: Partial<SlideComponent>) => void;
+  parameters: EventParameters;
 }): JSX.Element {
 
   function update<T extends keyof SlideComponent>
@@ -47,6 +48,7 @@ export function SlideEditPane(props: {
       themes={props.themes}
       styles={props.styles}
       themeId={props.theme ? props.theme.id : null}
+      parameters={props.parameters}
       iframe={true}
     />
     <Form.Group>
