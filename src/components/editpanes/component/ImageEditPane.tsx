@@ -45,6 +45,7 @@ export function ImageEditPane(props: {
       themes={props.themes}
       styles={props.styles}
       themeId={props.theme ? props.theme.id : null}
+      iframe={true}
     />
     <Form.Group>
       <Group>

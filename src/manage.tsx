@@ -20,7 +20,6 @@ import { PageNav } from './components/PageNav';
 import { ConnectivityPanelContainer } from './containers/ConnectivityPanelContainer';
 import { PageFooter } from './components/PageFooter';
 import * as Navigation from './libs/navigation';
-import { PageStyle } from './components/PageStyle';
 
 interface ManageProps {
   displays: Display[];
@@ -88,6 +87,7 @@ export function Manage(props: ManageProps): JSX.Element {
           <EditPanelContainer
             editPanel={props.editPanel}
             components={props.components}
+            liveEvent={props.liveEventId}
             events={props.events}
             styles={props.styles}
             themes={props.themes}
@@ -119,7 +119,6 @@ Navigation.init(store)
 
 ReactDOM.render(
   <Provider store={store}>
-    <PageStyle />
     <PageNav page="manage" />
     <ManageContainer />
     <PageFooter />
