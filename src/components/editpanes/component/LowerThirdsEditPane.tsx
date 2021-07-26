@@ -7,6 +7,7 @@ import { ViewPanel } from "../../ViewPanel";
 import { Group, Label } from "../Pane";
 import { StyleSelector } from "../ComponentEditPane";
 import { EventParameters, Styles, Theme, Themes } from "../../../reducers/shared";
+import { ComponentDownloadButton } from "../../ComponentDownloadButton";
 
 export function LowerThirdsEditPane(props: {
     component: LowerThirdsComponent;
@@ -40,6 +41,12 @@ export function LowerThirdsEditPane(props: {
           parameters={props.parameters}
           iframe={true}
         />
+        { props.theme ?
+          <ComponentDownloadButton
+            id={props.component.id}
+            parameters={props.parameters}
+            theme={props.theme}
+          /> : null }
         <Form.Group>
         <Group>
           <Label>Name</Label>

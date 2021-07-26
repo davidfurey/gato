@@ -8,6 +8,7 @@ import { EditableImageUrl } from '../../ui/EditableImageUrl';
 import { Group, Label, TypePropertyNames } from '../Pane';
 import { Themes, Styles, Theme, EventParameters } from '../../../reducers/shared';
 import { StyleSelector } from '../ComponentEditPane';
+import { ComponentDownloadButton } from '../../ComponentDownloadButton';
 
 export function ImageEditPane(props: {
   component: ImageComponent;
@@ -49,6 +50,12 @@ export function ImageEditPane(props: {
       parameters={props.parameters}
       iframe={true}
     />
+    { props.theme ?
+      <ComponentDownloadButton
+        id={props.component.id}
+        parameters={props.parameters}
+        theme={props.theme}
+      /> : null }
     <Form.Group>
       <Group>
         <Label>Name</Label>

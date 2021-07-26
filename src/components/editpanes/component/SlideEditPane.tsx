@@ -8,6 +8,7 @@ import { Group, Label, TypePropertyNames } from '../Pane';
 import { EditableImageUrl } from '../../ui/EditableImageUrl';
 import { Themes, Styles, Theme, EventParameters } from '../../../reducers/shared';
 import { StyleSelector } from '../ComponentEditPane';
+import { ComponentDownloadButton } from '../../ComponentDownloadButton';
 
 export function SlideEditPane(props: {
   component: SlideComponent;
@@ -51,6 +52,12 @@ export function SlideEditPane(props: {
       parameters={props.parameters}
       iframe={true}
     />
+    { props.theme ?
+      <ComponentDownloadButton
+        id={props.component.id}
+        parameters={props.parameters}
+        theme={props.theme}
+      /> : null }
     <Form.Group>
       <Group>
         <Label>Name</Label>

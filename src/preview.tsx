@@ -4,6 +4,8 @@ import { OSDComponent } from './OSDComponent';
 import { EventParameters, OnScreenComponentState, Styles, Themes } from './reducers/shared'
 import ReactDOMServer from 'react-dom/server';
 import { compileCss } from './components/PageStyle';
+import './preview.css';
+import './viewer.css';
 
 export function renderComponent(
   component: OSDComponent,
