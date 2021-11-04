@@ -85,7 +85,9 @@ export function MetadataPanel(props: Pick<EventEditPaneProps, "event" |
           updateEvent={props.updateEvent}
         />
       </Group>
-      { parameters !== undefined ? Object.entries(parameters).map(([key, value]) =>
+      { parameters !== undefined ? Object.entries(parameters)
+        .sort(([k1], [k2]) => k1.localeCompare(k2))
+        .map(([key, value]) =>
         <Group key={key}>
           <Form.Label column lg={4}>{key}</Form.Label>
           <EditableText
